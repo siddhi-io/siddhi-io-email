@@ -20,7 +20,6 @@ package org.wso2.extension.siddhi.io.email.source;
 
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserException;
-import com.icegreen.greenmail.util.DummySSLSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.log4j.Logger;
@@ -28,7 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.extension.siddhi.io.email.util.EmailTestConstants;
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.event.Event;
@@ -37,18 +35,20 @@ import org.wso2.siddhi.core.util.EventPrinter;
 import org.wso2.siddhi.core.util.SiddhiTestHelper;
 import org.wso2.siddhi.core.util.config.InMemoryConfigManager;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
+/**
+ * Class implementing ImapServerWithoutSSLEnableTestCase.
+ */
 public class ImapServerWithoutSSLEnableTestCase {
     private static final Logger log = Logger.getLogger(EmailSourceImapTestCase.class);
     private static final String PASSWORD = "password";
@@ -95,7 +95,7 @@ public class ImapServerWithoutSSLEnableTestCase {
         masterConfigs.put("source.email.action.after.processed", "SEEN");
         masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.content.type", "text/plain");
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -165,9 +165,9 @@ public class ImapServerWithoutSSLEnableTestCase {
 
     private void deliverMassage(String event , GreenMailUser user) throws MessagingException {
         MimeMessage message = new MimeMessage((Session) null);
-        message.setFrom(new InternetAddress(EmailTestConstants.EMAIL_FROM));
+        message.setFrom(new InternetAddress(EMAIL_FROM));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(ADDRESS));
-        message.setSubject(EmailTestConstants.EMAIL_SUBJECT);
+        message.setSubject(EMAIL_SUBJECT);
         message.setText(event);
         user.deliver(message);
     }

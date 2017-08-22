@@ -74,6 +74,11 @@
                 <version>${log4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${com.sun.mail.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <scope>test</scope>
@@ -107,6 +112,7 @@
                 <scope>test</scope>
             </dependency>
         </dependencies>
+
     </dependencyManagement>
 
     <build>
@@ -144,13 +150,15 @@
         </plugins>
     </build>
     <properties>
-        <siddhi.version>4.0.0-M36</siddhi.version>
+        <siddhi.version>4.0.0-M44</siddhi.version>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
-        <carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>
-        <carbon.transport.version>5.0.0-SNAPSHOT</carbon.transport.version>
+        <!--<carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>-->
+        <carbon.transport.version>5.0.0</carbon.transport.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <text.mapper.version>4.0.0-M7</text.mapper.version>
+        <com.sun.mail.version>1.5.6</com.sun.mail.version>
+        <siddhi.map.json.version>4.0.3</siddhi.map.json.version>
         <xml.mapper.version>4.0.0-M8</xml.mapper.version>
         <carbon.messaging.version>3.0.0</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

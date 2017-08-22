@@ -89,6 +89,11 @@ import java.util.stream.Stream;
                 defaultValue = "If store type is 'imap' then default value is "
                         + "'imap.gmail.com' and if store type is 'pop3' then"
                         + "default value is 'pop3.gmail.com'."),
+        @Parameter(name = "port",
+                description = "The port which is used to create the connection.",
+                type = {DataType.INT},
+                optional = true,
+                defaultValue = "'993' the default value is valid only if store is imap and ssl enable"),
         @Parameter(name = "folder",
                 description = "Name of the folder to fetch email.",
                 type = { DataType.STRING },
@@ -109,7 +114,8 @@ import java.util.stream.Stream;
                 optional = true,
                 defaultValue = "None"),
         @Parameter(name = "polling.interval",
-                description = "Interval that email source should poll the account to check for new mails arrivals ",
+                description = "Interval that email source should poll the account to check for new mails arrivals "
+                        + "in seconds.",
                 type = { DataType.LONG },
                 optional = true,
                 defaultValue = "600"),
@@ -128,15 +134,14 @@ import java.util.stream.Stream;
                 description = "The name of the folder, which mail has to move after processing."
                         + "If the action after process is 'MOVE' then it is mandatory to define the folder to move.",
                 type = { DataType.STRING }),
-        //todo option=true
         @Parameter(name = "content.type",
                 description = "Content type of the email. It can be either 'text/plain' or 'text/html.'",
                 type = { DataType.STRING },
                 optional = true,
                 defaultValue = "text/plain"),
         @Parameter(name = "ssl.enable",
-                description = "If it is 'true' then use a secure port to establish the connection. The possible values "
-                        + "are 'true or false.",
+                description = "If it is 'true' then use a secure port to establish the connection. The possible values"
+                        + " are 'true or false.",
                 type = { DataType.BOOL },
                 optional = true,
                 defaultValue = "true") },
@@ -151,7 +156,8 @@ import java.util.stream.Stream;
                                 + "username='wso2mail', "
                                 + "password='wso2Password',"
                                 + "store = 'imap',"
-                                + "host = 'imap.gmail.com ,"
+                                + "host = 'imap.gmail.com',"
+                                + "port = '993',"
                                 + "searchTerm = 'subject:das, from: wso2one@ , cc: wso2two, "
                                 + "polling.interval='50000',"
                                 + "action.after.processed='SEEN',"
@@ -160,11 +166,6 @@ import java.util.stream.Stream;
                                 "define stream inputStream (name string, age int, country string);"),
         },
         systemParameter = {
-                @SystemParameter(name = "mail.imap.port",
-                        description = "The IMAP server port to connect to, if the connect()"
-                                + " method doesn't explicitly specify one.",
-                        defaultValue = "143",
-                        possibleParameters = "Any Integer"),
                 @SystemParameter(name = "mail.imap.partialfetch",
                         description = "Controls whether the IMAP partial-fetch capability should be used",
                         defaultValue = "true",
@@ -363,9 +364,161 @@ import java.util.stream.Stream;
                                 + " IMAPStore store, Boolean isNamespace) "
                                 + "and public MyIMAPFolder(ListInfo li, IMAPStore store)",
                         defaultValue = "None",
-                        possibleParameters = "Valid String")
-
-})
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.connectiontimeout",
+                        description = "Socket connection timeout value in milliseconds.",
+                        defaultValue = "Infinite timeout",
+                        possibleParameters = "Integer value"),
+                @SystemParameter(name = "mail.pop3.timeout",
+                        description = "Socket I/O timeout value in milliseconds. ",
+                        defaultValue = "Infinite timeout",
+                        possibleParameters = "Integer value"),
+                @SystemParameter(name = "mail.pop3.message.class",
+                        description = "Class name of a subclass of com.sun.mail.pop3.POP3Message",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.localaddress",
+                        description = "Local address (host name) to bind to when creating the POP3 socket.",
+                        defaultValue = "Defaults to the address picked by the Socket class.",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.localport",
+                        description = "Local port number to bind to when creating the POP3 socket.",
+                        defaultValue =  "Defaults to the port number picked by the Socket class.",
+                        possibleParameters = "Valid port number"),
+                @SystemParameter(name = "mail.pop3.apop.enable",
+                        description = "If set to true, use APOP instead of USER/PASS to login to the POP3 server,"
+                                + " if the POP3 server supports APOP. APOP sends a digest of the password"
+                                + " rather than the clear text password.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.socketFactory",
+                        description = "If set to a class that implements the javax.net.SocketFactory interface,"
+                                + " this class will be used to create POP3 sockets.",
+                        defaultValue = "None",
+                        possibleParameters = "Socket Factory"),
+                @SystemParameter(name = "mail.pop3.socketFactory.class",
+                        description = "If set, specifies the name of a class that implements the javax.net."
+                                + " SocketFactory interface. "
+                                + "This class will be used to create POP3 sockets.",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.socketFactory.fallback",
+                        description = "If set to true, failure to create a socket using the specified socket"
+                                + " factory class will cause the socket to be created using"
+                                + " the java.net.Socket class.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.socketFactory.port",
+                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        defaultValue = "Default port",
+                        possibleParameters = "Valid port number"),
+                @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
+                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.ssl.trust",
+                        description = "If set, and a socket factory hasn't been specified,"
+                                + " enables use of a MailSSLSocketFactory. "
+                                + "If set to '*', all hosts are trusted."
+                                + "If set to a whitespace separated list of hosts, those hosts are trusted."
+                                + "Otherwise, trust depends on the certificate the server presents.",
+                        defaultValue = "Depends on the certificate the server presents",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.ssl.socketFactory",
+                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
+                                + " this class will be used to create POP3 SSL sockets.",
+                        defaultValue = "None",
+                        possibleParameters = "SSL Socket Factory"),
+                @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
+                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.ssl.trust",
+                        description = " If set, and a socket factory hasn't been specified,"
+                                + " enables use of a MailSSLSocketFactory."
+                                + "If set to '*', all hosts are trusted."
+                                + "If set to a whitespace separated list of hosts, those hosts are trusted. ",
+                        defaultValue = "trust depends on the certificate the server presents.",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.ssl.socketFactory",
+                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
+                                + " this class will be used to create POP3 SSL sockets.",
+                        defaultValue = "None",
+                        possibleParameters = "SSL Socket Factory"),
+                @SystemParameter(name = "mail.pop3.ssl.socketFactory.class",
+                        description = "If set, specifies the name of a class that extends"
+                                + " the javax.net.ssl.SSLSocketFactory class."
+                                + " This class will be used to create POP3 SSL sockets. ",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.ssl.socketFactory.p",
+                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        defaultValue = "995",
+                        possibleParameters = "Valid Integer"),
+                @SystemParameter(name = "mail.pop3.ssl.protocols",
+                        description = "Specifies the SSL protocols that will be enabled for SSL connections."
+                                + " The property value is a whitespace separated list of tokens acceptable"
+                                + " to the javax.net.ssl.SSLSocket.setEnabledProtocols method.",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.starttls.enable",
+                        description = "If true, enables the use of the STLS command (if supported by the server)"
+                                + " to switch the connection to a TLS-protected"
+                                + " connection before issuing any login commands",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.starttls.required",
+                        description = "If true, requires the use of the STLS command. If the server doesn't"
+                                + " support the STLS command, or the command fails, the connect method will fail.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.socks.host",
+                        description = "Specifies the host name of a SOCKS5 proxy server that will be used for"
+                                + " connections to the mail server.",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.socks.port",
+                        description = "Specifies the port number for the SOCKS5 proxy server.",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.disabletop",
+                        description = "If set to true, the POP3 TOP command will not be used to"
+                                + " fetch message headers. ",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.forgettopheaders",
+                        description = "If set to true, the headers that might have been retrieved using the POP3"
+                                + " TOP command will be forgotten and replaced by headers retrieved"
+                                + " as part of the POP3 RETR command.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.filecache.enable",
+                        description = "If set to true, the POP3 provider will cache message data in a temporary"
+                                + " file rather than in memory. Messages are only added to the cache when accessing"
+                                + " the message content. Message headers are always cached in memory (on demand)."
+                                + " The file cache is removed when the folder is closed or the JVM terminates.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.filecache.dir",
+                        description = "If the file cache is enabled, this property can be used"
+                                + " to override the default directory used by the JDK for temporary files.",
+                        defaultValue = "None",
+                        possibleParameters = "Valid String"),
+                @SystemParameter(name = "mail.pop3.cachewriteto",
+                        description = "Controls the behavior of the writeTo method on a POP3 message object."
+                                + " If set to true, and the message content hasn't yet been cached, and ignoreList"
+                                + " is null, the message is cached before being written. Otherwise, the message "
+                                + "is streamed directly to the output stream without being cached.",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+                @SystemParameter(name = "mail.pop3.keepmessagecontent",
+                        description = "If this property is set to true, a hard reference to the cached content"
+                                + " will be kept, preventing the memory from being reused until the folder"
+                                + " is closed or the cached content is explicitly invalidated"
+                                + " (using the invalidate method). ",
+                        defaultValue = "false",
+                        possibleParameters = "true or false"),
+        })
 
 public class EmailSource extends Source {
 
@@ -379,39 +532,41 @@ public class EmailSource extends Source {
     private String contentType;
     private boolean isImap = false;
 
-    @Override
-    public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
+    @Override public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
             String[] requiredProperties, ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
-
         this.sourceEventListener = sourceEventListener;
         this.configReader = configReader;
         this.optionHolder = optionHolder;
         validateAndGetEmailConfigurations();
-        getServerSystemProperties();
+        //Server system properties starts with 'mail.smtp'.
+        configReader.getAllConfigs().forEach((k, v) -> {
+            if (k.startsWith("mail." + store)) {
+                properties.put(k, v);
+            }
+        });
         properties.put(EmailConstants.TRANSPORT_MAIL_AUTO_ACKNOWLEDGE, EmailConstants.DEFAULT_AUTO_ACKNOWLEDGE);
         ServerConnectorProvider emailServerConnectorProvider = new EmailServerConnectorProvider();
-        emailServerConnector = emailServerConnectorProvider.createConnector("emailSource" , properties);
-        EmailMessageProcessor emailMessageProcessor =
-                new EmailMessageProcessor(sourceEventListener, requiredProperties, contentType);
+        emailServerConnector = emailServerConnectorProvider.createConnector("emailSource", properties);
+        EmailMessageProcessor emailMessageProcessor = new EmailMessageProcessor(sourceEventListener, requiredProperties,
+                contentType);
         emailServerConnector.setMessageProcessor(emailMessageProcessor);
-
     }
 
-
-    @Override
-    public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
+    @Override public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
         try {
             emailServerConnector.start();
         } catch (ServerConnectorException e) {
             //calling super class logs the exception and retry
             if (e.getCause() instanceof MailConnectException) {
-                 if (e.getCause().getCause() instanceof ConnectException) {
-                    throw new ConnectionUnavailableException("Connection is unavailable. Therefore retry again"
-                            + " to connect to the store." + e.getMessage(), e.getCause());
+                if (e.getCause().getCause() instanceof ConnectException) {
+                    throw new ConnectionUnavailableException(
+                            "Connection is unavailable. Therefore retry again" + " to connect to the store."
+                                    + e.getMessage(), e.getCause());
                 } else {
-                     throw new EmailSourceAdaptorRuntimeException("Error is encountered while connecting"
-                             + " the Email Source for stream: " + sourceEventListener.getStreamDefinition()
-                             + "." + e.getMessage(), e.getCause());
+                    throw new EmailSourceAdaptorRuntimeException(
+                            "Error is encountered while connecting" + " the Email Source for stream: "
+                                    + sourceEventListener.getStreamDefinition()
+                                    + "." + e.getMessage(), e.getCause());
                 }
             } else {
                 throw new EmailSourceAdaptorRuntimeException("Couldn't connect to email server connector. Therefore, "
@@ -427,21 +582,21 @@ public class EmailSource extends Source {
             }
 
         } catch (ServerConnectorException e) {
-            throw new EmailSourceAdaptorRuntimeException("Error is encountered while disconnecting "
-                    + "the Email Source for stream: " +
-                    sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
+            throw new EmailSourceAdaptorRuntimeException(
+                    "Error is encountered while disconnecting " + "the Email Source for stream: "
+                            + sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
         }
     }
 
     @Override public void destroy() {
-       if (emailServerConnector != null) {
-           try {
-               emailServerConnector.destroyConnector();
-           } catch (ServerConnectorException e) {
-               log.error("Error is encountered while destroying Email Source for stream: "
-                       + sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
-           }
-       }
+        if (emailServerConnector != null) {
+            try {
+                emailServerConnector.stop();
+            } catch (ServerConnectorException e) {
+                log.error("Error is encountered while destroying Email Source for stream: "
+                        + sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
+            }
+        }
     }
 
     @Override public void pause() {
@@ -449,8 +604,8 @@ public class EmailSource extends Source {
             try {
                 emailServerConnector.stop();
             } catch (ServerConnectorException e) {
-                throw new EmailSourceAdaptorRuntimeException("Error is encountered while pausing"
-                        + " the Email Source." + e.getMessage(), e);
+                throw new EmailSourceAdaptorRuntimeException(
+                        "Error is encountered while pausing" + " the Email Source." + e.getMessage(), e);
             }
         }
     }
@@ -460,8 +615,8 @@ public class EmailSource extends Source {
             try {
                 emailServerConnector.start();
             } catch (ServerConnectorException e) {
-                throw new EmailSourceAdaptorRuntimeException("Error is encountered while resuming"
-                        + " the Email Source." + e.getMessage(), e);
+                throw new EmailSourceAdaptorRuntimeException(
+                        "Error is encountered while resuming" + " the Email Source." + e.getMessage(), e);
             }
         }
     }
@@ -473,8 +628,9 @@ public class EmailSource extends Source {
     @Override public void restoreState(Map<String, Object> map) {
 
     }
+
     @Override public Class[] getOutputEventClasses() {
-        return new Class[]{String.class};
+        return new Class[] { String.class };
     }
 
     /**
@@ -492,7 +648,6 @@ public class EmailSource extends Source {
                     + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
 
-
         String password = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_PASSWORD,
                 configReader.readConfig(EmailConstants.EMAIL_RECEIVER_PASSWORD, EmailConstants.EMPTY_STRING));
         if (!password.isEmpty()) {
@@ -502,34 +657,45 @@ public class EmailSource extends Source {
                     + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
 
-
         this.store = optionHolder.validateAndGetStaticValue(EmailConstants.STORE,
                 configReader.readConfig(EmailConstants.STORE, EmailConstants.EMAIL_RECEIVER_DEFAULT_STORE));
         if (!store.contains(EmailConstants.IMAP_STORE) && !store.contains(EmailConstants.POP3_STORE)) {
-            throw new SiddhiAppCreationException(EmailConstants.STORE + " could be either "
-                    + EmailConstants.IMAP_STORE + " or " + EmailConstants.POP3_STORE + ". But found: " + store + ".");
+            throw new SiddhiAppCreationException(
+                    EmailConstants.STORE + " could be either " + EmailConstants.IMAP_STORE + " or "
+                            + EmailConstants.POP3_STORE + ". But found: " + store + ".");
         }
         properties.put(EmailConstants.TRANSPORT_MAIL_STORE, store);
         if (store.contains(EmailConstants.IMAP_STORE)) {
             isImap = true;
         }
 
-
         String host = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_HOST,
                 configReader.readConfig(EmailConstants.EMAIL_RECEIVER_HOST, store + ".gmail.com"));
         properties.put(EmailConstants.TRANSPORT_MAIL_RECEIVER_HOST_NAME, host);
-
 
         String sslEnable = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_SSL_ENABLE, configReader
                 .readConfig(EmailConstants.EMAIL_RECEIVER_SSL_ENABLE,
                         EmailConstants.EMAIL_RECEIVER_DEFAULT_SSL_ENABLE));
 
-        if (!sslEnable.equalsIgnoreCase("true") && !sslEnable.equalsIgnoreCase("false")) {
-            throw new SiddhiAppCreationException(EmailConstants.STORE + "could be either 'true' "
-                    + "or false. But found: " + sslEnable);
+        if (!(sslEnable.equalsIgnoreCase("true") || sslEnable.equalsIgnoreCase("false"))) {
+            throw new SiddhiAppCreationException(
+                    EmailConstants.STORE + "could be either 'true' " + "or 'false'. But found: " + sslEnable);
         }
         properties.put("mail." + store + ".ssl.enable", sslEnable);
 
+        String port = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_PORT, configReader
+                .readConfig(EmailConstants.EMAIL_RECEIVER_PORT, EmailConstants.EMPTY_STRING));
+
+        if (port.isEmpty()) {
+        if (sslEnable.equalsIgnoreCase("true") && store.equalsIgnoreCase("imap")) {
+                port = EmailConstants.EMAIL_RECEIVER_DEFAULT_PORT;
+        } else {
+                throw new SiddhiAppCreationException("Default value for the port can be only used if 'ssl.enable'"
+                        + " is 'true' and store type is 'imap' only.");
+        }
+        }
+
+        properties.put("mail." + store + ".port", port);
 
         String pollingInterval = optionHolder.validateAndGetStaticValue(EmailConstants.POLLING_INTERVAL,
                 configReader.readConfig(EmailConstants.POLLING_INTERVAL, EmailConstants.DEFAULT_POLLING_INTERVAL));
@@ -537,8 +703,8 @@ public class EmailSource extends Source {
         properties.put(EmailConstants.TRANSPORT_MAIL_POLLING_INTERVAL, Long.toString(timeInMilliSeconds));
 
         //get a list of valid search term keys.
-        List<String> validSearchTermKeys = Stream.of(EmailConstants.SEARCH_TERM_KEYS.values()).map(
-                EmailConstants.SEARCH_TERM_KEYS::name).collect(Collectors.toList());
+        List<String> validSearchTermKeys = Stream.of(EmailConstants.SearchTermKeys.values()).
+                map(EmailConstants.SearchTermKeys::name).collect(Collectors.toList());
 
         List<String> givenSearchtermkeys = new ArrayList<>();
 
@@ -549,8 +715,8 @@ public class EmailSource extends Source {
 
         if (!searchTerm.isEmpty()) {
             if (!(searchTerm.matches(pattern))) {
-                throw new SiddhiAppCreationException("search term '"
-                        + searchTerm + "' is not in correct format. It should be in 'key1:value1,key2:value2, ..."
+                throw new SiddhiAppCreationException("search term '" + searchTerm + "'"
+                        + " is not in correct format. It should be in 'key1:value1,key2:value2, ..."
                         + ", keyX:valueX format.");
             } else {
                 String condition[] = searchTerm.split(",");
@@ -567,12 +733,12 @@ public class EmailSource extends Source {
 
             //check given search term keys are valid.
             if (!validSearchTermKeys.containsAll(givenSearchtermkeys)) {
-                throw new SiddhiAppCreationException("Valid search term to search emails are"
-                        + " 'subject, bcc, cc, to and from' only. But found: " + givenSearchtermkeys.toString());
+                throw new SiddhiAppCreationException("Valid search term to search emails are" +
+                        " 'subject, bcc, cc, to and from' only. But found: "
+                        + givenSearchtermkeys.toString());
             }
             properties.put(EmailConstants.TRANSPORT_MAIL_SEARCH_TERM, searchTerm);
         }
-
 
         String folder = optionHolder.validateAndGetStaticValue(EmailConstants.FOLDER,
                 configReader.readConfig(EmailConstants.FOLDER, EmailConstants.DEFAULT_FOLDER));
@@ -587,8 +753,8 @@ public class EmailSource extends Source {
             action = optionHolder.validateAndGetStaticValue(EmailConstants.ACTION_AFTER_PROCESSED,
                     configReader.readConfig(EmailConstants.ACTION_AFTER_PROCESSED, "SEEN"));
             if (!validActions.contains(action.toUpperCase(Locale.ENGLISH))) {
-                throw new SiddhiAppCreationException(EmailConstants.ACTION_AFTER_PROCESSED +
-                        " could be 'MOVE, DELETE , SEEN, FLAGGED, ANSWERED,'. But found: " + action);
+                throw new SiddhiAppCreationException(EmailConstants.ACTION_AFTER_PROCESSED
+                        + " could be 'MOVE, DELETE , SEEN, FLAGGED, ANSWERED,'. But found: " + action);
             }
         } else {
             action = optionHolder.validateAndGetStaticValue(EmailConstants.ACTION_AFTER_PROCESSED,
@@ -598,17 +764,17 @@ public class EmailSource extends Source {
                         + " could only be 'DELETE' for the pop3 folder. But found: " + action);
             }
         }
-        properties.put(EmailConstants.TRANSPORT_MAIL_ACTION_AFTER_PROCESSED , action);
-
+        properties.put(EmailConstants.TRANSPORT_MAIL_ACTION_AFTER_PROCESSED, action);
 
         String moveToFolder = optionHolder.validateAndGetStaticValue(EmailConstants.MOVE_TO_FOLDER,
                 configReader.readConfig(EmailConstants.MOVE_TO_FOLDER, EmailConstants.EMPTY_STRING));
         if (action.equalsIgnoreCase("MOVE")) {
             if (moveToFolder.isEmpty()) {
-                throw new SiddhiAppCreationException("Since action after processed mail is 'MOVE', it "
-                        + "is mandatory to define " + EmailConstants.ACTION_AFTER_PROCESSED + "parameter "
-                        + "in either stream definition or deployment 'yaml' file.");
-            } else if(moveToFolder.equals(folder)){
+                throw new SiddhiAppCreationException(
+                        "Since action after processed mail is 'MOVE', it " + "is mandatory to define "
+                                + EmailConstants.ACTION_AFTER_PROCESSED + "parameter "
+                                + "in either stream definition or deployment 'yaml' file.");
+            } else if (moveToFolder.equals(folder)) {
                 log.warn("Given folder '" + moveToFolder + "' to move mails after processing"
                         + " has the same name of email going to fetch. Therefore, emails are"
                         + " remaining in the same folder.");
@@ -620,34 +786,16 @@ public class EmailSource extends Source {
                         + "is neglected while SiddhiAppCreation.");
             }
         }
-
-
-        properties.put(EmailConstants.TRANSPORT_MAIL_MOVE_TO_FOLDER , moveToFolder);
+        properties.put(EmailConstants.TRANSPORT_MAIL_MOVE_TO_FOLDER, moveToFolder);
 
         this.contentType = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_CONTENT_TYPE,
                 configReader.readConfig(EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE,
                         EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE));
-        if (!contentType.equalsIgnoreCase(EmailConstants.TEXT_HTML) &&
-                !contentType.equalsIgnoreCase(EmailConstants.TEXT_PLAIN)) {
-            //todo description
-            throw new SiddhiAppCreationException();
+        if (!(contentType.equalsIgnoreCase(EmailConstants.TEXT_HTML) ||
+                contentType.equalsIgnoreCase(EmailConstants.TEXT_PLAIN))) {
+            throw new SiddhiAppCreationException("supported content types are '" + EmailConstants.TEXT_HTML
+            + "' and '" + EmailConstants.TEXT_PLAIN + "' but found: " + contentType + ".");
         }
         properties.put(EmailConstants.TRANSPORT_MAIL_RECEIVER_CONTENT_TYPE, contentType);
-
-
     }
-
-    /**
-     * Get the server system properties.
-     */
-    private void getServerSystemProperties() {
-        Map<String, String> map = configReader.getAllConfigs();
-        for (Map.Entry<String, String> parameter : map.entrySet()) {
-            if (parameter.getKey().startsWith("mail." + store)) {
-                properties.put(parameter.getKey(), parameter.getValue());
-            }
-        }
-    }
-
-
 }

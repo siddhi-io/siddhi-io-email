@@ -22,12 +22,13 @@ import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.extension.siddhi.io.email.util.EmailTestConstants;
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.event.Event;
@@ -36,11 +37,6 @@ import org.wso2.siddhi.core.stream.output.StreamCallback;
 import org.wso2.siddhi.core.util.EventPrinter;
 import org.wso2.siddhi.core.util.SiddhiTestHelper;
 import org.wso2.siddhi.core.util.config.InMemoryConfigManager;
-
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,11 +53,13 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 /**
  * EmailSourceActionAfterProcessedTest case .
  */
 public class EmailSourceActionAfterProcessedTestCase {
-    private static final Logger log = Logger.getLogger(EmailSourceActionAfterProcessedTestCase.class);
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+            .getLogger(EmailSourceActionAfterProcessedTestCase.class);
     private static final String PASSWORD = "analytics123";
     private static final String USERNAME = "analytics";
     private static final String ADDRESS = "analytics@localhost";
@@ -98,10 +96,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        // the port (3993) is used by the greenmail server to create ssl connection
-        // which is not the standard port '993'.
-        // Therefore, it has to be given as a system parameter.
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -190,8 +185,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -278,8 +272,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -366,8 +359,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -450,8 +442,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
-        //server system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -503,8 +494,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -610,8 +600,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -705,6 +694,9 @@ public class EmailSourceActionAfterProcessedTestCase {
             throws IOException, MessagingException, UserException, InterruptedException {
 
         log.info("Test 4: email event receiver when action.after.process is MOVE.");
+        final TestAppender appender = new TestAppender();
+        final Logger log = Logger.getRootLogger();
+
 
         //create a local mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
@@ -713,8 +705,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
+        masterConfigs.put("source.email.port", "3143");
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
         inMemoryConfigManager.generateConfigReader("source", "email");
@@ -792,14 +783,13 @@ public class EmailSourceActionAfterProcessedTestCase {
     }
 
 
-
     // create an e-mail message using javax.mail ..
     // use greenmail to store the message
     private void deliverMassage(String event , GreenMailUser user) throws MessagingException {
         MimeMessage message = new MimeMessage((Session) null);
-        message.setFrom(new InternetAddress(EmailTestConstants.EMAIL_FROM));
+        message.setFrom(new InternetAddress(EMAIL_FROM));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(ADDRESS));
-        message.setSubject(EmailTestConstants.EMAIL_SUBJECT);
+        message.setSubject(EMAIL_SUBJECT);
         message.setText(event);
         user.deliver(message);
     }
@@ -839,5 +829,27 @@ public class EmailSourceActionAfterProcessedTestCase {
         }
 
         return false;
+    }
+
+    private class TestAppender extends AppenderSkeleton {
+        private final List<LoggingEvent> log = new ArrayList<>();
+
+        @Override
+        public boolean requiresLayout() {
+            return false;
+        }
+
+        @Override
+        protected void append(final LoggingEvent loggingEvent) {
+            log.add(loggingEvent);
+        }
+
+        @Override
+        public void close() {
+        }
+
+        List<LoggingEvent> getLog() {
+            return new ArrayList<LoggingEvent>(log);
+        }
     }
 }

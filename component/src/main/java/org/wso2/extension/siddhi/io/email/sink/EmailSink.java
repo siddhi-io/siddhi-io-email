@@ -19,6 +19,7 @@
 
 package org.wso2.extension.siddhi.io.email.sink;
 
+import com.sun.mail.util.MailConnectException;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.messaging.ClientConnector;
@@ -41,6 +42,7 @@ import org.wso2.siddhi.core.util.transport.Option;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
 
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,18 +64,15 @@ import java.util.Map;
                 + " smtp server parameters).",
         parameters = {
                 @Parameter(name = "username",
-                           description = "Username(address) of the email account which is used to send emails.",
+                           description = "Username of the email account which is used to send emails"
+                                   + " (e.g: 'abc' is the username for abc@gmail.com).",
+                           type = {DataType.STRING}),
+                @Parameter(name = "address",
+                           description = "Address of the email account which is used to send emails.",
                            type = {DataType.STRING}),
                 @Parameter(name = "password",
                            description = "Password of the email account.",
                            type = {DataType.STRING}),
-                @Parameter(name = "store",
-                           //todo smtp
-                           description = "Type of the store which is used to receive mails. It can be"
-                                   + " either imap ,pop3 , imaps or pop3s.",
-                           type = {DataType.STRING},
-                           optional = true,
-                           defaultValue = "smtp"),
                 @Parameter(name = "host",
                            description = "Host name of the smtp server "
                                    + "(e.g. host name for a gmail account : 'smtp.gmail.com'). The default value"
@@ -81,18 +80,23 @@ import java.util.Map;
                            type = {DataType.STRING},
                            optional = true,
                            defaultValue = "smtp.gmail.com"),
+                @Parameter(name = "port",
+                           description = "The port which is used to create the connection.",
+                           type = {DataType.INT},
+                           optional = true,
+                           defaultValue = "'465' the default value is only valid is ssl enable"),
                 @Parameter(name = "ssl.enable",
                            description = "Whether the connection should be established through"
                                    + " secure connection or not."
                                    + " The value can be either 'true' or 'false'. If it is 'true' then the connection "
                                    + "is establish through 493 port which is secure connection.",
-                           type = {DataType.STRING},
+                           type = {DataType.BOOL},
                            optional = true,
                            defaultValue = "true"),
                 @Parameter(name = "auth",
                            description = "Whether to use AUTH command or not, while authenticating. If true,"
                                    + " then attempt to authenticate the user using the AUTH command.",
-                           type = {DataType.STRING},
+                           type = {DataType.BOOL},
                            optional = true,
                            defaultValue = "true"),
                 @Parameter(name = "content.type",
@@ -129,21 +133,17 @@ import java.util.Map;
                         + " given 'to' and 'cc' recipients."
                         + "The email is sent through wso2@gmail.com email account via secure connection.",
                         syntax = "@sink(type='email', @map(type='json'), "
-                                + "username='wso2@gmail.com', "
-                                + "password='abc123',"
-                                + "store='smtp'"
+                                + "username='wso2', "
+                                + "address='wso2@gmail.com',"
+                                + "password='wso234',"
                                 + "host='smtp.gmail.com',"
                                 + "subject='Event from SP',"
-                                + "to='wso2one@gmail.com ,wso2two@gmail.com',"
-                                + "cc='wso2three@gmail.com"
+                                + "to='towso2@gmail.com ,wso2two@gmail.com',"
+                                + "cc='ccwso2@gmail.com'"
                                 + ")" +
                                 "define stream inputStream (name string, age int, country string);"),
         },
         systemParameter = {
-                @SystemParameter(name = "mail.smtp.port",
-                                 description = "The SMTP server port to establish the connection.",
-                                 defaultValue = "25",
-                                 possibleParameters = "Any Integer"),
                 @SystemParameter(name = "mail.smtp.connectiontimeout",
                                  description = "Socket connection timeout value in milliseconds. ",
                                  defaultValue = "infinite timeout",
@@ -312,6 +312,9 @@ public class EmailSink extends Sink {
     private ClientConnector emailClientConnector;
     private Option optionSubject;
     private Option optionTo;
+    private Option optionCc;
+    private Option optionBcc;
+    private Map<String, Object> initProperties = new HashMap<>();
     private Map<String, String> emailProperties = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
@@ -322,39 +325,72 @@ public class EmailSink extends Sink {
         this.configReader = configReader;
         this.optionHolder = optionHolder;
         validateAndGetRequiredParameters();
-        getServerSystemParameters();
+        //Server system properties starts with 'mail.smtp'.
+        configReader.getAllConfigs().forEach((k, v)-> {
+            if (k.startsWith("mail.smtp")) {
+                initProperties.put(k, v);
+            }
+        });
     }
 
     @Override
     public void connect() throws ConnectionUnavailableException {
         emailClientConnector = new EmailClientConnector();
+        try {
+            emailClientConnector.init(null, null, initProperties);
+        } catch (ClientConnectorException e) {
+            if (e.getCause() instanceof MailConnectException) {
+                if (e.getCause().getCause() instanceof ConnectException) {
+                    throw new ConnectionUnavailableException("Error is encountered while connecting the smtp"
+                            + " server by the email ClientConnector with properties: "
+                            + initProperties.toString(), e);
+                } else {
+                    throw new RuntimeException("Error is encountered while connecting  to the server "
+                            + "with properties: " + initProperties.toString() , e);
+                }
+            } else {
+                throw new RuntimeException("Error is encountered while connecting to the"
+                        + " server with properties: " + initProperties.toString() , e);
+            }
+        }
     }
 
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
-
         if (optionSubject != null) {
             String subject = optionSubject.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
         }
-
         if (optionTo != null) {
             String to = optionTo.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
         }
-
-
+        if (optionCc != null) {
+            String cc = optionCc.getValue(dynamicOptions);
+            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+        }
+        if (optionBcc != null) {
+            String bcc = optionBcc.getValue(dynamicOptions);
+            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+        }
         CarbonMessage textCarbonMessage = new TextCarbonMessage(payload.toString());
-
         try {
             emailClientConnector.send(textCarbonMessage, null, emailProperties);
         } catch (ClientConnectorException e) {
-                //todo check exception and retry.
-            throw new ConnectionUnavailableException("Error is encountered while sending the message by the email"
-                    + " ClientConnector with properties: " + emailProperties.toString() , e);
+                //calling super class logs the exception and retry
+                if (e.getCause() instanceof MailConnectException) {
+                    if (e.getCause().getCause() instanceof ConnectException) {
+                        throw new ConnectionUnavailableException("Error is encountered while connecting the smtp" 
+                                + " server by the email ClientConnector.", e);
+                    } else {
+                        throw new RuntimeException("Error is encountered while sending the message by the email"
+                                + " ClientConnector with properties: " + emailProperties.toString() , e);
+                    }
+                } else {
+                    throw new RuntimeException("Error is encountered while sending the message by the email"
+                            + " ClientConnector with properties: " + emailProperties.toString() , e);
+                }
         }
-
-
     }
 
     /**
@@ -368,8 +404,15 @@ public class EmailSink extends Sink {
            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_USERNAME + " is a mandatory parameter. "
                    + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_USERNAME, username);
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_USERNAME, username);
 
+        String address = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_ADDRESS,
+                configReader.readConfig(EmailConstants.MAIL_PUBLISHER_ADDRESS, EmailConstants.EMPTY_STRING));
+        if (address.isEmpty()) {
+            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_USERNAME + " is a mandatory parameter. "
+                    + "It should be defined in either stream definition or deployment 'yaml' file.");
+        }
+        emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_FROM, address);
 
         String password = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_PASSWORD,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_PASSWORD, ""));
@@ -377,36 +420,44 @@ public class EmailSink extends Sink {
             throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_PASSWORD + " is a mandatory parameter. "
                     + "It should be defined in either stream definition or deployment 'ymal' file.");
         }
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_PASSWORD, password);
-
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_PASSWORD, password);
 
         String host = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_HOST_NAME, configReader
                 .readConfig(EmailConstants.MAIL_PUBLISHER_HOST_NAME, EmailConstants.MAIL_PUBLISHER_DEFAULT_HOST));
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_HOST_NAME, host);
-
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_HOST_NAME, host);
 
         String sslEnable = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_SSL_ENABLE,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_SSL_ENABLE,
                         EmailConstants.MAIL_PUBLISHER_DEFAULT_SSL_ENABLE));
         //validate string value of sslEnable is either true or false
-        if (!sslEnable.equals("true") && !sslEnable.equals("false")) {
+        if (!(sslEnable.equals("true") || sslEnable.equals("false"))) {
             throw new SiddhiAppCreationException("Value of the " + EmailConstants.MAIL_PUBLISHER_SSL_ENABLE +
                     "should be either 'true' or 'false'.");
         }
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_SSL_ENABLE, sslEnable);
-
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_SSL_ENABLE, sslEnable);
 
         String auth = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_AUTH,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_AUTH,
                         EmailConstants.MAIL_PUBLISHER_DEFAULT_AUTH));
         //validate string value of auth enable is either true or false
-        //todo !(||)
-        if (!auth.equalsIgnoreCase("true") && !auth.equalsIgnoreCase("false")) {
+        if (!(auth.equalsIgnoreCase("true") || auth.equalsIgnoreCase("false"))) {
             throw new SiddhiAppCreationException("Value of the " + EmailConstants.MAIL_PUBLISHER_AUTH +
                     "should be either 'true' or 'false'.");
         }
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_AUTH_ENABLE, auth);
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_AUTH_ENABLE, auth);
 
+        String port = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_PORT,
+                configReader.readConfig(EmailConstants.MAIL_PUBLISHER_PORT, EmailConstants.EMPTY_STRING));
+        //validate string value of auth enable is either true or false
+        if (port.isEmpty()) {
+            if (sslEnable.equalsIgnoreCase("true")) {
+                port = EmailConstants.MAIL_PUBLISHER_DEFAULT_PORT;
+            } else {
+                throw new SiddhiAppCreationException("The default port: " + EmailConstants.MAIL_PUBLISHER_DEFAULT_PORT
+                        + " can only be used if ssl enable.");
+            }
+        }
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_PORT, port);
 
         //to is a dynamic variable, if that option is not exist,
         // check whether default value for the 'to' is given in the configurations.
@@ -422,7 +473,6 @@ public class EmailSink extends Sink {
             optionTo = optionHolder.validateAndGetOption(EmailConstants.TO);
         }
 
-
         //subject is a dynamic variable, if that option is not exist,
         // check whether default value for the subject is given in the configurations.
         if (!optionHolder.isOptionExists(EmailConstants.SUBJECT)) {
@@ -437,37 +487,32 @@ public class EmailSink extends Sink {
             optionSubject = optionHolder.validateAndGetOption(EmailConstants.SUBJECT);
         }
 
-        //todo put cc and bcc as dynamic
-
-        String cc = optionHolder.validateAndGetStaticValue(EmailConstants.CC,
-                configReader.readConfig(EmailConstants.CC, EmailConstants.EMPTY_STRING));
-        if (!cc.isEmpty()) {
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+        //cc is a dynamic variable, if that option is not exist,
+        // check whether default value for the 'cc' is given in the configurations.
+        if (!optionHolder.isOptionExists(EmailConstants.CC)) {
+            String  cc = configReader.readConfig(EmailConstants.CC, EmailConstants.EMPTY_STRING);
+            if (!cc.isEmpty()) {
+                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+            }
+        } else {
+            optionCc = optionHolder.validateAndGetOption(EmailConstants.CC);
         }
 
-
-        String bcc = optionHolder.validateAndGetStaticValue(EmailConstants.BCC,
-                configReader.readConfig(EmailConstants.BCC, EmailConstants.EMPTY_STRING));
-        if (!bcc.isEmpty()) {
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+        //bcc is a dynamic variable, if that option is not exist,
+        // check whether default value for the 'bcc' is given in the configurations.
+        if (!optionHolder.isOptionExists(EmailConstants.BCC)) {
+            String  bcc = configReader.readConfig(EmailConstants.BCC, EmailConstants.EMPTY_STRING);
+            if (!bcc.isEmpty()) {
+                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+            }
+        } else {
+            optionBcc = optionHolder.validateAndGetOption(EmailConstants.BCC);
         }
-
+        
         String contentType = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                         EmailConstants.MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE));
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
-    }
-
-    /**
-     * Get the server system properties
-     */
-    public void getServerSystemParameters() {
-        Map<String, String> map = configReader.getAllConfigs();
-        for (Map.Entry<String, String> parameter : map.entrySet()) {
-            if (parameter.getKey().startsWith("mail.smtp")) {
-                emailProperties.put(parameter.getKey(), parameter.getValue());
-            }
-        }
     }
 
     @Override public void disconnect() {
@@ -480,7 +525,8 @@ public class EmailSink extends Sink {
 
     @Override
     public String[] getSupportedDynamicOptions() {
-        return new String[]{EmailConstants.SUBJECT, EmailConstants.TO};
+        return new String[]{EmailConstants.SUBJECT, EmailConstants.TO,
+        EmailConstants.CC, EmailConstants.BCC};
     }
 
 

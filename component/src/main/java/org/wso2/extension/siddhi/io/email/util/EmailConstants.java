@@ -28,21 +28,24 @@ public class EmailConstants {
     private EmailConstants(){};
 
     public static final String MAIL_PUBLISHER_USERNAME = "username";
+    public static final String MAIL_PUBLISHER_ADDRESS  = "address";
     public static final String MAIL_PUBLISHER_PASSWORD = "password";
     public static final String MAIL_PUBLISHER_HOST_NAME = "host";
     public static final String MAIL_PUBLISHER_SSL_ENABLE = "ssl.enable";
+    public static final String MAIL_PUBLISHER_PORT = "port";
     public static final String MAIL_PUBLISHER_AUTH = "auth";
     public static final String MAIL_PUBLISHER_CONTENT_TYPE = "content.type";
     public static final String SUBJECT = "subject";
     public static final String TO = "to";
     public static final String BCC = "bcc";
-    public static final String CC = "tcc";
+    public static final String CC = "cc";
 
     /**
      * Default values for the email sink configurations.
      */
     public static final String MAIL_PUBLISHER_DEFAULT_HOST = "smtp.gmail.com";
     public static final String MAIL_PUBLISHER_DEFAULT_SSL_ENABLE = "true";
+    public static final String MAIL_PUBLISHER_DEFAULT_PORT = "465";
     public static final String MAIL_PUBLISHER_DEFAULT_AUTH = "true";
     public static final String MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE = "text/plain";
 
@@ -51,9 +54,11 @@ public class EmailConstants {
      */
     public static final String TRANSPORT_MAIL_PUBLISHER_USERNAME = "username";
     public static final String TRANSPORT_MAIL_PUBLISHER_PASSWORD = "password";
-    public static final String TRANSPORT_MAIL_PUBLISHER_HOST_NAME = "hostName";
-    public static final String TRANSPORT_MAIL_PUBLISHER_SSL_ENABLE = "smtp.ssl.enable";
-    public static final String TRANSPORT_MAIL_PUBLISHER_AUTH_ENABLE = "smtp.auth.enable";
+    public static final String TRANSPORT_MAIL_PUBLISHER_HOST_NAME = "mail.smtp.host";
+    public static final String TRANSPORT_MAIL_PUBLISHER_SSL_ENABLE = "mail.smtp.ssl.enable";
+    public static final String TRANSPORT_MAIL_PUBLISHER_AUTH_ENABLE = "mail.smtp.auth";
+    public static final String TRANSPORT_MAIL_PUBLISHER_PORT = "mail.smtp.port";
+    public static final String TRANSPORT_MAIL_HEADER_FROM = "From";
     public static final String TRANSPORT_MAIL_HEADER_TO = "To";
     public static final String TRANSPORT_MAIL_HEADER_CC = "Cc";
     public static final String TRANSPORT_MAIL_HEADER_BCC = "Bcc";
@@ -67,6 +72,7 @@ public class EmailConstants {
     public static final String EMAIL_RECEIVER_PASSWORD = "password";
     public static final String EMAIL_RECEIVER_HOST = "host";
     public static final String EMAIL_RECEIVER_SSL_ENABLE = "ssl.enable";
+    public static final String EMAIL_RECEIVER_PORT = "port";
     public static final String POLLING_INTERVAL = "polling.interval";
     public static final String EMAIL_RECEIVER_CONTENT_TYPE = "content.type";
     public static final String ACTION_AFTER_PROCESSED = "action.after.processed";
@@ -75,7 +81,16 @@ public class EmailConstants {
     public static final String MOVE_TO_FOLDER = "move.to.folder";
     public static final String EMAIL_SEARCH_TERM = "search.term";
 
-
+    /**
+     * Default values for the email source configurations.
+     */
+    public static final String EMAIL_RECEIVER_DEFAULT_STORE = "imap";
+    public static final String EMAIL_RECEIVER_DEFAULT_PORT = "993";
+    public static final String EMAIL_RECEIVER_DEFAULT_SSL_ENABLE = "true";
+    public static final String DEFAULT_FOLDER = "INBOX";
+    public static final String DEFAULT_POLLING_INTERVAL = "600";
+    public static final String EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE = "text/plain";
+    public static final String DEFAULT_AUTO_ACKNOWLEDGE = "false";
 
     /**
      * Required carbon transport properties to receive the email.
@@ -92,19 +107,8 @@ public class EmailConstants {
     public static final String TRANSPORT_MAIL_SEARCH_TERM = "searchTerm";
     public static final String TRANSPORT_MAIL_RECEIVER_CONTENT_TYPE = "contentType";
 
-
     /**
-     * Default values for the email source configurations.
-     */
-    public static final String EMAIL_RECEIVER_DEFAULT_STORE = "imap";
-    public static final String EMAIL_RECEIVER_DEFAULT_SSL_ENABLE = "true";
-    public static final String DEFAULT_FOLDER = "INBOX";
-    public static final String DEFAULT_POLLING_INTERVAL = "600";
-    public static final String EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE = "text/plain";
-    public static final String DEFAULT_AUTO_ACKNOWLEDGE = "false";
-
-    /**
-     * Represent empty string
+     * Represent empty string.
      */
     public static final String EMPTY_STRING = "";
 
@@ -127,7 +131,10 @@ public class EmailConstants {
         MOVE, SEEN, DELETE, FLAGGED, ANSWERED,
     }
 
-    public enum SEARCH_TERM_KEYS {
+    /**
+     * valid keys for search term if store type is imap.
+     */
+    public enum SearchTermKeys {
         BCC, CC, SUBJECT, TO, FROM,
     }
 }

@@ -10,7 +10,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
 import org.wso2.siddhi.core.SiddhiAppRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.event.Event;
@@ -70,17 +69,7 @@ public class EmailSourceImapTestCase {
         //create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
-        // the port (3993) is used by the greenmail server to create ssl connection
-        // which is not the standard port '993'.
-        // Therefore, it has to be given as a system parameter.
-        Map<String, String> masterConfigs = new HashMap<>();
-        masterConfigs.put("source.email.mail.imap.port", "3993");
-
         SiddhiManager siddhiManager = new SiddhiManager();
-        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
-        inMemoryConfigManager.generateConfigReader("source", "email");
-        siddhiManager.setConfigManager(inMemoryConfigManager);
-
         String streams = "" + "@App:name('TestSiddhiApp')"
                 + "@source(type='email'," +  "@map(type='xml'),"
                 + "username='" + USERNAME + "',"
@@ -89,6 +78,7 @@ public class EmailSourceImapTestCase {
                 + "host = '" + LOCALHOST + "',"
                 + "folder = 'INBOX',"
                 + "ssl.enable = 'true' ,"
+                + "port = '3993' ,"
                 + "polling.interval = '5' ,"
                 + "search.term = 'Subject: Test, from:someone' ,"
                 + "content.type = 'text/plain',"
@@ -165,7 +155,7 @@ public class EmailSourceImapTestCase {
         masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.content.type", "text/plain");
         masterConfigs.put("source.email.ssl.enable", "true");
-        masterConfigs.put("source.email.mail.imap.port", "3993");
+        masterConfigs.put("source.email.port", "3993");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -237,12 +227,8 @@ public class EmailSourceImapTestCase {
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
-
-        // the port (3993) is used by the greenmail server to create ssl connection
-        // which is not the standard port '993'.
-        // Therefore, it has to be given as a system parameter.
         Map<String, String> masterConfigs = new HashMap<>();
-        masterConfigs.put("source.email.mail.imap.port", "3993");
+        masterConfigs.put("source.email.port", "3993");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -253,7 +239,8 @@ public class EmailSourceImapTestCase {
                 + "@source(type='email', @map(type='xml'), "
                 + "username= '" + USERNAME + "',"
                 + "password = '" + PASSWORD + "',"
-                + "store = 'smtp')"
+                + "store = 'smtp',"
+                + "port = '3993')"
                 + "define stream FooStream (name string, age int, country string); "
                 + "define stream BarStream (name string, age int, country string); ";
 
@@ -289,7 +276,6 @@ public class EmailSourceImapTestCase {
         masterConfigs.put("source.email.action.after.processed", "SEEN");
         masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.content.type", "text/plain");
-        //system parameter
         masterConfigs.put("source.email.mail.imap.port", "3993");
 
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -359,27 +345,20 @@ public class EmailSourceImapTestCase {
 
 
     @Test(description = "Test scenario: Configure email event receiver with invalid host")
-    public void siddhiEmailSourceTest5() throws MessagingException, UserException, InterruptedException {
+    public void siddhiEmailSourceTest5() throws UserException, InterruptedException {
 
         log.info("Test scenario: Configure email event receiver with invalid host");
 
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
-
-        Map<String, String> masterConfigs = new HashMap<>();
-        //system parameter
-        masterConfigs.put("source.email.mail.imap.port", "3143");
-
         SiddhiManager siddhiManager = new SiddhiManager();
-        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
-        inMemoryConfigManager.generateConfigReader("source", "email");
-        siddhiManager.setConfigManager(inMemoryConfigManager);
         String streams = "" + "@App:name('TestSiddhiApp')"
                 + "@source(type='email', @map(type='xml'), "
                 + "username= '" + USERNAME + "',"
                 + "password = '" + PASSWORD + "',"
                 + "store = 'imap',"
+                + "port = '3993',"
                 + "host = 'pop3.localhost.com',"
                 + "ssl.enable = 'false')"
                 + "define stream FooStream (name string, age int, country string); "
@@ -395,12 +374,12 @@ public class EmailSourceImapTestCase {
 
         try {
             siddhiAppRuntime.start();
-        } catch (EmailSourceAdaptorRuntimeException e) {
+        } catch (Exception e) {
             exception = e.getMessage();
+            Assert.assertTrue(exception.contains("Error is encountered while connecting the Email Source"),
+                    "Since pop3.localhost.com is a invalid host, it refuse to connect.");
+            siddhiAppRuntime.shutdown();
         }
-
-        Assert.assertTrue(exception.contains("Error is encountered while connecting the Email Source"),
-                "Since pop3.localhost.com is a invalid host, it refuse to connect.");
     }
 
     private void deliverMassage(String event , GreenMailUser user) throws MessagingException {

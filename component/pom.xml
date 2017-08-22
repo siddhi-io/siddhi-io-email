@@ -65,6 +65,10 @@
             <artifactId>siddhi-query-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
@@ -79,19 +83,7 @@
             <artifactId>greenmail</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
@@ -117,13 +109,11 @@
                         <!-- check and remove-->
                         <Private-Package>
                             org.wso2.carbon.transport.email.*,
-                            org.apache.commons.pool2.*,
                             org.wso2.extension.siddhi.io.email.internal.*
-                            org.wso2.carbon.connector.framework.ConnectorManager,
                             org.wso2.carbon.connector.framework.server.internal.*,
-                            org.wso2.carbon.connector.framework.server.polling.*,
-                            org.apache.commons.vfs2.*,
-                            org.quartz.*;
+                            org.wso2.carbon.messaging.*,
+                            javax.mail.*;
+                            com.sun.mail*;
                         </Private-Package>
                         <Export-Package>
                             org.wso2.extension.siddhi.io.email.*
@@ -132,7 +122,8 @@
                             *;resolution:=optional
                         </Import-Package>
                         <Include-Resource>
-                            META-INF=target/classes/META-INF
+                            {maven-resources},
+                            META-INF=target/classes/META-INF,
                         </Include-Resource>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
