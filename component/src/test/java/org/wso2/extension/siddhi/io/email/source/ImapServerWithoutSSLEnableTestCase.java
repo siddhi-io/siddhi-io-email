@@ -54,9 +54,9 @@ public class ImapServerWithoutSSLEnableTestCase {
     private static final String PASSWORD = "password";
     private static final String USERNAME = "abc";
     private static final String ADDRESS = "abc@localhost";
-    private static final String EMAIL_FROM = "someone@localhost.com";
+    private static final String EMAIL_FROM = "someone@localhost";
     private static final String EMAIL_SUBJECT = "Test E-Mail";
-    private static final String LOCALHOST = "localhost.com";
+    private static final String LOCALHOST = "localhost";
     private static final String STORE = "imap";
     private int waitTime = 500;
     private int timeout = 30000;

@@ -28,8 +28,8 @@ public class EmailSinkTestCase {
     private static final String PASSWORD = "carbon123";
     private static final String USERNAME = "carbon";
     private static final String ADDRESS = "carbon@localhost";
-    private static final String TO = "someone@localhost.com";
-    private static final String HOST = "localhost.com";
+    private static final String TO = "someone@localhost";
+    private static final String HOST = "localhost";
     private GreenMail mailServer;
 
     @BeforeClass
@@ -51,11 +51,11 @@ public class EmailSinkTestCase {
 
         Map<String, String> masterConfigs = new HashMap<>();
         masterConfigs.put("sink.email.port", "3025");
-        masterConfigs.put("sink.email.host", "localhost.com");
+        masterConfigs.put("sink.email.host", "localhost");
         masterConfigs.put("sink.email.ssl.enable", "false");
         masterConfigs.put("sink.email.auth", "false");
-        masterConfigs.put("sink.email.bcc", "bcc@localhost.com");
-        masterConfigs.put("sink.email.cc", "cc@localhost.com");
+        masterConfigs.put("sink.email.bcc", "bcc@localhost");
+        masterConfigs.put("sink.email.cc", "cc@localhost");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);

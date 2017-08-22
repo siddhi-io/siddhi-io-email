@@ -63,9 +63,9 @@ public class EmailSourceActionAfterProcessedTestCase {
     private static final String PASSWORD = "analytics123";
     private static final String USERNAME = "analytics";
     private static final String ADDRESS = "analytics@localhost";
-    private static final String EMAIL_FROM = "someone@localhost.com";
+    private static final String EMAIL_FROM = "someone@localhost";
     private static final String EMAIL_SUBJECT = "Test E-Mail";
-    private static final String LOCALHOST = "localhost.com";
+    private static final String LOCALHOST = "localhost";
     private int waitTime = 500;
     private int timeout = 5000;
     AtomicInteger eventCount;
