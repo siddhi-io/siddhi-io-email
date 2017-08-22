@@ -1,6 +1,15 @@
 # Compiled class file
 *.class
 
+target
+.classpath
+.settings
+.project
+*.iml
+*.iws
+*.ipr
+.idea
+*.class
 # Log file
 *.log
 
@@ -18,5 +27,24 @@
 *.tar.gz
 *.rar
 
+# Package Files #
+*.war
+*.ear
+
+# ignore Intellij-IDEA files
+*.iml
+*.ipr
+*.iws
+*.classpath
+*.settings
+*.project
+*.idea
+.DS_Store
+
+# ignore logs
+
+# ignore target directories
+target/
+*.*~
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
