@@ -19,8 +19,8 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="JMS-IO-Test-Suite">
-    <test name="jms-tests" enabled="true" preserve-order="true">
+<suite name="Email-IO-Test-Suite">
+    <test name="email-tests" enabled="true" preserve-order="true">
         <classes>
             <class name="org.wso2.extension.siddhi.io.email.sink.EmailSinkTestCase"/>
             <class name="org.wso2.extension.siddhi.io.email.source.EmailSourceImapTestCase"/>

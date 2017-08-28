@@ -116,16 +116,6 @@
     </dependencyManagement>
 
     <build>
-        <!-- add jacoco-->
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.wso2.carbon.maven</groupId>
-                    <artifactId>carbon-feature-plugin</artifactId>
-                    <version>${carbon.feature.plugin.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -148,12 +138,59 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*TestCase.java</include>
+                        </includes>
+                        <reportFormat>brief</reportFormat>
+                        <useFile>false</useFile>
+                        <forkMode>once</forkMode>
+                        <argLine>${surefireArgLine} -ea -Xmx512m</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.maven.version}</version>
+                    <executions>
+                        <execution>
+                            <id>jacoco-initialize</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${basedir}/target/coverage-reports/jacoco.exec</destFile>
+                                <propertyName>surefireArgLine</propertyName>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>jacoco-site</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${basedir}/target/coverage-reports/jacoco.exec</dataFile>
+                                <outputDirectory>${basedir}/target/coverage-reports/</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     <properties>
-        <siddhi.version>4.0.0-M44</siddhi.version>
+        <siddhi.version>4.0.0-M52</siddhi.version>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
         <!--<carbon.feature.plugin.version>3.0.0</carbon.feature.plugin.version>-->
+        <jacoco.maven.version>0.7.8</jacoco.maven.version>
         <carbon.transport.version>5.0.0</carbon.transport.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <text.mapper.version>4.0.0-M7</text.mapper.version>
