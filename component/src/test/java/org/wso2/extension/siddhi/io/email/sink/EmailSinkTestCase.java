@@ -79,7 +79,6 @@ public class EmailSinkTestCase {
 
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         InputHandler stockStream = siddhiAppRuntime.getInputHandler("FooStream");
-
         siddhiAppRuntime.start();
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
@@ -92,7 +91,5 @@ public class EmailSinkTestCase {
                 + " There are 3 recipients. Therefore total number of messages are 6.");
         MimeMessage m = messages[0];
         assertEquals(m.getSubject(), "SP-WSO2");
-
     }
-
 }

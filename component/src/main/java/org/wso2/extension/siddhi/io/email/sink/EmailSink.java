@@ -515,13 +515,9 @@ public class EmailSink extends Sink {
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
     }
 
-    @Override public void disconnect() {
+    @Override public void disconnect() {}
 
-    }
-
-    @Override public void destroy() {
-
-    }
+    @Override public void destroy() {}
 
     @Override
     public String[] getSupportedDynamicOptions() {
@@ -529,20 +525,16 @@ public class EmailSink extends Sink {
         EmailConstants.CC, EmailConstants.BCC};
     }
 
-
     @Override
     public Map<String, Object> currentState() {
         return null;
     }
 
     @Override
-    public void restoreState(Map<String, Object> map) {
-
-    }
+    public void restoreState(Map<String, Object> map) {}
 
     @Override
     public Class[] getSupportedInputEventClasses() {
         return new Class[]{String.class};
     }
-
 }

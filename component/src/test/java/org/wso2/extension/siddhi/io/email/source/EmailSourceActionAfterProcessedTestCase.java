@@ -23,7 +23,6 @@ import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -68,7 +67,7 @@ public class EmailSourceActionAfterProcessedTestCase {
     private static final String LOCALHOST = "localhost";
     private int waitTime = 500;
     private int timeout = 5000;
-    AtomicInteger eventCount;
+    private AtomicInteger eventCount;
     private GreenMail mailServer;
 
     @BeforeMethod public void setUp() {
@@ -84,12 +83,9 @@ public class EmailSourceActionAfterProcessedTestCase {
     @Test(description = "Test scenario: Configure siddhi to email event receiver when action.after.process is DELETE")
     public void siddhiEmailSourceActionAfterProcessedTest1() throws IOException, MessagingException,
             UserException, InterruptedException {
-
         log.info("Test1: email event receiver when action.after.process is DELETE.");
-
         //create a local mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
         Map<String, String> masterConfigs = new HashMap<>();
 
         masterConfigs.put("source.email.search.term", "subject:Test");
@@ -114,12 +110,10 @@ public class EmailSourceActionAfterProcessedTestCase {
                 + "action.after.processed='DELETE') "
                 + "define stream FooStream (name string, age int, country string); "
                 + "define stream BarStream (name string, age int, country string); ";
-
         String query = "" +
                 "from FooStream " +
                 "select * " +
                 "insert into BarStream; ";
-
         String event =
                 "<events>"
                         + "<event>"
@@ -145,7 +139,6 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
@@ -155,7 +148,6 @@ public class EmailSourceActionAfterProcessedTestCase {
 
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -169,7 +161,6 @@ public class EmailSourceActionAfterProcessedTestCase {
                 + " Therefore, zero messages are found in 'INBOX'.");
         Thread.sleep(500);
         siddhiAppRuntime.shutdown();
-
     }
 
 
@@ -179,8 +170,8 @@ public class EmailSourceActionAfterProcessedTestCase {
         log.info("Test 3: Email event receiver when action.after.process is FLAGGED");
         //create a local mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
         Map<String, String> masterConfigs = new HashMap<>();
+
         masterConfigs.put("source.email.search.term", "subject:Test");
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
@@ -231,7 +222,6 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
@@ -396,7 +386,6 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "<country>USA</country>"
                         + "</event>"
                         + "</events>";
-
         deliverMassage(event, user);
 
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
@@ -405,7 +394,6 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
@@ -415,7 +403,6 @@ public class EmailSourceActionAfterProcessedTestCase {
 
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -427,10 +414,8 @@ public class EmailSourceActionAfterProcessedTestCase {
         Message[] messagesAfterFlagged = getMessage("INBOX");
         Assert.assertEquals(messagesAfterFlagged.length, 1);
         Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.ANSWERED), "message is marked as SEEN.");
-
         Thread.sleep(500);
         siddhiAppRuntime.shutdown();
-
     }
 
     @Test(description = "Configure siddhi to email event receiver when action.after.process is unsupported value")
@@ -552,14 +537,12 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
                     eventCount.incrementAndGet();
                     received.add(event.getData(0).toString());
                 }
-
             }
         });
 
@@ -573,14 +556,11 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         Message[] messagesInInboxAfterMove = getMessage("INBOX");
         Assert.assertEquals(messagesInInboxAfterMove.length, 0, "message is moved to another folder");
-
         Message[] messagesInProcessedMailFolder = getMessage("ProcessedMail");
         Assert.assertEquals(messagesInProcessedMailFolder.length, 2,
                 "message is moved to another folder");
-
         Thread.sleep(500);
         siddhiAppRuntime.shutdown();
-
     }
 
 
@@ -593,7 +573,6 @@ public class EmailSourceActionAfterProcessedTestCase {
         log.info("Test 4: email event receiver when action.after.process is MOVE.");
         //create a local mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
 
         Map<String, String> masterConfigs = new HashMap<>();
         masterConfigs.put("source.email.search.term", "subject:Test");
@@ -649,7 +628,6 @@ public class EmailSourceActionAfterProcessedTestCase {
         Thread.sleep(1000);
         Message[] messages = getMessage("INBOX");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
-
         Assert.assertTrue(!isFolderExist("X-non-exist"));
 
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
@@ -658,17 +636,14 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
                     eventCount.incrementAndGet();
                     received.add(event.getData(0).toString());
                 }
-
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -694,10 +669,6 @@ public class EmailSourceActionAfterProcessedTestCase {
             throws IOException, MessagingException, UserException, InterruptedException {
 
         log.info("Test 4: email event receiver when action.after.process is MOVE.");
-        final TestAppender appender = new TestAppender();
-        final Logger log = Logger.getRootLogger();
-
-
         //create a local mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
         Map<String, String> masterConfigs = new HashMap<>();
@@ -756,14 +727,92 @@ public class EmailSourceActionAfterProcessedTestCase {
         List<String> expected = new ArrayList<>(2);
 
         siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
-
             @Override public void receive(Event[] events) {
                 EventPrinter.print(events);
                 for (Event event : events) {
                     eventCount.incrementAndGet();
                     received.add(event.getData(0).toString());
                 }
+            }
+        });
+        expected.add("John");
+        expected.add("Mike");
 
+        SiddhiTestHelper.waitForEvents(waitTime, 2, eventCount, timeout);
+        Assert.assertEquals(eventCount.intValue(), 2, "Event count should be equal to two.");
+        Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
+                + "Mike respectively");
+        Message[] messagesInInboxAfterMove = getMessage("INBOX");
+        Assert.assertEquals(messagesInInboxAfterMove.length, 2, "message is moved to another folder");
+        Thread.sleep(500);
+        siddhiAppRuntime.shutdown();
+    }
+
+    @Test(description = "Configure siddhi to email event receiver when action.after.process is SEEN")
+    public void siddhiEmailSourceActionAfterProcessedTest9()
+            throws IOException, MessagingException, UserException, InterruptedException {
+
+        log.info("Test 3: email event receiver when action.after.process is SEEN.");
+        //create a local mail server
+        GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.search.term", "subject:Test");
+        masterConfigs.put("source.email.folder", "INBOX");
+        masterConfigs.put("source.email.polling.interval", "5");
+        masterConfigs.put("source.email.content.type", "text/plain");
+        masterConfigs.put("source.email.port", "3143");
+
+        SiddhiManager siddhiManager = new SiddhiManager();
+        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
+        inMemoryConfigManager.generateConfigReader("source", "email");
+        siddhiManager.setConfigManager(inMemoryConfigManager);
+
+        String streams = "" +
+                "@App:name('TestSiddhiApp')"
+                + "@source(type='email',@map(type='xml'), "
+                + "username='" + USERNAME + "',"
+                + "password='" + PASSWORD + "',"
+                + "host = '" + LOCALHOST + "',"
+                + "store ='imap',"
+                + "ssl.enable = 'false',"
+                + "action.after.processed='SEEN') "
+                + "define stream FooStream (name string, age int, country string); "
+                + "define stream BarStream (name string, age int, country string); ";
+
+        String query = "" +
+                "from FooStream " +
+                "select * " +
+                "insert into BarStream; ";
+
+        String event =
+                "<events>"
+                        + "<event>"
+                        + "<name>John</name>"
+                        + "<age>100</age>"
+                        + "<country>AUS</country>"
+                        + "</event>"
+                        + "<event>"
+                        + "<name>Mike</name>"
+                        + "<age>20</age>"
+                        + "<country>USA</country>"
+                        + "</event>"
+                        + "</events>";
+
+        deliverMassage(event, user);
+
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        siddhiAppRuntime.start();
+        List<String> received = new ArrayList<>(2);
+        List<String> expected = new ArrayList<>(2);
+
+        siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
+            @Override public void receive(Event[] events) {
+                EventPrinter.print(events);
+                for (Event event : events) {
+                    eventCount.incrementAndGet();
+                    received.add(event.getData(0).toString());
+                }
             }
         });
 
@@ -774,14 +823,15 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(eventCount.intValue(), 2, "Event count should be equal to two.");
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
-        Message[] messagesInInboxAfterMove = getMessage("INBOX");
-        Assert.assertEquals(messagesInInboxAfterMove.length, 2, "message is moved to another folder");
+
+        Message[] messagesAfterFlagged = getMessage("INBOX");
+        Assert.assertEquals(messagesAfterFlagged.length, 1);
+        Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.SEEN), "message is marked as SEEN.");
 
         Thread.sleep(500);
         siddhiAppRuntime.shutdown();
 
     }
-
 
     // create an e-mail message using javax.mail ..
     // use greenmail to store the message
@@ -831,8 +881,8 @@ public class EmailSourceActionAfterProcessedTestCase {
         return false;
     }
 
-    private class TestAppender extends AppenderSkeleton {
-        private final List<LoggingEvent> log = new ArrayList<>();
+    class TestAppender extends AppenderSkeleton {
+        private final List<LoggingEvent> log = new ArrayList<LoggingEvent>();
 
         @Override
         public boolean requiresLayout() {
@@ -848,8 +898,9 @@ public class EmailSourceActionAfterProcessedTestCase {
         public void close() {
         }
 
-        List<LoggingEvent> getLog() {
+        public List<LoggingEvent> getLog() {
             return new ArrayList<LoggingEvent>(log);
         }
+
     }
 }

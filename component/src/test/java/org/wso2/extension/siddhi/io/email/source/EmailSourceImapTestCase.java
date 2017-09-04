@@ -1,3 +1,22 @@
+/*
+ *  Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.extension.siddhi.io.email.source;
 
 import com.icegreen.greenmail.user.GreenMailUser;
@@ -31,7 +50,6 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
 /**
  * Class implementing Email source imap test cases.
  */
@@ -45,7 +63,7 @@ public class EmailSourceImapTestCase {
     private static final String LOCALHOST = "localhost";
     private int waitTime = 500;
     private int timeout = 5000;
-    AtomicInteger eventCount;
+    private AtomicInteger eventCount;
     private GreenMail mailServer;
 
     @BeforeMethod public void setUp() {
@@ -65,11 +83,10 @@ public class EmailSourceImapTestCase {
     public void siddhiEmailSourceTest1() throws MessagingException, UserException, InterruptedException {
 
         log.info("Test scenario: All properties set in siddhi query correctly.");
-
         //create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
         SiddhiManager siddhiManager = new SiddhiManager();
+
         String streams = "" + "@App:name('TestSiddhiApp')"
                 + "@source(type='email'," +  "@map(type='xml'),"
                 + "username='" + USERNAME + "',"
@@ -125,7 +142,6 @@ public class EmailSourceImapTestCase {
 
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -141,11 +157,10 @@ public class EmailSourceImapTestCase {
     public void siddhiEmailSourceTest2() throws MessagingException, UserException, InterruptedException {
 
         log.info("Test scenario: Configure email event receiver only using mandatory params.");
-
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
         Map<String, String> masterConfigs = new HashMap<>();
+
         masterConfigs.put("source.mail.store", "imap");
         masterConfigs.put("source.email.host", LOCALHOST);
         masterConfigs.put("source.email.folder", "INBOX");
@@ -186,10 +201,8 @@ public class EmailSourceImapTestCase {
                         + "<country>USA</country>"
                         + "</event>"
                + "</events>";
-
         deliverMassage(event, user);
         Thread.sleep(500);
-
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -207,7 +220,6 @@ public class EmailSourceImapTestCase {
 
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -223,10 +235,8 @@ public class EmailSourceImapTestCase {
     public void siddhiEmailSourceTest3() throws MessagingException, UserException, InterruptedException {
 
         log.info("Test scenario: Configure siddhi to receive events from mails via smtp.");
-
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-
         Map<String, String> masterConfigs = new HashMap<>();
         masterConfigs.put("source.email.port", "3993");
 
@@ -256,7 +266,6 @@ public class EmailSourceImapTestCase {
         } catch (SiddhiAppCreationException e) {
             exception = e.getMessage();
         }
-
         Assert.assertTrue(exception.contains("store could be either imap or pop3. But found: smtp."),
                 "pop3 or imap stores are used by email source to receive emails.");
     }
@@ -265,7 +274,6 @@ public class EmailSourceImapTestCase {
     public void siddhiEmailSourceTest4() throws MessagingException, UserException, InterruptedException {
 
         log.info("Test scenario: imap server with SSL.");
-
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
@@ -331,7 +339,6 @@ public class EmailSourceImapTestCase {
 
             }
         });
-
         expected.add("John");
         expected.add("Mike");
 
@@ -348,7 +355,6 @@ public class EmailSourceImapTestCase {
     public void siddhiEmailSourceTest5() throws UserException, InterruptedException {
 
         log.info("Test scenario: Configure email event receiver with invalid host");
-
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
@@ -371,7 +377,6 @@ public class EmailSourceImapTestCase {
 
         String exception = null;
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
-
         try {
             siddhiAppRuntime.start();
         } catch (Exception e) {
@@ -390,6 +395,4 @@ public class EmailSourceImapTestCase {
         message.setText(event);
         user.deliver(message);
     }
-
-
 }
