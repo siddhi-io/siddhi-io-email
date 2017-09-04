@@ -1,27 +1,36 @@
-# Ignore everything in this directory
-target
-.classpath
-.settings
-.project
+# Compiled class file
 *.class
 
-# Ignore Package Files
-*.war
-*.ear
-
-# Ignore Intellij-IDEA files
-*.iml
-*.ipr
-*.iws
-*.classpath
-*.settings
-*.project
-*.idea
-.DS_Store
-
-# Ignore logs
+# Log file
 *.log
 
-# Ignore target directories
+# BlueJ files
+*.ctxt
+
 target/
-*.*~
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+#idea files
+.idea/
+*.iml
+
+.classpath
+.project
+.settings/
+.cache-tests
+.cache-main
+
+site/
