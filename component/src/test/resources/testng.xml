@@ -24,6 +24,9 @@
         <classes>
             <class name="org.wso2.extension.siddhi.io.email.sink.EmailSinkTestCase"/>
             <class name="org.wso2.extension.siddhi.io.email.source.EmailSourceImapTestCase"/>
+            <class name="org.wso2.extension.siddhi.io.email.source.EmailSourceActionAfterProcessedTestCase"/>
+            <class name="org.wso2.extension.siddhi.io.email.source.MailServerSslConnectionTestCase"/>
+            <class name="org.wso2.extension.siddhi.io.email.source.SearchTermTestCase"/>
         </classes>
     </test>
 </suite>

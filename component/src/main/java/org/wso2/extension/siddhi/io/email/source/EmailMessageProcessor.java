@@ -91,18 +91,13 @@ public class EmailMessageProcessor implements CarbonMessageProcessor {
         return values;
     }
 
-
     @Override public void setTransportSender(TransportSender transportSender) {
-
     }
 
     @Override public void setClientConnector(ClientConnector clientConnector) {
-
     }
-
 
     @Override public String getId() {
         return "email-message-processor";
     }
-
 }

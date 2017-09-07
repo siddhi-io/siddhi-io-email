@@ -626,7 +626,6 @@ public class EmailSource extends Source {
     }
 
     @Override public void restoreState(Map<String, Object> map) {
-
     }
 
     @Override public Class[] getOutputEventClasses() {
@@ -676,7 +675,6 @@ public class EmailSource extends Source {
         String sslEnable = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_SSL_ENABLE, configReader
                 .readConfig(EmailConstants.EMAIL_RECEIVER_SSL_ENABLE,
                         EmailConstants.EMAIL_RECEIVER_DEFAULT_SSL_ENABLE));
-
         if (!(sslEnable.equalsIgnoreCase("true") || sslEnable.equalsIgnoreCase("false"))) {
             throw new SiddhiAppCreationException(
                     EmailConstants.STORE + "could be either 'true' " + "or 'false'. But found: " + sslEnable);
@@ -685,16 +683,15 @@ public class EmailSource extends Source {
 
         String port = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_PORT, configReader
                 .readConfig(EmailConstants.EMAIL_RECEIVER_PORT, EmailConstants.EMPTY_STRING));
-
         if (port.isEmpty()) {
-        if (sslEnable.equalsIgnoreCase("true") && store.equalsIgnoreCase("imap")) {
-                port = EmailConstants.EMAIL_RECEIVER_DEFAULT_PORT;
-        } else {
-                throw new SiddhiAppCreationException("Default value for the port can be only used if 'ssl.enable'"
-                        + " is 'true' and store type is 'imap' only.");
+                if (sslEnable.equalsIgnoreCase("true") && store.equalsIgnoreCase("imap")) {
+                        port = EmailConstants.EMAIL_RECEIVER_DEFAULT_PORT;
+                } else {
+                         throw new SiddhiAppCreationException(
+                                    "Default value for the port can be only used if 'ssl.enable'"
+                                            + " is 'true' and store type is 'imap' only.");
+                }
         }
-        }
-
         properties.put("mail." + store + ".port", port);
 
         String pollingInterval = optionHolder.validateAndGetStaticValue(EmailConstants.POLLING_INTERVAL,
@@ -705,9 +702,7 @@ public class EmailSource extends Source {
         //get a list of valid search term keys.
         List<String> validSearchTermKeys = Stream.of(EmailConstants.SearchTermKeys.values()).
                 map(EmailConstants.SearchTermKeys::name).collect(Collectors.toList());
-
         List<String> givenSearchtermkeys = new ArrayList<>();
-
         String searchTerm = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_SEARCH_TERM,
                 configReader.readConfig(EmailConstants.EMAIL_SEARCH_TERM, EmailConstants.EMPTY_STRING));
 
@@ -730,7 +725,6 @@ public class EmailSource extends Source {
                     }
                 }
             }
-
             //check given search term keys are valid.
             if (!validSearchTermKeys.containsAll(givenSearchtermkeys)) {
                 throw new SiddhiAppCreationException("Valid search term to search emails are" +
@@ -789,7 +783,7 @@ public class EmailSource extends Source {
         properties.put(EmailConstants.TRANSPORT_MAIL_MOVE_TO_FOLDER, moveToFolder);
 
         this.contentType = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_CONTENT_TYPE,
-                configReader.readConfig(EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE,
+                configReader.readConfig(EmailConstants.EMAIL_RECEIVER_CONTENT_TYPE,
                         EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE));
         if (!(contentType.equalsIgnoreCase(EmailConstants.TEXT_HTML) ||
                 contentType.equalsIgnoreCase(EmailConstants.TEXT_PLAIN))) {

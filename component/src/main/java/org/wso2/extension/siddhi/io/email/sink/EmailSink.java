@@ -516,11 +516,9 @@ public class EmailSink extends Sink {
     }
 
     @Override public void disconnect() {
-
     }
 
     @Override public void destroy() {
-
     }
 
     @Override
@@ -529,7 +527,6 @@ public class EmailSink extends Sink {
         EmailConstants.CC, EmailConstants.BCC};
     }
 
-
     @Override
     public Map<String, Object> currentState() {
         return null;
@@ -537,12 +534,10 @@ public class EmailSink extends Sink {
 
     @Override
     public void restoreState(Map<String, Object> map) {
-
     }
 
     @Override
     public Class[] getSupportedInputEventClasses() {
         return new Class[]{String.class};
     }
-
 }
