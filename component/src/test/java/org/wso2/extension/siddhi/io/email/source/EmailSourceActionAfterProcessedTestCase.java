@@ -22,8 +22,6 @@ import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -72,8 +70,6 @@ public class EmailSourceActionAfterProcessedTestCase {
 
     @BeforeMethod public void setUp() {
         eventCount = new AtomicInteger(0);
-        mailServer = new GreenMail(ServerSetupTest.IMAP);
-        mailServer.start();
     }
 
     @AfterMethod public void tearDown() {
@@ -85,14 +81,17 @@ public class EmailSourceActionAfterProcessedTestCase {
             UserException, InterruptedException {
         log.info("Test1: email event receiver when action.after.process is DELETE.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.POP3);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
-        Map<String, String> masterConfigs = new HashMap<>();
 
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.search.term", "subject:Test");
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
         masterConfigs.put("source.email.content.type", "text/plain");
-        masterConfigs.put("source.email.port", "3143");
+        masterConfigs.put("source.email.port", "3110");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -105,7 +104,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                 + "username='" + USERNAME + "',"
                 + "password='" + PASSWORD + "',"
                 + "host = '" + LOCALHOST + "',"
-                + "store ='imap',"
+                + "store ='pop3',"
                 + "ssl.enable = 'false',"
                 + "action.after.processed='DELETE') "
                 + "define stream FooStream (name string, age int, country string); "
@@ -130,7 +129,7 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         deliverMassage(event, user);
         Thread.sleep(500);
-        Message[] messages = getMessage("INBOX");
+        Message[] messages = getMessage("INBOX", "pop3", "3110");
         Assert.assertEquals(messages.length, 1, "One message is in the INBOX");
 
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
@@ -156,7 +155,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesAfterDelete = getMessage("INBOX");
+        Message[] messagesAfterDelete = getMessage("INBOX", "pop3", "3110");;
         Assert.assertEquals(messagesAfterDelete.length, 0, "Message has been deleted after processing."
                 + " Therefore, zero messages are found in 'INBOX'.");
         Thread.sleep(500);
@@ -169,9 +168,11 @@ public class EmailSourceActionAfterProcessedTestCase {
             UserException, InterruptedException {
         log.info("Test 3: Email event receiver when action.after.process is FLAGGED");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
         Map<String, String> masterConfigs = new HashMap<>();
-
+        masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.search.term", "subject:Test");
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
@@ -240,7 +241,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesAfterFlagged = getMessage("INBOX");
+        Message[] messagesAfterFlagged = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesAfterFlagged.length, 1);
         Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.FLAGGED), "message is marked as FLAGGED");
 
@@ -255,9 +256,12 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         log.info("Test 3: email event receiver when action.after.process is SEEN.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.search.term", "subject:Test");
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
@@ -327,7 +331,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesAfterFlagged = getMessage("INBOX");
+        Message[] messagesAfterFlagged = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesAfterFlagged.length, 1);
         Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.SEEN), "message is marked as SEEN.");
 
@@ -342,9 +346,12 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         log.info("Test 4: email event receiver when action.after.process is ANSWERED.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.folder.to.move", "");
         masterConfigs.put("source.email.search.term", "subject:Test");
         masterConfigs.put("source.email.folder", "INBOX");
         masterConfigs.put("source.email.polling.interval", "5");
@@ -411,7 +418,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesAfterFlagged = getMessage("INBOX");
+        Message[] messagesAfterFlagged = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesAfterFlagged.length, 1);
         Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.ANSWERED), "message is marked as SEEN.");
         Thread.sleep(500);
@@ -424,9 +431,16 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         log.info("Test 5: email event receiver when action.after.process is STAR.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.folder.to.move", "");
+        masterConfigs.put("source.email.search.term", "subject:Test");
+        masterConfigs.put("source.email.folder", "INBOX");
+        masterConfigs.put("source.email.polling.interval", "5");
+        masterConfigs.put("source.email.content.type", "text/plain");
         masterConfigs.put("source.email.port", "3143");
 
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -470,8 +484,10 @@ public class EmailSourceActionAfterProcessedTestCase {
     public void siddhiEmailSourceActionAfterProcessedTest6()
             throws IOException, MessagingException, UserException, InterruptedException {
 
-        log.info("Test 4: email event receiver when action.after.process is MOVE.");
+        log.info("Test 4: email event receiver when action.after.process is MOVE with existing folder.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
@@ -526,11 +542,12 @@ public class EmailSourceActionAfterProcessedTestCase {
         deliverMassage(event2, user);
 
         Thread.sleep(1000);
-        Message[] messages = getMessage("INBOX");
+        Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
 
-        createFolder("ProcessedMail");
-        Assert.assertTrue(isFolderExist("ProcessedMail"), "folder has been created.");
+        createFolder("ProcessedMail", "imap", "3143");
+        Assert.assertTrue(isFolderExist("ProcessedMail", "imap", "3143"),
+                "folder has been created.");
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
         List<String> received = new ArrayList<>(2);
@@ -554,9 +571,10 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesInInboxAfterMove = getMessage("INBOX");
+        Message[] messagesInInboxAfterMove = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesInInboxAfterMove.length, 0, "message is moved to another folder");
-        Message[] messagesInProcessedMailFolder = getMessage("ProcessedMail");
+        Message[] messagesInProcessedMailFolder = getMessage("ProcessedMail",
+                "imap", "3143");
         Assert.assertEquals(messagesInProcessedMailFolder.length, 2,
                 "message is moved to another folder");
         Thread.sleep(500);
@@ -570,8 +588,10 @@ public class EmailSourceActionAfterProcessedTestCase {
     public void siddhiEmailSourceActionAfterProcessedTest7()
             throws IOException, MessagingException, UserException, InterruptedException {
 
-        log.info("Test 4: email event receiver when action.after.process is MOVE.");
+        log.info("Test 4: email event receiver when action.after.process is MOVE with non existing folder.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
@@ -626,9 +646,9 @@ public class EmailSourceActionAfterProcessedTestCase {
         deliverMassage(event2, user);
 
         Thread.sleep(1000);
-        Message[] messages = getMessage("INBOX");
+        Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
-        Assert.assertTrue(!isFolderExist("X-non-exist"));
+        Assert.assertTrue(!isFolderExist("X-non-exist", "imap", "3143"));
 
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
@@ -652,10 +672,11 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesInInboxAfterMove = getMessage("INBOX");
+        Message[] messagesInInboxAfterMove = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesInInboxAfterMove.length, 0, "message is moved to another folder");
 
-        Message[] messagesInProcessedMailFolder = getMessage("X-non-exist");
+        Message[] messagesInProcessedMailFolder = getMessage("X-non-exist",
+                "imap", "3143");
         Assert.assertEquals(messagesInProcessedMailFolder.length, 2,
                 "message is moved to another folder");
         Thread.sleep(500);
@@ -670,6 +691,8 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         log.info("Test 4: email event receiver when action.after.process is MOVE.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
         Map<String, String> masterConfigs = new HashMap<>();
         masterConfigs.put("source.email.search.term", "subject:Test");
@@ -716,7 +739,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         deliverMassage(event1, user);
         deliverMassage(event2, user);
         Thread.sleep(1000);
-        Message[] messages = getMessage("INBOX");
+        Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
 
        // Assert.assertTrue(!isFolderExist("X-non-exist"));
@@ -742,7 +765,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(eventCount.intValue(), 2, "Event count should be equal to two.");
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
-        Message[] messagesInInboxAfterMove = getMessage("INBOX");
+        Message[] messagesInInboxAfterMove = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesInInboxAfterMove.length, 2, "message is moved to another folder");
         Thread.sleep(500);
         siddhiAppRuntime.shutdown();
@@ -754,6 +777,8 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         log.info("Test 3: email event receiver when action.after.process is SEEN.");
         //create a local mail server
+        mailServer = new GreenMail(ServerSetupTest.IMAP);
+        mailServer.start();
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
 
         Map<String, String> masterConfigs = new HashMap<>();
@@ -824,7 +849,7 @@ public class EmailSourceActionAfterProcessedTestCase {
         Assert.assertEquals(expected, received, " name parameter of received events are 'John' and"
                 + "Mike respectively");
 
-        Message[] messagesAfterFlagged = getMessage("INBOX");
+        Message[] messagesAfterFlagged = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messagesAfterFlagged.length, 1);
         Assert.assertTrue(messagesAfterFlagged[0].isSet(Flags.Flag.SEEN), "message is marked as SEEN.");
 
@@ -844,22 +869,24 @@ public class EmailSourceActionAfterProcessedTestCase {
         user.deliver(message);
     }
 
-    private Message[] getMessage(String folderName) throws MessagingException {
+    private Message[] getMessage(String folderName, String storeType, String port)
+            throws MessagingException {
         Properties props = new Properties();
-        props.put("mail.imap.port", "3143");
+        props.put("mail." + storeType + ".port", port);
         Session session = Session.getInstance(props);
-        Store store = session.getStore("imap");
+        Store store = session.getStore(storeType);
         store.connect(LOCALHOST, USERNAME, PASSWORD);
         Folder folder = store.getFolder(folderName);
         folder.open(Folder.READ_ONLY);
         return folder.getMessages();
     }
 
-    private void createFolder(String folderName) throws MessagingException {
+    private void createFolder(String folderName, String storeType, String port)
+            throws MessagingException {
         Properties props = new Properties();
-        props.put("mail.imap.port", "3143");
+        props.put("mail." + storeType + ".port", port);
         Session session = Session.getInstance(props);
-        Store store = session.getStore("imap");
+        Store store = session.getStore(storeType);
         store.connect(LOCALHOST, USERNAME, PASSWORD);
         Folder folder = store.getFolder(folderName);
         if (!folder.exists()) {
@@ -867,40 +894,18 @@ public class EmailSourceActionAfterProcessedTestCase {
         }
     }
 
-    private boolean isFolderExist(String folderName) throws MessagingException {
+    private boolean isFolderExist(String folderName, String storeType, String port)
+            throws MessagingException {
         Properties props = new Properties();
-        props.put("mail.imap.port", "3143");
+        props.put("mail." + storeType + ".port", port);
         Session session = Session.getInstance(props);
-        Store store = session.getStore("imap");
+        Store store = session.getStore(storeType);
         store.connect(LOCALHOST, USERNAME, PASSWORD);
         Folder folder = store.getFolder(folderName);
         if (folder.exists()) {
             return true;
         }
-
         return false;
     }
 
-    class TestAppender extends AppenderSkeleton {
-        private final List<LoggingEvent> log = new ArrayList<LoggingEvent>();
-
-        @Override
-        public boolean requiresLayout() {
-            return false;
-        }
-
-        @Override
-        protected void append(final LoggingEvent loggingEvent) {
-            log.add(loggingEvent);
-        }
-
-        @Override
-        public void close() {
-        }
-
-        public List<LoggingEvent> getLog() {
-            return new ArrayList<LoggingEvent>(log);
-        }
-
-    }
 }

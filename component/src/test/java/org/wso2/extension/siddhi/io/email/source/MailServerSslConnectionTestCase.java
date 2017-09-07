@@ -49,7 +49,10 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class EmailSourceSslConnectionTestCase {
+/**
+ * Class implementing to test the email source with and without SSL connection.
+ */
+public class MailServerSslConnectionTestCase {
     private static final Logger log = Logger.getLogger(EmailSourceImapTestCase.class);
     private static final String PASSWORD = "password";
     private static final String USERNAME = "abc";

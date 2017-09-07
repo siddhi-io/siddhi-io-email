@@ -55,9 +55,9 @@ import javax.mail.internet.MimeMessage;
  */
 public class EmailSourceImapTestCase {
     private static final Logger log = Logger.getLogger(EmailSourceImapTestCase.class);
-    private static final String PASSWORD = "analytics";
-    private static final String USERNAME = "analytics";
-    private static final String ADDRESS = "analytics@localhost";
+    private static final String PASSWORD = "password";
+    private static final String USERNAME = "abc";
+    private static final String ADDRESS = "abc@localhost";
     private static final String EMAIL_FROM = "someone@localhost";
     private static final String EMAIL_SUBJECT = "Test E-Mail";
     private static final String LOCALHOST = "localhost";
@@ -238,7 +238,14 @@ public class EmailSourceImapTestCase {
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
         Map<String, String> masterConfigs = new HashMap<>();
-        masterConfigs.put("source.email.port", "3993");
+        masterConfigs.put("source.email.host", LOCALHOST);
+        masterConfigs.put("source.email.folder", "INBOX");
+        masterConfigs.put("source.email.search.term", "subject:Test");
+        masterConfigs.put("source.email.polling.interval", "5");
+        masterConfigs.put("source.email.action.after.processed", "SEEN");
+        masterConfigs.put("source.email.folder.to.move", "");
+        masterConfigs.put("source.email.content.type", "text/plain");
+        masterConfigs.put("source.email.ssl.enable", "true");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -357,8 +364,20 @@ public class EmailSourceImapTestCase {
         log.info("Test scenario: Configure email event receiver with invalid host");
         // create user on mail server
         GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.folder", "INBOX");
+        masterConfigs.put("source.email.search.term", "subject:Test");
+        masterConfigs.put("source.email.polling.interval", "5");
+        masterConfigs.put("source.email.action.after.processed", "SEEN");
+        masterConfigs.put("source.email.folder.to.move", "");
+        masterConfigs.put("source.email.content.type", "text/plain");
+        masterConfigs.put("source.email.mail.imap.port", "3993");
 
         SiddhiManager siddhiManager = new SiddhiManager();
+        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
+        inMemoryConfigManager.generateConfigReader("source", "email");
+        siddhiManager.setConfigManager(inMemoryConfigManager);
+
         String streams = "" + "@App:name('TestSiddhiApp')"
                 + "@source(type='email', @map(type='xml'), "
                 + "username= '" + USERNAME + "',"
@@ -366,7 +385,7 @@ public class EmailSourceImapTestCase {
                 + "store = 'imap',"
                 + "port = '3993',"
                 + "host = 'pop3.localhost',"
-                + "ssl.enable = 'false')"
+                + "ssl.enable = 'true')"
                 + "define stream FooStream (name string, age int, country string); "
                 + "define stream BarStream (name string, age int, country string); ";
 
@@ -386,6 +405,55 @@ public class EmailSourceImapTestCase {
             siddhiAppRuntime.shutdown();
         }
     }
+
+    @Test(description = "Configure siddhi to recieve events from email where the email "
+            + "has to have non-text content")
+    public void siddhiEmailSourceTest6() throws MessagingException, UserException, InterruptedException {
+
+        log.info("Test scenario: Configure siddhi to recieve events from email where the email"
+                + " has to have non-text content");
+        // create user on mail server
+        GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("source.email.host", LOCALHOST);
+        masterConfigs.put("source.email.folder", "INBOX");
+        masterConfigs.put("source.email.search.term", "subject:Test");
+        masterConfigs.put("source.email.polling.interval", "5");
+        masterConfigs.put("source.email.action.after.processed", "SEEN");
+        masterConfigs.put("source.email.folder.to.move", "");
+        masterConfigs.put("source.email.content.type", "text/json");
+        masterConfigs.put("source.email.ssl.enable", "true");
+
+        SiddhiManager siddhiManager = new SiddhiManager();
+        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
+        inMemoryConfigManager.generateConfigReader("source", "email");
+        siddhiManager.setConfigManager(inMemoryConfigManager);
+
+        String streams = "" + "@App:name('TestSiddhiApp')"
+                + "@source(type='email', @map(type='xml'), "
+                + "username= '" + USERNAME + "',"
+                + "password = '" + PASSWORD + "',"
+                + "store = 'imap',"
+                + "port = '3993')"
+                + "define stream FooStream (name string, age int, country string); "
+                + "define stream BarStream (name string, age int, country string); ";
+
+        String query = ""
+                + "from FooStream "
+                + "select * "
+                + "insert into BarStream; ";
+
+        String exception = null;
+
+        try {
+            SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        } catch (SiddhiAppCreationException e) {
+            exception = e.getMessage();
+        }
+        Assert.assertTrue(exception.contains("supported content types are 'text/html' and"
+                + " 'text/plain' but found: text/json"));
+    }
+
 
     private void deliverMassage(String event , GreenMailUser user) throws MessagingException {
         MimeMessage message = new MimeMessage((Session) null);

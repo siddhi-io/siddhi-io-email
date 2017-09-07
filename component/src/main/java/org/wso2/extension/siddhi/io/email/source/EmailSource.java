@@ -626,7 +626,6 @@ public class EmailSource extends Source {
     }
 
     @Override public void restoreState(Map<String, Object> map) {
-
     }
 
     @Override public Class[] getOutputEventClasses() {
@@ -784,7 +783,7 @@ public class EmailSource extends Source {
         properties.put(EmailConstants.TRANSPORT_MAIL_MOVE_TO_FOLDER, moveToFolder);
 
         this.contentType = optionHolder.validateAndGetStaticValue(EmailConstants.EMAIL_RECEIVER_CONTENT_TYPE,
-                configReader.readConfig(EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE,
+                configReader.readConfig(EmailConstants.EMAIL_RECEIVER_CONTENT_TYPE,
                         EmailConstants.EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE));
         if (!(contentType.equalsIgnoreCase(EmailConstants.TEXT_HTML) ||
                 contentType.equalsIgnoreCase(EmailConstants.TEXT_PLAIN))) {
