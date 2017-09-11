@@ -53,147 +53,99 @@ import java.util.Map;
 @Extension(
         name = "email",
         namespace = "sink",
-        description = "The email sink uses 'smtp' server to publish events via emails. It can be published events in"
-                + " 'text', 'xml' or 'json' formats. The user can define email"
-                + " sink parameters in either 'deployment yaml' file or stream definition."
-                + " So that email source checks whether parameters are given in"
-                + " stream definition or 'ymal' file respectively. If it is not given in both places,"
-                + " then default values are taken for the optional parameters."
-                + " If user need to configure server system parameters which are not given as options in"
-                + " stream definition then it is needed to define them in 'yaml' file under email sink properties."
-                + " (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about"
-                + " smtp server parameters). Further, some email account required to enable 'access to less secure"
-                + " apps' option (for gmail account you can enable it via "
-                + "https://myaccount.google.com/lesssecureapps).",
+        description = "The email sink uses `smtp` server to publish events via emails. The format of the events can " +
+                "be `text`, `xml`, or `json`. You can configure parameters for an email sink in the stream definition" +
+                " or the `<SP_HOME>/conf/deplyment.yaml` file. The email source first checks the stream definition" +
+                " for parameters. If no parameters are configured there, the email source checks the " +
+                "`deployment.yaml` file. If the parameter configurations are not available in either place, the " +
+                "default values are considered (i.e., if they are available). If you need to configure server " +
+                "system parameters that are not provided as options in the stream definition, those should be " +
+                "defined in the `yaml`file under email sink properties. " +
+                "For more information about SMTP server parameters, see " +
+                "[SMTP Transport] (https://javaee.github.io/javamail/SMTP-Transport)",
+
         parameters = {
                 @Parameter(name = "username",
-                           description = "Username of the email account which is used to send emails"
-                                   + " (e.g: 'abc' is the username for abc@gmail.com).",
+                           description = "Username of the email account that is used to send emails. e.g., 'abc' is" +
+                                   " the username of `abc@gmail.com`).",
                            type = {DataType.STRING}),
                 @Parameter(name = "address",
-                           description = "Address of the email account which is used to send emails.",
+                           description = "The address of the email account that is used to send emails.",
                            type = {DataType.STRING}),
                 @Parameter(name = "password",
-                           description = "Password of the email account.",
+                           description = "The password of the email account that is used to send emails.",
                            type = {DataType.STRING}),
                 @Parameter(name = "host",
-                           description = "Host name of the smtp server "
-                                   + "(e.g. host name for a gmail account : 'smtp.gmail.com'). The default value"
-                                   + " 'smtp.gmail.com' is only valid if email account is a gmail account.",
+                           description = "The host name of the smtp server. The email address should always be " +
+                                   "`<USERNAME>@<HOST_NAME>.com'. (e.g., If `gmail` is the host name, the " +
+                                   "email address should always be a gmail account.",
                            type = {DataType.STRING},
                            optional = true,
                            defaultValue = "smtp.gmail.com"),
                 @Parameter(name = "port",
-                           description = "The port which is used to create the connection.",
+                           description = "The port that is used to create the connection.",
                            type = {DataType.INT},
                            optional = true,
-                           defaultValue = "'465' the default value is only valid is ssl enable"),
+                           defaultValue = "`465` which is the default value is only valid if SSL is enabled."),
                 @Parameter(name = "ssl.enable",
-                           description = "Whether the connection should be established through"
-                                   + " secure connection or not."
-                                   + " The value can be either 'true' or 'false'. If it is 'true' then the connection "
-                                   + "is establish through 493 port which is secure connection.",
+                           description = "This parameter specifies whether the connection should be established " +
+                                   "through a secure connection or not. If the value is `true` the connection is " +
+                                   "established through the 493 port which is a secure connection.",
                            type = {DataType.BOOL},
                            optional = true,
                            defaultValue = "true"),
                 @Parameter(name = "auth",
-                           description = "Whether to use AUTH command or not, while authenticating. If true,"
-                                   + " then attempt to authenticate the user using the AUTH command.",
+                           description = "If this parameter is set to `true` the `AUTH` command is used to " +
+                                   "authenticate the email server before publishing the processed messages as emails.",
                            type = {DataType.BOOL},
                            optional = true,
                            defaultValue = "true"),
                 @Parameter(name = "content.type",
-                           description = "Content type can be either 'text/plain' or 'text/html'.",
+                           description = "The content type can be either `text/plain` or `text/html`.",
                            type = {DataType.STRING},
                            optional = true,
                            defaultValue = "text/plain"),
                 @Parameter(name = "subject",
-                           description = "Subject of the mail which has to be send.",
+                           description = "The subject of the email to be sent.",
                            type = {DataType.STRING},
                            dynamic = true),
                 @Parameter(name = "to",
-                           description = "Address of the 'to' recipients. If there are more than to recipients,"
-                                   + " then addresses can be given as a comma separated list.",
+                           description = "The address of the email recipient. If there are multiple recipients, " +
+                                   "all the addresses are specified as a comma separated list.",
                            type = {DataType.STRING},
                            dynamic = true),
                 @Parameter(name = "cc",
-                           description = "Address of the 'cc' recipients. If there are more than cc recipients,"
-                                   + " then addresses can be given as a comma separated list.",
+                           description = "The addresses of the recipients that should be included in the CC " +
+                                   "(Carbon Copy) list. When there are multiple CC recipients, all the addresses " +
+                                   "are specified as a comma separated list.",
                            type = DataType.STRING,
                            optional = true,
                            defaultValue = "None"),
                 @Parameter(name = "bcc",
-                           description = "Address of the 'bcc' recipients. If there are more than bcc recipients,"
-                                + " then addresses can be given as a comma separated list.",
+                           description = "The addresses of the recipients that should be included in the BCC " +
+                                   "(Blind Carbon Copy) list. When there are multiple BCC recipients, all the " +
+                                   "addresses are specified as a comma separated list.",
                            type = DataType.STRING,
                            optional = true,
                            defaultValue = "None")
 
         },
         examples = {
-                @Example(description = "Following example illustrates how to publish events using the email sink"
-                        + "using mandatory parameters. As in the example, it publishes events come "
-                        + "from the fooStream in json format via email sink "
-                        + "to the given 'to' recipients."
-                        + " The email is sent by the sender.account@gmail.com via secure connection.",
-
-                        syntax =  "@sink(type='email', @map(type ='json'), "
-                                + "username='sender.account', "
-                                + "address='sender.account@gmail.com',"
-                                + "password='account.password',"
-                                + "subject='Alerts from Wso2 Stream Processor',"
-                                + "to='{{email}}',"
-                                + ")"
-                                + "define stream fooStream (email string, loginId int, name string);"),
-
-                @Example(description = "Following example illustrates how to configure the query parameters and "
-                        + "system parameters in the deployment ymal file.\n "
-                        + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
-                        + "follows\n"
-                        + "\nsiddhi:\n"
-                        + "  extensions:\n"
-                        + "    -\n"
-                        + "      extension:\n"
-                        + "        name:'email'\n"
-                        + "        namespace:'sink'\n"
-                        + "        properties:\n"
-                        + "          username:sender.account\n"
-                        + "          address:sender.account@gmail.com\n"
-                        + "          address:sender.account@gmail.com\n"
-                        + "\nAs in the example, it publishes events come"
-                        + "from the fooStream in json format via email sink "
-                        + "to the given 'to' recipients."
-                        + " The email is sent by the sender.account@gmail.com via secure connection.",
-
-                        syntax =  "@sink(type='email', @map(type ='json'), "
-                                + "subject='Alerts from Wso2 Stream Processor',"
-                                + "to='{{email}}',"
-                                + ")"
-                                + "define stream fooStream (email string, loginId int, name string);"),
-
-                @Example(description = "Following example illustrates how to publish events using the email sink."
-                        + " According to the example, it publishes events come from the fooStream in xml"
-                        + " format via email sink as a text/html message"
-                        + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
-                        + " `subject` attribute will be the value of the `name` parameter in the corresponding"
-                        + " output event",
-
-                        syntax =  "@sink(type='email', @map(type ='json'), "
-                                + "username='sender.account', "
-                                + "address='sender.account@gmail.com',"
-                                + "password='account.password',"
-                                + "host='smtp.gmail.com',"
-                                + "port='465',"
-                                + "ssl.enable='true',"
-                                + "auth='true',"
-                                + "content.type='text/html',"
-                                + "subject='Alerts from Wso2 Stream Processor-{{name}}',"
-                                + "to='to1.account@gmail.com, to2.account@gmail.com',"
-                                + "cc='cc1.account@gmail.com, cc2.account@gmail.com',"
-                                + "bcc='bcc1.account@gmail.com"
-                                + ")"
-                                + "define stream fooStream (name string, age int, country string);"),
-        },
+                @Example(syntax = "define stream inputStream (name string, age int, country string);\n" +
+                        "@sink(type='email', @map(type='json'),\n "
+                        + "username='wso2',\n "
+                        + "address='wso2@gmail.com',\n"
+                        + "password='wso234',\n"
+                        + "host='smtp.gmail.com',\n"
+                        + "subject='Event from SP',\n"
+                        + "to='towso2@gmail.com ,wso2two@gmail.com',\n"
+                        + "cc='ccwso2@gmail.com'"
+                        + ")",
+                        description = "This query publishes events from the stream named `InputStream` in `json` " +
+                                "format via an email sink. The output events are sent to the specified `to` and " +
+                                "`cc` recipients. The email is sent using the `wso2@gmail.com` email account via " +
+                                "a secure connection.)")
+                    },
         systemParameter = {
                 @SystemParameter(name = "mail.smtp.ssl.trust",
                                  description = "If set, and a socket factory hasn't been specified, enables use of a "
