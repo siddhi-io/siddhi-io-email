@@ -128,7 +128,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                 + "</events>";
 
         deliverMassage(event, user);
-        Thread.sleep(500);
+        mailServer.waitForIncomingEmail(5000, 1);
         Message[] messages = getMessage("INBOX", "pop3", "3110");
         Assert.assertEquals(messages.length, 1, "One message is in the INBOX");
 
@@ -216,7 +216,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "</events>";
 
         deliverMassage(event, user);
-
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
         List<String> received = new ArrayList<>(2);
@@ -305,7 +305,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "</events>";
 
         deliverMassage(event, user);
-
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
         List<String> received = new ArrayList<>(2);
@@ -394,7 +394,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "</event>"
                         + "</events>";
         deliverMassage(event, user);
-
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
         List<String> received = new ArrayList<>(2);
@@ -540,8 +540,7 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-
-        Thread.sleep(1000);
+        mailServer.waitForIncomingEmail(5000, 2);
         Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
 
@@ -644,8 +643,7 @@ public class EmailSourceActionAfterProcessedTestCase {
 
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-
-        Thread.sleep(1000);
+        mailServer.waitForIncomingEmail(5000, 2);
         Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
         Assert.assertTrue(!isFolderExist("X-non-exist", "imap", "3143"));
@@ -738,7 +736,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "</events>";
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-        Thread.sleep(1000);
+        mailServer.waitForIncomingEmail(5000, 2);
         Message[] messages = getMessage("INBOX", "imap", "3143");
         Assert.assertEquals(messages.length, 2, "Two message is in the INBOX");
 
@@ -825,7 +823,7 @@ public class EmailSourceActionAfterProcessedTestCase {
                         + "</events>";
 
         deliverMassage(event, user);
-
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
         List<String> received = new ArrayList<>(2);
