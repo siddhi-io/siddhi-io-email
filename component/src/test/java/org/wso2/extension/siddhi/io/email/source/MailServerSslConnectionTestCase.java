@@ -135,7 +135,7 @@ public class MailServerSslConnectionTestCase {
                         + "</events>";
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-
+        mailServer.waitForIncomingEmail(5000, 2);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -218,7 +218,7 @@ public class MailServerSslConnectionTestCase {
                         + "</events>";
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-
+        mailServer.waitForIncomingEmail(5000, 2);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -304,7 +304,7 @@ public class MailServerSslConnectionTestCase {
                         + "</events>";
         deliverMassage(event1, user);
         deliverMassage(event2, user);
-
+        mailServer.waitForIncomingEmail(5000, 2);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 

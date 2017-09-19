@@ -149,7 +149,6 @@
                             org.wso2.carbon.transport.email.*,
                             org.wso2.extension.siddhi.io.email.internal.*
                             org.wso2.carbon.connector.framework.server.internal.*,
-                            org.wso2.carbon.messaging.*,
                             javax.mail.*;
                             com.sun.mail*;
                         </Private-Package>

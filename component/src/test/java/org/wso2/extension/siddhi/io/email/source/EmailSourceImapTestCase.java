@@ -124,7 +124,7 @@ public class EmailSourceImapTestCase {
                 + "</events>";
 
         deliverMassage(event, user);
-        Thread.sleep(500);
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -202,7 +202,7 @@ public class EmailSourceImapTestCase {
                         + "</event>"
                + "</events>";
         deliverMassage(event, user);
-        Thread.sleep(500);
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -328,7 +328,7 @@ public class EmailSourceImapTestCase {
                         + "</events>";
 
         deliverMassage(event, user);
-        Thread.sleep(500);
+        mailServer.waitForIncomingEmail(5000, 1);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 

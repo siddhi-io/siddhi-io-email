@@ -29,11 +29,9 @@ import static org.testng.Assert.assertTrue;
  */
 public class EmailSinkTestCase {
     private static final Logger log = Logger.getLogger(EmailSinkTestCase.class);
-    private static final String PASSWORD = "abc123";
+    private static final String PASSWORD = "password";
     private static final String USERNAME = "abc";
     private static final String ADDRESS = "abc@localhost";
-    private static final String TO = "to@localhost";
-    private static final String HOST = "localhost";
     private GreenMail mailServer;
 
     @AfterMethod
@@ -41,9 +39,10 @@ public class EmailSinkTestCase {
         mailServer.stop();
     }
 
-    @Test(description = "Configure siddhi to email event publisher only using madatory params")
+    @Test(description = "Configure siddhi to email event publisher only using mandatory params")
     public void emailSinkTest1() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest1 : Configure siddhi to email event publisher only using mandatory params.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -81,8 +80,8 @@ public class EmailSinkTestCase {
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
         stockStream.send(new Object[]{"IBM", 57.678f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 2);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         assertEquals(messages.length, 2, "Send two messages.");
         assertEquals(messages[0].getSubject(), "FooStream-WSO2");
@@ -97,6 +96,7 @@ public class EmailSinkTestCase {
     public void emailSinkTest2() throws IOException, MessagingException,
             UserException, InterruptedException {
         // setup user on the mail server
+        log.info("EmailSinkTest2 : Configure siddhi for email event publisher with defining 'CC' & 'BCC'.");
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
         mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
@@ -134,8 +134,8 @@ public class EmailSinkTestCase {
         siddhiAppRuntime.start();
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 3);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertEquals(messages.length, 3, "Send one messages to each recipients."
@@ -145,14 +145,16 @@ public class EmailSinkTestCase {
                 "to@localhost");
         assertEquals(InternetAddress.toString(messages[0].getRecipients(Message.RecipientType.CC)),
                 "cc@localhost");
-        MimeMessage m = messages[0];
-        assertEquals(m.getSubject(), "FooStream");
+        //BCC addresses are not contained in the message header in greenmail since some mail smtp provider not
+        //allow to see the email bcc recipient list.
+        assertEquals(messages[0].getSubject(), "FooStream");
         siddhiAppRuntime.shutdown();
     }
 
     @Test(description = "Configure email event publisher with invalid host")
     public void emailSinkTest3() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest3 : Configure email event publisher with invalid host.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -198,6 +200,7 @@ public class EmailSinkTestCase {
     @Test(description = "Configure email event publisher with invalid port")
     public void emailSinkTest4() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest4 : Configure email event publisher with invalid port.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -244,6 +247,7 @@ public class EmailSinkTestCase {
     @Test(description = "Configure siddhi to publish events to email via smtp with non-secure mode")
     public void emailSinkTest5() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest5 : Configure siddhi to publish events to email via smtp with non-secure mode");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -283,8 +287,8 @@ public class EmailSinkTestCase {
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
         stockStream.send(new Object[]{"IBM", 57.678f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 3);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertTrue(messages.length > 0);
@@ -295,6 +299,7 @@ public class EmailSinkTestCase {
     @Test(description = "Configure email event publisher via imap host")
     public void emailSinkTest6() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest6 : Configure email event publisher via imap host.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -341,6 +346,8 @@ public class EmailSinkTestCase {
             + " to,cc,bcc list")
     public void emailSinkTest7() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest7 : Configure siddhi to publish events to email with defining multiple recipients in"
+                + " to,cc,bcc list");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -379,8 +386,8 @@ public class EmailSinkTestCase {
         siddhiAppRuntime.start();
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 6);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertEquals(messages.length, 6, "Send one messages to each recipients."
@@ -396,6 +403,7 @@ public class EmailSinkTestCase {
     @Test(description = "Configure siddhi to email event publisher to publish the event mapped to xml")
     public void emailSinkTest8() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest8 : Configure siddhi to email event publisher to publish the event mapped to xml.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -434,8 +442,8 @@ public class EmailSinkTestCase {
         siddhiAppRuntime.start();
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 3);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertEquals(messages.length, 3, "Send one messages to each recipients."
@@ -451,6 +459,7 @@ public class EmailSinkTestCase {
     @Test(description = "Configure siddhi to email event publisher to publish the event mapped to json")
     public void emailSinkTest9() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest9 : Configure siddhi to email event publisher to publish the event mapped to json.");
         // setup user on the mail server
         mailServer = new GreenMail(ServerSetupTest.SMTP);
         mailServer.start();
@@ -489,8 +498,8 @@ public class EmailSinkTestCase {
         siddhiAppRuntime.start();
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 3);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertEquals(messages.length, 3, "Send one messages to each recipients."
@@ -505,6 +514,8 @@ public class EmailSinkTestCase {
     @Test(description = "Configure siddhi to publish events to email via smtp with securing as auth disabled")
     public void emailSinkTest10() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest10 : "
+                + "Configure siddhi to publish events to email via smtp with securing as auth disabled.");
         // setup user on the mail server
         Security.setProperty("ssl.SocketFactory.provider",
                 DummySSLSocketFactory.class.getName());
@@ -546,8 +557,8 @@ public class EmailSinkTestCase {
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
         stockStream.send(new Object[]{"IBM", 57.678f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 6);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertTrue(messages.length > 0);
@@ -558,6 +569,8 @@ public class EmailSinkTestCase {
     @Test(description = "Configure siddhi to publish events to email via smtp with securing and auth enable")
     public void emailSinkTest11() throws IOException, MessagingException,
             UserException, InterruptedException {
+        log.info("EmailSinkTest11 : "
+                + "Configure siddhi to publish events to email via smtp with securing as auth disabled.");
         // setup user on the mail server
         Security.setProperty("ssl.SocketFactory.provider",
                 DummySSLSocketFactory.class.getName());
@@ -599,8 +612,8 @@ public class EmailSinkTestCase {
 
         stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
         stockStream.send(new Object[]{"IBM", 57.678f, 100L});
-        Thread.sleep(2000);
 
+        mailServer.waitForIncomingEmail(5000, 3);
         MimeMessage[] messages = mailServer.getReceivedMessages();
         //mail for all recipients are send to same INBOX.
         assertTrue(messages.length > 0);

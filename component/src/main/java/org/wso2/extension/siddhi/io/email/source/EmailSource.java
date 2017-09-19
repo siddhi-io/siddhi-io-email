@@ -532,6 +532,16 @@ public class EmailSource extends Source {
     private String contentType;
     private boolean isImap = false;
 
+    /**
+     * The initialization method for {@link Source}, which will be called before other methods and validate
+     * the all configuration and getting the intial values.
+     * @param sourceEventListener After receiving events, the source should trigger onEvent() of this listener.
+     *                            Listener will then pass on the events to the appropriate mappers for processing .
+     * @param optionHolder        Option holder containing static configuration related to the {@link Source}
+     * @param configReader        to read the {@link Source} related system configuration.
+     * @param siddhiAppContext    the context of the {@link org.wso2.siddhi.query.api.SiddhiApp} used to get siddhi
+     *                            related utilty functions.
+     */
     @Override public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
             String[] requiredProperties, ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.sourceEventListener = sourceEventListener;
@@ -552,6 +562,13 @@ public class EmailSource extends Source {
         emailServerConnector.setMessageProcessor(emailMessageProcessor);
     }
 
+    /**
+     * Intialy Called to connect to the end point for start  retriving the messages asynchronisly .
+     *
+     * @param connectionCallback Callback to pass the ConnectionUnavailableException in case of connection failure after
+     *                           initial successful connection(can be used when events are receving asynchronasily)
+     * @throws ConnectionUnavailableException if it cannot connect to the source backend immediately.
+     */
     @Override public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
         try {
             emailServerConnector.start();
@@ -575,6 +592,9 @@ public class EmailSource extends Source {
         }
     }
 
+    /**
+     * This method can be called when it is needed to disconnect from the end point.
+     */
     @Override public void disconnect() {
         try {
             if (emailServerConnector != null) {
@@ -588,6 +608,9 @@ public class EmailSource extends Source {
         }
     }
 
+    /**
+     * Called at the end to clean all the resources consumed by the {@link Source}
+     */
     @Override public void destroy() {
         if (emailServerConnector != null) {
             try {
@@ -599,6 +622,9 @@ public class EmailSource extends Source {
         }
     }
 
+    /**
+     * Called to pause event consumption
+     */
     @Override public void pause() {
         if (emailServerConnector != null) {
             try {
@@ -610,6 +636,9 @@ public class EmailSource extends Source {
         }
     }
 
+    /**
+     * Called to resume event consumption
+     */
     @Override public void resume() {
         if (emailServerConnector != null) {
             try {
@@ -621,15 +650,35 @@ public class EmailSource extends Source {
         }
     }
 
+    /**
+     * Used to collect the serializable state of the processing element, that need to be
+     * persisted for the reconstructing the element to the same state on a different point of time
+     *
+     * @return stateful objects of the processing element as a map
+     */
     @Override public Map<String, Object> currentState() {
-        return null;
+            // no state to restore
+            return null;
     }
 
+    /**
+     * Used to restore serialized state of the processing element, for reconstructing
+     *
+     * @param map stateful objects of the element as a map.
+     *              This is the same map that is created upon calling currentState() method.
+     */
     @Override public void restoreState(Map<String, Object> map) {
+            // no state to restore
     }
 
+    /**
+     * Returns the list of classes which this source can output.
+     *
+     * @return Array of classes that will be output by the source.
+     * Null or empty array if it can produce any type of class.
+     */
     @Override public Class[] getOutputEventClasses() {
-        return new Class[] { String.class };
+            return new Class[] { String.class };
     }
 
     /**

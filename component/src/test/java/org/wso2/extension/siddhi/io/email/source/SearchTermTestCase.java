@@ -99,10 +99,9 @@ public class SearchTermTestCase {
                 + "define stream FooStream (name string, age int, country string); "
                 + "define stream BarStream (name string, age int, country string); ";
 
-        String query = ""
-                + "from FooStream "
-                + "select * "
-                + "insert into BarStream; ";
+        String query = "from FooStream "
+                       + "select * "
+                       + "insert into BarStream; ";
 
         String event1 =
                 "<events>"
@@ -137,11 +136,15 @@ public class SearchTermTestCase {
                         + "</event>"
                         + "</events>";
 
-        deliverMassage(event1, user, "da1 4.0.0 @Release mail", "cc1@localhost", "bcc1@localhost");
-        deliverMassage(event2, user, "da 4.0.0 @Release mail", "cc@localhost", "bcc@localhost");
-        deliverMassage(event3, user, "da1 4.0.0 @Release mail", "cc@localhost", "bcc@localhost");
-        deliverMassage(event4, user, "da2 4.0.0 @Release mail", "cc3@localhost", "bcc1@localhost");
-        Thread.sleep(500);
+        deliverMassage(event1, user, "da1 4.0.0 @Release mail", "abc@localhost",
+                "to@localhost", "cc1@localhost", "bcc1@localhost");
+        deliverMassage(event2, user, "da 4.0.0 @Release mail", "abc@localhost", "to@localhost",
+                "cc@localhost", "bcc@localhost");
+        deliverMassage(event3, user, "da1 4.0.0 @Release mail", "abc@localhost", "to@localhost",
+                "cc@localhost", "bcc@localhost");
+        deliverMassage(event4, user, "da2 4.0.0 @Release mail", "abc@localhost", "to@localhost",
+                "cc3@localhost", "bcc1@localhost");
+        mailServer.waitForIncomingEmail(5000, 12);
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
         siddhiAppRuntime.start();
 
@@ -163,13 +166,188 @@ public class SearchTermTestCase {
         siddhiAppRuntime.shutdown();
     }
 
-    // create an e-mail message using javax.mail ..
+    @Test (description = "Configure siddhi to recieve events from email where invalid search.term set in siddhi query")
+    public void siddhiEmailSourceTest2() throws MessagingException, UserException, InterruptedException {
+
+        log.info("Test scenario: siddhi to recieve events from email where invalid search.term set in siddhi query");
+        //create user on mail server
+        GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+        SiddhiManager siddhiManager = new SiddhiManager();
+
+        String streams = "" + "@App:name('TestSiddhiApp')"
+                + "@source(type='email'," +  "@map(type='xml'),"
+                + "username='" + USERNAME + "',"
+                + "password='" + PASSWORD + "',"
+                + "store = 'imap' ,"
+                + "host = '" + LOCALHOST + "',"
+                + "folder = 'INBOX',"
+                + "ssl.enable = 'true' ,"
+                + "port = '3993' ,"
+                + "polling.interval = '5' ,"
+                + "search.term = 'subject:das, From:abc, To:abc, bcc:xyz:cc:xyz' ,"
+                + "content.type = 'text/plain',"
+                + "action.after.processed = 'MOVE',"
+                + "move.to.folder = 'ProcessedMail')"
+                + "define stream FooStream (name string, age int, country string); "
+                + "define stream BarStream (name string, age int, country string); ";
+        String query = "from FooStream "
+                + "select * "
+                + "insert into BarStream; ";
+        try {
+            SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        } catch (Exception e) {
+            String exception = e.getMessage();
+            Assert.assertTrue(exception.contains("search term 'subject:das, From:abc,"
+                    + " To:abc, bcc:xyz:cc:xyz' is not in correct format."
+                    + " It should be in 'key1:value1,key2:value2, ..., keyX:valueX format"));
+        }
+    }
+
+    @Test (description = "Configure siddhi to recieve events from email where values set as"
+            + " case insensitively in search.term")
+    public void siddhiEmailSourceTest3() throws MessagingException, UserException, InterruptedException {
+
+        log.info("Test scenario: Configure siddhi to recieve events from email"
+                + " where values set as case insensitively in search.term");
+        //create user on mail server
+        GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+        SiddhiManager siddhiManager = new SiddhiManager();
+
+        String streams = "" + "@App:name('TestSiddhiApp')"
+                + "@source(type='email'," +  "@map(type='xml'),"
+                + "username='" + USERNAME + "',"
+                + "password='" + PASSWORD + "',"
+                + "store = 'imap' ,"
+                + "host = '" + LOCALHOST + "',"
+                + "folder = 'INBOX',"
+                + "ssl.enable = 'true' ,"
+                + "port = '3993' ,"
+                + "polling.interval = '5' ,"
+                + "search.term = 'subject:DAS 4.0.0 @Release mail,from:ABC,to:TO,bcc:BCC,cc:CC',"
+                + "content.type = 'text/plain',"
+                + "action.after.processed = 'MOVE',"
+                + "move.to.folder = 'ProcessedMail')"
+                + "define stream FooStream (name string, age int, country string); "
+                + "define stream BarStream (name string, age int, country string); ";
+
+        String query = "from FooStream "
+                + "select * "
+                + "insert into BarStream; ";
+
+        String event =
+                "<events>"
+                        + "<event>"
+                        + "<name>Ricky</name>"
+                        + "<age>100</age>"
+                        + "<country>AUS</country>"
+                        + "</event>"
+                        + "</events>";
+
+        deliverMassage(event, user, "das 4.0.0 @Release mail", "abc@localhost", "to@localhost",
+                "cc@localhost", "bcc@localhost");
+        mailServer.waitForIncomingEmail(5000, 3);
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        siddhiAppRuntime.start();
+
+        siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
+
+            @Override public void receive(Event[] events) {
+                EventPrinter.print(events);
+                for (Event event : events) {
+                    eventCount.incrementAndGet();
+                    Assert.assertEquals(event.getData(0), "Ricky");
+                }
+
+            }
+        });
+
+        SiddhiTestHelper.waitForEvents(waitTime, 1, eventCount, timeout);
+        Assert.assertEquals(eventCount.intValue(), 1, "Event count should be equal to one.");
+        Thread.sleep(500);
+        siddhiAppRuntime.shutdown();
+    }
+
+    @Test (description = "Configure siddhi to recieve events from email where only one key"
+            + " value defined in search.term")
+    public void siddhiEmailSourceTest4() throws MessagingException, UserException, InterruptedException {
+
+        log.info("Test scenario: Configure siddhi to recieve events from email where only one"
+                + " key value defined in search.term");
+        //create user on mail server
+        GreenMailUser user = mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+        SiddhiManager siddhiManager = new SiddhiManager();
+
+        String streams = "" + "@App:name('TestSiddhiApp')"
+                + "@source(type='email'," +  "@map(type='xml'),"
+                + "username='" + USERNAME + "',"
+                + "password='" + PASSWORD + "',"
+                + "store = 'imap' ,"
+                + "host = '" + LOCALHOST + "',"
+                + "folder = 'INBOX',"
+                + "ssl.enable = 'true' ,"
+                + "port = '3993' ,"
+                + "polling.interval = '5' ,"
+                + "search.term = 'subject:DAS 4.0.0 @Release mail',"
+                + "content.type = 'text/plain',"
+                + "action.after.processed = 'MOVE',"
+                + "move.to.folder = 'ProcessedMail')"
+                + "define stream FooStream (name string, age int, country string); "
+                + "define stream BarStream (name string, age int, country string); ";
+
+        String query = "from FooStream "
+                + "select * "
+                + "insert into BarStream; ";
+
+        String event =
+                "<events>"
+                        + "<event>"
+                        + "<name>Ricky</name>"
+                        + "<age>100</age>"
+                        + "<country>AUS</country>"
+                        + "</event>"
+                        + "</events>";
+
+        deliverMassage(event, user, "das 4.0.0 @Release mail");
+        mailServer.waitForIncomingEmail(5000, 1);
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        siddhiAppRuntime.start();
+
+        siddhiAppRuntime.addCallback("BarStream", new StreamCallback() {
+
+            @Override public void receive(Event[] events) {
+                EventPrinter.print(events);
+                for (Event event : events) {
+                    eventCount.incrementAndGet();
+                    Assert.assertEquals(event.getData(0), "Ricky");
+                }
+
+            }
+        });
+
+        SiddhiTestHelper.waitForEvents(waitTime, 1, eventCount, timeout);
+        Assert.assertEquals(eventCount.intValue(), 1, "Event count should be equal to one.");
+        Thread.sleep(500);
+        siddhiAppRuntime.shutdown();
+    }
+
+    // create an e-mail message using javax.mail
     // use greenmail to store the message
-    private void deliverMassage(String event , GreenMailUser user, String subject, String cc, String bcc)
-     throws MessagingException {
+    private void deliverMassage(String event , GreenMailUser user, String subject)
+            throws MessagingException {
         MimeMessage message = new MimeMessage((Session) null);
         message.setFrom(new InternetAddress(EMAIL_FROM));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(ADDRESS));
+        message.setSubject(subject);
+        message.setText(event);
+        user.deliver(message); }
+
+    // create an e-mail message using javax.mail
+    // use greenmail to store the message
+    private void deliverMassage(String event , GreenMailUser user, String subject, String from, String to,
+            String cc, String bcc) throws MessagingException {
+        MimeMessage message = new MimeMessage((Session) null);
+        message.setFrom(new InternetAddress(from));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
         message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc));
         message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
         message.setSubject(subject);
