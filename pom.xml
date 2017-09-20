@@ -160,7 +160,7 @@
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
         <siddhi.map.json.version>4.0.3</siddhi.map.json.version>
-        <xml.mapper.version>4.0.0</xml.mapper.version>
+        <xml.mapper.version>4.0.1</xml.mapper.version>
         <text.mapper.version>1.0.4</text.mapper.version>
         <json.mapper.version>4.0.4</json.mapper.version>
         <carbon.messaging.version>3.0.0</carbon.messaging.version>
