@@ -124,7 +124,6 @@
                 <scope>test</scope>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
     <build>
@@ -133,36 +132,24 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <preparationGoals>clean install</preparationGoals>
+                    <preparationGoals>clean install -Pdocumentation-deploy</preparationGoals>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.wso2.siddhi</groupId>
-                <artifactId>siddhi-doc-gen</artifactId>
-                <version>${siddhi.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-md-docs</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
   </build>
     <properties>
-        <siddhi.version>4.0.0-M78</siddhi.version>
+        <siddhi.version>4.0.0-M106</siddhi.version>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
-        <jacoco.maven.version>0.7.8</jacoco.maven.version>
+        <jacoco.maven.version>0.7.9</jacoco.maven.version>
         <carbon.transport.version>5.0.0</carbon.transport.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
         <siddhi.map.json.version>4.0.3</siddhi.map.json.version>
-        <xml.mapper.version>4.0.1</xml.mapper.version>
+        <xml.mapper.version>4.0.2</xml.mapper.version>
         <text.mapper.version>1.0.4</text.mapper.version>
-        <json.mapper.version>4.0.4</json.mapper.version>
+        <json.mapper.version>4.0.5</json.mapper.version>
         <carbon.messaging.version>3.0.0</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
