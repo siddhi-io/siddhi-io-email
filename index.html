@@ -12,7 +12,7 @@
       
         <link rel="shortcut icon" href="./images/favicon.ico">
       
-      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.7.4">
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.10.3">
     
     
       
@@ -20,12 +20,12 @@
       
     
     
-      <script src="./assets/javascripts/modernizr-1df76c4e58.js"></script>
+      <script src="./assets/javascripts/modernizr-e826f8942a.js"></script>
     
     
-      <link rel="stylesheet" href="./assets/stylesheets/application-769c285a91.css">
+      <link rel="stylesheet" href="./assets/stylesheets/application-9011e2d3f8.css">
       
-        <link rel="stylesheet" href="./assets/stylesheets/application-02c2a4388f.palette.css">
+        <link rel="stylesheet" href="./assets/stylesheets/application-23f75ab9c7.palette.css">
       
     
     
@@ -63,11 +63,13 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        
-          <a href="." title="Siddhi-IO-Email" class="md-logo md-header-nav__button">
-            <img src="./images/siddhi-logo-w.svg" width="24" height="24">
-          </a>
-        
+        <a href="." title="Siddhi-IO-Email" class="md-header-nav__button md-logo">
+          
+            
+              <img src="./images/siddhi-logo-w.svg" width="24" height="24">
+            
+          
+        </a>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
         <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
@@ -86,17 +88,17 @@
         
           <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
           
-<div class="md-search" data-md-component="search">
+<div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="search"></label>
   <div class="md-search__inner">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
       <label class="md-icon md-search__icon" for="search"></label>
-      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">&#xE5CD;</button>
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="result" data-md-lang-search="">
+        <div class="md-search-result" data-md-component="result" data-md-lang-search="" data-md-lang-tokenizer="[\s\-]+">
           <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
             Type to start searching
           </div>
@@ -116,6 +118,7 @@
     <div class="md-container">
       
       
+      
       <main class="md-main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
@@ -125,11 +128,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="drawer">
-    
-      <i class="md-logo md-nav__button">
-        <img src="./images/siddhi-logo-w.svg">
-      </i>
-    
+    <div class="md-nav__button md-logo">
+      
+        
+          <img src="./images/siddhi-logo-w.svg">
+        
+      
+    </div>
     Siddhi-IO-Email
   </label>
   
@@ -250,8 +255,20 @@
 
 
   <li class="md-nav__item">
-    <a href="api/1.0.0-M2-SNAPSHOT/" title="1.0.0-M2-SNAPSHOT" class="md-nav__link">
-      1.0.0-M2-SNAPSHOT
+    <a href="api/1.0.0-M6/" title="1.0.0-M6" class="md-nav__link">
+      1.0.0-M6
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="api/latest/" title="latest" class="md-nav__link">
+      latest
     </a>
   </li>
 
@@ -367,7 +384,7 @@ Using the extension, events can be published through smtp mail server and receiv
 <li><a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-email/issues">Issue tracker</a></li>
 </ul>
 <h2 id="latest-api-docs">Latest API Docs</h2>
-<p>Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-email/api/1.0.0-M2-SNAPSHOT">1.0.0-M2-SNAPSHOT</a>.</p>
+<p>Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-email/api/1.0.0-M6">1.0.0-M6</a>.</p>
 <h2 id="how-to-use">How to use</h2>
 <p><strong>Using the extension in <a target="_blank" href="https://github.com/wso2/product-sp">WSO2 Stream Processor</a></strong></p>
 <ul>
@@ -384,7 +401,7 @@ Using the extension, events can be published through smtp mail server and receiv
 </ul>
 <pre><code>     &lt;dependency&gt;
         &lt;groupId&gt;org.wso2.extension.siddhi.io.email&lt;/groupId&gt;
-        &lt;artifactId&gt;siddhi-io-email-parent&lt;/artifactId&gt;
+        &lt;artifactId&gt;siddhi-io-email&lt;/artifactId&gt;
         &lt;version&gt;x.x.x&lt;/version&gt;
      &lt;/dependency&gt;
 </code></pre>
@@ -407,10 +424,6 @@ Using the extension, events can be published through smtp mail server and receiv
 </table>
 <hr />
 <h2 id="features">Features</h2>
-<ul>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-email/api/1.0.0-M2-SNAPSHOT/#email-source">email</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sources">Source</a>)</em><br><div style="padding-left: 1em;"><p>Email source allows user to receive events via emails. Email source can be configured using 'imap' or 'pop3' server to receive events. This allows user to filter the messages which satisfy the given criteria under 'search term' option. The user can define email source parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition and 'ymal' file respectively. If it is not given in both places, then default values are taken if defaults values are available. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email source properties. (Refer link: https://javaee.github.io/javamail/IMAP-Store ,  https://javaee.github.io/javamail/POP3-Store to more information about imap and pop3 server system parameters).</p></div></li>
-<li><a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-email/api/1.0.0-M2-SNAPSHOT/#email-sink">email</a> <em>(<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sinks">Sink</a>)</em><br><div style="padding-left: 1em;"><p>The email sink uses 'smtp' server to publish events via emails. It can be published events in 'text', 'xml' or 'json' formats. The user can define email sink parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition or 'ymal' file respectively. If it is not given in both places, then default values are taken if defaults values are available. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email sink properties. (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about smtp server parameters).</p></div></li>
-</ul>
 <h2 id="how-to-contribute">How to Contribute</h2>
 <ul>
 <li>
@@ -459,13 +472,13 @@ Using the extension, events can be published through smtp mail server and receiv
       <nav class="md-footer-nav__inner md-grid">
         
         
-          <a href="api/1.0.0-M2-SNAPSHOT/" title="1.0.0-M2-SNAPSHOT" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="api/1.0.0-M6/" title="1.0.0-M6" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                1.0.0-M2-SNAPSHOT
+                1.0.0-M6
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -495,7 +508,7 @@ Using the extension, events can be published through smtp mail server and receiv
       
     </div>
     
-      <script src="./assets/javascripts/application-c35428f87f.js"></script>
+      <script src="./assets/javascripts/application-f3ab9e5ff8.js"></script>
       
       
       <script>app.initialize({url:{base:"."}})</script>
