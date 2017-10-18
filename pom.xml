@@ -31,7 +31,7 @@
 
     <groupId>org.wso2.extension.siddhi.io.email</groupId>
     <artifactId>siddhi-io-email-parent</artifactId>
-    <version>1.0.0-M6-SNAPSHOT</version>
+    <version>1.0.0-M6</version>
     <name>Siddhi io email extension</name>
 
     <modules>
@@ -43,7 +43,7 @@
         <url>https://github.com/wso2-extensions/siddhi-io-email.git</url>
         <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-email.git
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.0.0-M6</tag>
     </scm>
 
     <dependencyManagement>
