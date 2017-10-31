@@ -61,7 +61,8 @@ import java.util.Map;
                 + " If user need to configure server system parameters which are not given as options in"
                 + " stream definition then it is needed to define them in 'yaml' file under email sink properties."
                 + " (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about"
-                + " smtp server parameters).",
+                + " smtp server parameters). Further, make sure that, it has been allowed to access less secure apps"
+                + " in the email account.",
         parameters = {
                 @Parameter(name = "username",
                            description = "Username of the email account which is used to send emails"
@@ -133,13 +134,13 @@ import java.util.Map;
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
                         + "The email is sent by the sender.account@gmail.com via secure connection.",
-                        syntax =  "define stream fooStream (name string, age int, country string);"
+                        syntax =  "define stream fooStream (email string, loginId int, name string);"
                                 + "@sink(type='email', @map(type ='json'), "
                                 + "username='sender.account', "
                                 + "address='sender.account@gmail.com',"
                                 + "password='account.password',"
                                 + "subject='Alerts from Wso2 Stream Processor',"
-                                + "to='to1.account@gmail.com ,to2.account@gmail.com',"
+                                + "to='{{email}}',"
                                 + ")"),
 
                 @Example(description = "Following example illustrates how to publish events using the email sink."
