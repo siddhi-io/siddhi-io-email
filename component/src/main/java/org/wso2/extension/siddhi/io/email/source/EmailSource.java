@@ -146,21 +146,33 @@ import java.util.stream.Stream;
                 optional = true,
                 defaultValue = "true") },
         examples = {
-                @Example(description = "Following example illustrates how to receive events in 'xml' format"
-                        + " using email source. The email source polls the mail account in every 50 seconds"
-                        + " to check whether new mails has been arrived and processes new mails only if"
-                        + " if it satisfy the properties given under email search term. In the example"
-                        + " action after processes is defined as the 'SEEN', so that"
-                        + " after processing the event, corresponding mail is mark as read.",
+                @Example(description = "Following example illustrates how to receive events in `xml` format"
+                        + " using email source. In this example only mandatory parameters are defined in the "
+                        + " in the stream definition. For other parameters default values are taken."
+                        + " since search term is not defined, it poll and take all new messages in the inbox folder",
                         syntax = "@source(type='email', @map(type='xml'), "
-                                + "username='wso2mail', "
-                                + "password='wso2Password',"
+                                + "username='receiver.account', "
+                                + "password='account.password',"
+                                + ")" +
+                                "define stream inputStream (name string, age int, country string);"),
+
+                @Example(description = "Following example illustrates how to receive events in `xml` format"
+                        + " using email source. The email source polls the mail account in every 500 seconds"
+                        + " to check whether new mails has been arrived and processes new mails only if"
+                        + " if it satisfy the properties given under email search term (email messages which come from"
+                        + "`from.account@.<host name>`, contains `cc.account` in cc receipts list, and"
+                        + " `Stream Processor` words in the mail subject)"
+                        + " In the example, action after processes is defined as the `DELETE`, so that"
+                        + " after processing the event, corresponding mail is deleted from the mail folder.",
+                        syntax = "@source(type='email', @map(type='xml'), "
+                                + "username='receiver.account', "
+                                + "password='account.password',"
                                 + "store = 'imap',"
                                 + "host = 'imap.gmail.com',"
                                 + "port = '993',"
-                                + "searchTerm = 'subject:das, from: wso2one@ , cc: wso2two, "
-                                + "polling.interval='50000',"
-                                + "action.after.processed='SEEN',"
+                                + "searchTerm = 'subject:Stream Processor, from: from.account@ , cc: cc.account',"
+                                + "polling.interval='500',"
+                                + "action.after.processed='DELETE',"
                                 + "content.type='text/html,"
                                 + ")" +
                                 "define stream inputStream (name string, age int, country string);"),

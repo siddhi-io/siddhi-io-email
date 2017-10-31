@@ -193,7 +193,7 @@ public class EmailSinkTestCase {
             siddhiAppRuntime.start();
         } catch (Exception e) {
             String exception = e.getMessage();
-            Assert.assertTrue(exception.contains("Error is encountered while connecting  to the server"));
+            Assert.assertTrue(exception.contains("Error is encountered while connecting to the smtp server"));
         }
     }
 
@@ -239,7 +239,7 @@ public class EmailSinkTestCase {
             siddhiAppRuntime.start();
          } catch (Exception e) {
             String exception = e.getMessage();
-            Assert.assertTrue(exception.contains("Error is encountered while connecting  to the server"));
+            Assert.assertTrue(exception.contains("Error is encountered while connecting  to the smtp server"));
         }
     }
 
@@ -338,7 +338,7 @@ public class EmailSinkTestCase {
             siddhiAppRuntime.start();
          } catch (Exception e) {
             String exception = e.getMessage();
-            Assert.assertTrue(exception.contains("Error is encountered while connecting  to the server"));
+            Assert.assertTrue(exception.contains("Error is encountered while connecting to the smtp server"));
         }
     }
 
