@@ -57,12 +57,12 @@ import java.util.Map;
                 + " sink parameters in either 'deployment yaml' file or stream definition."
                 + " So that email source checks whether parameters are given in"
                 + " stream definition or 'ymal' file respectively. If it is not given in both places,"
-                + " then default values are taken if defaults values are available."
+                + " then default values are taken for the optional parameters"
                 + " If user need to configure server system parameters which are not given as options in"
                 + " stream definition then it is needed to define them in 'yaml' file under email sink properties."
                 + " (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about"
-                + " smtp server parameters). Further, make sure that, it has been allowed to access less secure apps"
-                + " in the email account.",
+                + " smtp server parameters). Further, some email account required to enable 'access to less secure"
+                + " apps' (For gmail account you can enable it via https://myaccount.google.com/lesssecureapps.)",
         parameters = {
                 @Parameter(name = "username",
                            description = "Username of the email account which is used to send emails"
