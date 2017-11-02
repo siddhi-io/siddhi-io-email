@@ -134,12 +134,37 @@ import java.util.Map;
                         + "using mandatory parameters. As in the example, it publishes events come "
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
-                        + "The email is sent by the sender.account@gmail.com via secure connection.",
+                        + " The email is sent by the sender.account@gmail.com via secure connection.",
 
                         syntax =  "@sink(type='email', @map(type ='json'), "
                                 + "username='sender.account', "
                                 + "address='sender.account@gmail.com',"
                                 + "password='account.password',"
+                                + "subject='Alerts from Wso2 Stream Processor',"
+                                + "to='{{email}}',"
+                                + ")"
+                                + "define stream fooStream (email string, loginId int, name string);"),
+
+                @Example(description = "Following example illustrates how to configure the query parameters and "
+                        + "system parameters in the deployment ymal file.\n "
+                        + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
+                        + "follows\n"
+                        + "\nsiddhi:\n"
+                        + "  extensions:\n"
+                        + "    -\n"
+                        + "      extension:\n"
+                        + "        name:'email'\n"
+                        + "        namespace:'sink'\n"
+                        + "        properties:\n"
+                        + "          username:sender.account\n"
+                        + "          address:sender.account@gmail.com\n"
+                        + "          address:sender.account@gmail.com\n"
+                        + "\nAs in the example, it publishes events come"
+                        + "from the fooStream in json format via email sink "
+                        + "to the given 'to' recipients."
+                        + " The email is sent by the sender.account@gmail.com via secure connection.",
+
+                        syntax =  "@sink(type='email', @map(type ='json'), "
                                 + "subject='Alerts from Wso2 Stream Processor',"
                                 + "to='{{email}}',"
                                 + ")"
