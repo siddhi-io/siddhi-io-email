@@ -57,12 +57,13 @@ import java.util.Map;
                 + " sink parameters in either 'deployment yaml' file or stream definition."
                 + " So that email source checks whether parameters are given in"
                 + " stream definition or 'ymal' file respectively. If it is not given in both places,"
-                + " then default values are taken for the optional parameters"
+                + " then default values are taken for the optional parameters."
                 + " If user need to configure server system parameters which are not given as options in"
                 + " stream definition then it is needed to define them in 'yaml' file under email sink properties."
                 + " (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about"
                 + " smtp server parameters). Further, some email account required to enable 'access to less secure"
-                + " apps' (For gmail account you can enable it via https://myaccount.google.com/lesssecureapps.)",
+                + " apps' option (for gmail account you can enable it via "
+                + "https://myaccount.google.com/lesssecureapps).",
         parameters = {
                 @Parameter(name = "username",
                            description = "Username of the email account which is used to send emails"
@@ -133,15 +134,41 @@ import java.util.Map;
                         + "using mandatory parameters. As in the example, it publishes events come "
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
-                        + "The email is sent by the sender.account@gmail.com via secure connection.",
-                        syntax =  "define stream fooStream (email string, loginId int, name string);"
-                                + "@sink(type='email', @map(type ='json'), "
+                        + " The email is sent by the sender.account@gmail.com via secure connection.",
+
+                        syntax =  "@sink(type='email', @map(type ='json'), "
                                 + "username='sender.account', "
                                 + "address='sender.account@gmail.com',"
                                 + "password='account.password',"
                                 + "subject='Alerts from Wso2 Stream Processor',"
                                 + "to='{{email}}',"
-                                + ")"),
+                                + ")"
+                                + "define stream fooStream (email string, loginId int, name string);"),
+
+                @Example(description = "Following example illustrates how to configure the query parameters and "
+                        + "system parameters in the deployment ymal file.\n "
+                        + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
+                        + "follows\n"
+                        + "\nsiddhi:\n"
+                        + "  extensions:\n"
+                        + "    -\n"
+                        + "      extension:\n"
+                        + "        name:'email'\n"
+                        + "        namespace:'sink'\n"
+                        + "        properties:\n"
+                        + "          username:sender.account\n"
+                        + "          address:sender.account@gmail.com\n"
+                        + "          address:sender.account@gmail.com\n"
+                        + "\nAs in the example, it publishes events come"
+                        + "from the fooStream in json format via email sink "
+                        + "to the given 'to' recipients."
+                        + " The email is sent by the sender.account@gmail.com via secure connection.",
+
+                        syntax =  "@sink(type='email', @map(type ='json'), "
+                                + "subject='Alerts from Wso2 Stream Processor',"
+                                + "to='{{email}}',"
+                                + ")"
+                                + "define stream fooStream (email string, loginId int, name string);"),
 
                 @Example(description = "Following example illustrates how to publish events using the email sink."
                         + " According to the example, it publishes events come from the fooStream in xml"
@@ -149,8 +176,8 @@ import java.util.Map;
                         + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
                         + " `subject` attribute will be the value of the `name` parameter in the corresponding"
                         + " output event",
-                        syntax =  "define stream fooStream (name string, age int, country string);"
-                                + "@sink(type='email', @map(type ='json'), "
+
+                        syntax =  "@sink(type='email', @map(type ='json'), "
                                 + "username='sender.account', "
                                 + "address='sender.account@gmail.com',"
                                 + "password='account.password',"
@@ -163,7 +190,8 @@ import java.util.Map;
                                 + "to='to1.account@gmail.com, to2.account@gmail.com',"
                                 + "cc='cc1.account@gmail.com, cc2.account@gmail.com',"
                                 + "bcc='bcc1.account@gmail.com"
-                                + ")"),
+                                + ")"
+                                + "define stream fooStream (name string, age int, country string);"),
         },
         systemParameter = {
                 @SystemParameter(name = "mail.smtp.connectiontimeout",
