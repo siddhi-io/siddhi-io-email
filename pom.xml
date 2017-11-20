@@ -90,16 +90,6 @@
                 <version>${carbon.transport.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.transport</groupId>
-                <artifactId>org.wso2.carbon.connector.framework</artifactId>
-                <version>${carbon.transport.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.messaging</groupId>
-                <artifactId>org.wso2.carbon.messaging</artifactId>
-                <version>${carbon.messaging.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.extension.siddhi.map.xml</groupId>
                 <artifactId>siddhi-map-xml</artifactId>
                 <version>${xml.mapper.version}</version>
@@ -143,7 +133,7 @@
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
         <jacoco.maven.version>0.7.9</jacoco.maven.version>
-        <carbon.transport.version>5.0.1</carbon.transport.version>
+        <carbon.transport.version>6.0.49</carbon.transport.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
         <xml.mapper.version>4.0.6</xml.mapper.version>
