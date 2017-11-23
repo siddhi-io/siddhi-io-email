@@ -21,11 +21,12 @@ package org.wso2.extension.siddhi.io.email.sink;
 
 import com.sun.mail.util.MailConnectException;
 import org.apache.log4j.Logger;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.ClientConnector;
-import org.wso2.carbon.messaging.TextCarbonMessage;
-import org.wso2.carbon.messaging.exceptions.ClientConnectorException;
-import org.wso2.carbon.transport.email.sender.EmailClientConnector;
+import org.wso2.carbon.transport.email.connector.factory.EmailConnectorFactoryImpl;
+import org.wso2.carbon.transport.email.contract.EmailClientConnector;
+import org.wso2.carbon.transport.email.contract.EmailConnectorFactory;
+import org.wso2.carbon.transport.email.contract.message.EmailBaseMessage;
+import org.wso2.carbon.transport.email.contract.message.EmailTextMessage;
+import org.wso2.carbon.transport.email.exception.EmailConnectorException;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.siddhi.annotation.Example;
 import org.wso2.siddhi.annotation.Extension;
@@ -359,12 +360,12 @@ import java.util.Map;
 )
 public class EmailSink extends Sink {
     private static final Logger log = Logger.getLogger(EmailSink.class);
-    private ClientConnector emailClientConnector;
+    private EmailClientConnector emailClientConnector;
     private Option optionSubject;
     private Option optionTo;
     private Option optionCc;
     private Option optionBcc;
-    private Map<String, Object> initProperties = new HashMap<>();
+    private Map<String, String> initProperties = new HashMap<>();
     private Map<String, String> emailProperties = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
@@ -403,10 +404,11 @@ public class EmailSink extends Sink {
      */
     @Override
     public void connect() throws ConnectionUnavailableException {
-        emailClientConnector = new EmailClientConnector();
+        EmailConnectorFactory emailConnectorFactory = new EmailConnectorFactoryImpl();
         try {
-            emailClientConnector.init(null, null, initProperties);
-        } catch (ClientConnectorException e) {
+            emailClientConnector = emailConnectorFactory.createEmailClientConnector();
+            emailClientConnector.init(initProperties);
+        } catch (EmailConnectorException e) {
             if (e.getCause() instanceof MailConnectException) {
                 if (e.getCause().getCause() instanceof ConnectException) {
                     throw new ConnectionUnavailableException("Error is encountered while connecting the smtp"
@@ -448,10 +450,11 @@ public class EmailSink extends Sink {
             String bcc = optionBcc.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
         }
-        CarbonMessage textCarbonMessage = new TextCarbonMessage(payload.toString());
+        EmailBaseMessage emailBaseMessage = new EmailTextMessage(payload.toString());
+        emailBaseMessage.setHeaders(emailProperties);
         try {
-            emailClientConnector.send(textCarbonMessage, null, emailProperties);
-        } catch (ClientConnectorException e) {
+            emailClientConnector.send(emailBaseMessage);
+        } catch (EmailConnectorException e) {
                 //calling super class logs the exception and retry
                 if (e.getCause() instanceof MailConnectException) {
                     if (e.getCause().getCause() instanceof ConnectException) {

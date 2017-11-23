@@ -20,10 +20,11 @@ package org.wso2.extension.siddhi.io.email.source;
 
 import com.sun.mail.util.MailConnectException;
 import org.apache.log4j.Logger;
-import org.wso2.carbon.messaging.ServerConnector;
-import org.wso2.carbon.messaging.ServerConnectorProvider;
-import org.wso2.carbon.messaging.exceptions.ServerConnectorException;
-import org.wso2.carbon.transport.email.provider.EmailServerConnectorProvider;
+import org.wso2.carbon.transport.email.connector.factory.EmailConnectorFactoryImpl;
+import org.wso2.carbon.transport.email.contract.EmailConnectorFactory;
+import org.wso2.carbon.transport.email.contract.EmailMessageListener;
+import org.wso2.carbon.transport.email.contract.EmailServerConnector;
+import org.wso2.carbon.transport.email.exception.EmailConnectorException;
 import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.siddhi.annotation.Example;
@@ -538,7 +539,8 @@ public class EmailSource extends Source {
     private SourceEventListener sourceEventListener;
     private ConfigReader configReader;
     private OptionHolder optionHolder;
-    private ServerConnector emailServerConnector;
+    private EmailServerConnector emailServerConnector;
+    private EmailMessageListener emailMessageListener;
     private Map<String, String> properties = new HashMap<>();
     private String store;
     private String contentType;
@@ -567,11 +569,17 @@ public class EmailSource extends Source {
             }
         });
         properties.put(EmailConstants.TRANSPORT_MAIL_AUTO_ACKNOWLEDGE, EmailConstants.DEFAULT_AUTO_ACKNOWLEDGE);
-        ServerConnectorProvider emailServerConnectorProvider = new EmailServerConnectorProvider();
-        emailServerConnector = emailServerConnectorProvider.createConnector("emailSource", properties);
-        EmailMessageProcessor emailMessageProcessor = new EmailMessageProcessor(sourceEventListener, requiredProperties,
-                contentType);
-        emailServerConnector.setMessageProcessor(emailMessageProcessor);
+        EmailConnectorFactory emailConnectorFactory = new EmailConnectorFactoryImpl();
+            try {
+                    emailServerConnector = emailConnectorFactory.createEmailServerConnector(
+                            "emailSource", properties);
+            } catch (EmailConnectorException e) {
+                    throw new EmailSourceAdaptorRuntimeException("Error is encountered while creating the email "
+                            + "server connector.", e);
+            }
+
+            emailMessageListener = new EmailSourceMessageListener(sourceEventListener,
+                    requiredProperties, contentType);
     }
 
     /**
@@ -583,8 +591,9 @@ public class EmailSource extends Source {
      */
     @Override public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
         try {
-            emailServerConnector.start();
-        } catch (ServerConnectorException e) {
+            emailServerConnector.init();
+            emailServerConnector.start(emailMessageListener);
+        } catch (EmailConnectorException e) {
             //calling super class logs the exception and retry
             if (e.getCause() instanceof MailConnectException) {
                 if (e.getCause().getCause() instanceof ConnectException) {
@@ -613,7 +622,7 @@ public class EmailSource extends Source {
                 emailServerConnector.stop();
             }
 
-        } catch (ServerConnectorException e) {
+        } catch (EmailConnectorException e) {
             throw new EmailSourceAdaptorRuntimeException(
                     "Error is encountered while disconnecting " + "the Email Source for stream: "
                             + sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
@@ -627,7 +636,7 @@ public class EmailSource extends Source {
         if (emailServerConnector != null) {
             try {
                 emailServerConnector.stop();
-            } catch (ServerConnectorException e) {
+            } catch (EmailConnectorException e) {
                 log.error("Error is encountered while destroying Email Source for stream: "
                         + sourceEventListener.getStreamDefinition() + "." + e.getMessage(), e);
             }
@@ -641,7 +650,7 @@ public class EmailSource extends Source {
         if (emailServerConnector != null) {
             try {
                 emailServerConnector.stop();
-            } catch (ServerConnectorException e) {
+            } catch (EmailConnectorException e) {
                 throw new EmailSourceAdaptorRuntimeException(
                         "Error is encountered while pausing" + " the Email Source." + e.getMessage(), e);
             }
@@ -654,8 +663,8 @@ public class EmailSource extends Source {
     @Override public void resume() {
         if (emailServerConnector != null) {
             try {
-                emailServerConnector.start();
-            } catch (ServerConnectorException e) {
+                emailServerConnector.start(emailMessageListener);
+            } catch (EmailConnectorException e) {
                 throw new EmailSourceAdaptorRuntimeException(
                         "Error is encountered while resuming" + " the Email Source." + e.getMessage(), e);
             }

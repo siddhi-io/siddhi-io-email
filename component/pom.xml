@@ -37,14 +37,6 @@
             <artifactId>org.wso2.carbon.transport.email</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.connector.framework</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.messaging</groupId>
-            <artifactId>org.wso2.carbon.messaging</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi-query-compiler</artifactId>
         </dependency>
@@ -170,7 +162,7 @@
                         <!-- check and remove-->
                         <Private-Package>
                             org.wso2.carbon.transport.email.*,
-                            org.wso2.extension.siddhi.io.email.internal.*
+                            <!--org.wso2.extension.siddhi.io.email.internal.*-->
                             org.wso2.carbon.connector.framework.server.internal.*,
                             javax.mail.*;
                             com.sun.mail*;

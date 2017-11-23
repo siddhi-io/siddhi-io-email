@@ -19,25 +19,22 @@
 package org.wso2.extension.siddhi.io.email.source;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.messaging.CarbonCallback;
-import org.wso2.carbon.messaging.CarbonMessage;
-import org.wso2.carbon.messaging.CarbonMessageProcessor;
-import org.wso2.carbon.messaging.ClientConnector;
-import org.wso2.carbon.messaging.TextCarbonMessage;
-import org.wso2.carbon.messaging.TransportSender;
+import org.wso2.carbon.transport.email.contract.EmailMessageListener;
+import org.wso2.carbon.transport.email.contract.message.EmailBaseMessage;
+import org.wso2.carbon.transport.email.contract.message.EmailTextMessage;
 import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 
 /**
- * The class implementing Email Message Processor.
+ * The class implementing Email Source message listener to listen incoming email Messages.
  */
-public class EmailMessageProcessor implements CarbonMessageProcessor {
-    private static final Logger log = Logger.getLogger(EmailMessageProcessor.class);
+class EmailSourceMessageListener implements EmailMessageListener {
+    private static final Logger log = Logger.getLogger(EmailSourceMessageListener.class);
     private SourceEventListener sourceEventListener;
     private String[] requiredProperties;
     private String contentType;
 
-    public EmailMessageProcessor(SourceEventListener sourceEventListener, String[] requiredProperties,
+    public EmailSourceMessageListener(SourceEventListener sourceEventListener, String[] requiredProperties,
             String contentType) {
         this.sourceEventListener = sourceEventListener;
         this.requiredProperties = requiredProperties.clone();
@@ -45,42 +42,41 @@ public class EmailMessageProcessor implements CarbonMessageProcessor {
     }
 
     @Override
-    public boolean receive(CarbonMessage carbonMessage, CarbonCallback carbonCallback) throws Exception {
+    public void onMessage(EmailBaseMessage emailBaseMessage) {
         try {
-            if (carbonMessage instanceof TextCarbonMessage) {
-                String event = ((TextCarbonMessage) carbonMessage).getText();
+            if (emailBaseMessage instanceof EmailTextMessage) {
+                String event = ((EmailTextMessage) emailBaseMessage).getText();
                 if (!event.isEmpty()) {
-                    String[] transportProperties = getRequiredPropertyOrHeaderValues(carbonMessage);
+                    String[] transportProperties = getRequiredPropertyOrHeaderValues(emailBaseMessage);
                     sourceEventListener.onEvent(event, transportProperties);
                 } else {
                     log.warn("Receive a message which satisfied the given criteria under"
                             + " the Search Term but in another"
-                            + "content type: " + carbonMessage.getHeader("Content-Type")
+                            + "content type: " + emailBaseMessage.getHeader("Content-Type")
                             + ". Therefore, skip the" + "message by further processing.");
                 }
             } else {
                 throw new SiddhiAppCreationException("Email source only support for the Text carbon message.");
             }
         } finally {
-            carbonCallback.done(carbonMessage);
+            emailBaseMessage.sendAck();
         }
-        return true;
     }
 
     /**
      * Get required properties.
-     * @param carbonMessage CarbonMessage received from the email server connector
+     * @param emailBaseMessage emailBasedMessage received from the email server connector.
      * @return String array which contain required property values.
      */
-    private String[] getRequiredPropertyOrHeaderValues(CarbonMessage carbonMessage) {
+    private String[] getRequiredPropertyOrHeaderValues(EmailBaseMessage emailBaseMessage) {
         String[] values = new String[requiredProperties.length];
         int i = 0;
         for (String propertyKey : requiredProperties) {
-            String headerValue = carbonMessage.getHeader(propertyKey);
+            String headerValue = emailBaseMessage.getHeader(propertyKey);
             if (headerValue != null) {
                 values[i++] = headerValue;
             } else {
-                Object propertyValue = carbonMessage.getProperty(propertyKey);
+                Object propertyValue = emailBaseMessage.getProperty(propertyKey);
                 if (propertyValue != null) {
                     values[i++] = propertyValue.toString();
                 } else {
@@ -91,13 +87,4 @@ public class EmailMessageProcessor implements CarbonMessageProcessor {
         return values;
     }
 
-    @Override public void setTransportSender(TransportSender transportSender) {
-    }
-
-    @Override public void setClientConnector(ClientConnector clientConnector) {
-    }
-
-    @Override public String getId() {
-        return "email-message-processor";
-    }
 }
