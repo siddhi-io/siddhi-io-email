@@ -16,7 +16,7 @@
     
     
       
-        <title>1.0.0-M8 - Siddhi-IO-Email</title>
+        <title>1.0.4 - Siddhi-IO-Email</title>
       
     
     
@@ -84,7 +84,7 @@
                 </span>
               
             
-            1.0.0-M8
+            1.0.4
           
         </span>
       </div>
@@ -181,54 +181,6 @@
           
           
 
-
-  <li class="md-nav__item">
-    <a href="../1.0.4/" title="1.0.4" class="md-nav__link">
-      1.0.4
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../1.0.3/" title="1.0.3" class="md-nav__link">
-      1.0.3
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../1.0.2/" title="1.0.2" class="md-nav__link">
-      1.0.2
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../1.0.1/" title="1.0.1" class="md-nav__link">
-      1.0.1
-    </a>
-  </li>
-
-        
-          
-          
-          
-
   
 
 
@@ -240,11 +192,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="toc">
-        1.0.0-M8
+        1.0.4
       </label>
     
-    <a href="./" title="1.0.0-M8" class="md-nav__link md-nav__link--active">
-      1.0.0-M8
+    <a href="./" title="1.0.4" class="md-nav__link md-nav__link--active">
+      1.0.4
     </a>
     
       
@@ -303,6 +255,54 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.0.3/" title="1.0.3" class="md-nav__link">
+      1.0.3
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.0.2/" title="1.0.2" class="md-nav__link">
+      1.0.2
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.0.1/" title="1.0.1" class="md-nav__link">
+      1.0.1
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../1.0.0-M8/" title="1.0.0-M8" class="md-nav__link">
+      1.0.0-M8
+    </a>
   </li>
 
         
@@ -446,10 +446,10 @@
               
                 
                 
-                <h1 id="api-docs-v100-m8">API Docs - v1.0.0-M8</h1>
+                <h1 id="api-docs-v104">API Docs - v1.0.4</h1>
 <h2 id="sink">Sink</h2>
 <h3 id="email-sink">email <em><a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a></em></h3>
-<p style="word-wrap: break-word">The email sink uses 'smtp' server to publish events via emails. It can be published events in 'text', 'xml' or 'json' formats. The user can define email sink parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition or 'ymal' file respectively. If it is not given in both places, then default values are taken if defaults values are available. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email sink properties. (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about smtp server parameters).</p>
+<p style="word-wrap: break-word">The email sink uses 'smtp' server to publish events via emails. It can be published events in 'text', 'xml' or 'json' formats. The user can define email sink parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition or 'ymal' file respectively. If it is not given in both places, then default values are taken for the optional parameters. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email sink properties. (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about smtp server parameters). Further, some email account required to enable 'access to less secure apps' option (for gmail account you can enable it via https://myaccount.google.com/lesssecureapps).</p>
 
 <p><span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span></p>
 <pre><code>@sink(type=&quot;email&quot;, username=&quot;&lt;STRING&gt;&quot;, address=&quot;&lt;STRING&gt;&quot;, password=&quot;&lt;STRING&gt;&quot;, host=&quot;&lt;STRING&gt;&quot;, port=&quot;&lt;INT&gt;&quot;, ssl.enable=&quot;&lt;BOOL&gt;&quot;, auth=&quot;&lt;BOOL&gt;&quot;, content.type=&quot;&lt;STRING&gt;&quot;, subject=&quot;&lt;STRING&gt;&quot;, to=&quot;&lt;STRING&gt;&quot;, cc=&quot;&lt;STRING&gt;&quot;, bcc=&quot;&lt;STRING&gt;&quot;, @map(...)))
@@ -765,10 +765,22 @@
 </table></p>
 <p><span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span></p>
-<pre><code>@sink(type='email', @map(type='json'), username='wso2', address='wso2@gmail.com',password='wso234',host='smtp.gmail.com',subject='Event from SP',to='towso2@gmail.com ,wso2two@gmail.com',cc='ccwso2@gmail.com')define stream inputStream (name string, age int, country string);
+<pre><code>@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
 </code></pre>
 
-<p style="word-wrap: break-word">Following example illustrates how to publish a event using email sink. As in the example, it publishes events come from the inputStream in json format through email to given 'to' and 'cc' recipients.The email is sent through wso2@gmail.com email account via secure connection.</p>
+<p style="word-wrap: break-word">Following example illustrates how to publish events using the email sinkusing mandatory parameters. As in the example, it publishes events come from the fooStream in json format via email sink to the given 'to' recipients. The email is sent by the sender.account@gmail.com via secure connection.</p>
+
+<p><span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span></p>
+<pre><code>@sink(type='email', @map(type ='json'), subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
+</code></pre>
+
+<p style="word-wrap: break-word">Following example illustrates how to configure the query parameters and system parameters in the deployment ymal file.<br>&nbsp;Corresponding parameters need to be configure under name:'email' and namespace:'sink' as follows<br><br>siddhi:<br>&nbsp;&nbsp;extensions:<br>&nbsp;&nbsp;&nbsp;&nbsp;-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extension:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:'email'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;namespace:'sink'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;properties:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username:sender.account<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br><br>As in the example, it publishes events comefrom the fooStream in json format via email sink to the given 'to' recipients. The email is sent by the sender.account@gmail.com via secure connection.</p>
+
+<p><span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span></p>
+<pre><code>@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',host='smtp.gmail.com',port='465',ssl.enable='true',auth='true',content.type='text/html',subject='Alerts from Wso2 Stream Processor-{{name}}',to='to1.account@gmail.com, to2.account@gmail.com',cc='cc1.account@gmail.com, cc2.account@gmail.com',bcc='bcc1.account@gmail.com)define stream fooStream (name string, age int, country string);
+</code></pre>
+
+<p style="word-wrap: break-word">Following example illustrates how to publish events using the email sink. According to the example, it publishes events come from the fooStream in xml format via email sink as a text/html message to the given <code>to</code>,<code>cc</code> and <code>bcc</code> recipients using a secure connection. <code>name</code> in the <code>subject</code> attribute will be the value of the <code>name</code> parameter in the corresponding output event</p>
 
 <h2 id="source">Source</h2>
 <h3 id="email-source">email <em><a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a></em></h3>
@@ -1304,10 +1316,16 @@
 </table></p>
 <p><span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span></p>
-<pre><code>@source(type='email', @map(type='xml'), username='wso2mail', password='wso2Password',store = 'imap',host = 'imap.gmail.com',port = '993',searchTerm = 'subject:das, from: wso2one@ , cc: wso2two, polling.interval='50000',action.after.processed='SEEN',content.type='text/html,)define stream inputStream (name string, age int, country string);
+<pre><code>@source(type='email', @map(type='xml'), username='receiver.account', password='account.password',)define stream inputStream (name string, age int, country string);
 </code></pre>
 
-<p style="word-wrap: break-word">Following example illustrates how to receive events in 'xml' format using email source. The email source polls the mail account in every 50 seconds to check whether new mails has been arrived and processes new mails only if if it satisfy the properties given under email search term. In the example action after processes is defined as the 'SEEN', so that after processing the event, corresponding mail is mark as read.</p>
+<p style="word-wrap: break-word">Following example illustrates how to receive events in <code>xml</code> format using email source. In this example only mandatory parameters are defined in the  in the stream definition. For other parameters default values are taken. since search term is not defined, it poll and take all new messages in the inbox folder</p>
+
+<p><span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span></p>
+<pre><code>@source(type='email', @map(type='xml'), username='receiver.account', password='account.password',store = 'imap',host = 'imap.gmail.com',port = '993',searchTerm = 'subject:Stream Processor, from: from.account@ , cc: cc.account',polling.interval='500',action.after.processed='DELETE',content.type='text/html,)define stream inputStream (name string, age int, country string);
+</code></pre>
+
+<p style="word-wrap: break-word">Following example illustrates how to receive events in <code>xml</code> format using email source. The email source polls the mail account in every 500 seconds to check whether new mails has been arrived and processes new mails only if if it satisfy the properties given under email search term (email messages which come from<code>from.account@.&lt;host name&gt;</code>, contains <code>cc.account</code> in cc receipts list, and <code>Stream Processor</code> words in the mail subject) In the example, action after processes is defined as the <code>DELETE</code>, so that after processing the event, corresponding mail is deleted from the mail folder.</p>
                 
                   
                 
@@ -1326,7 +1344,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../1.0.1/" title="1.0.1" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../.." title="Welcome to WSO2 Siddhi IO Email" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -1335,19 +1353,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                1.0.1
+                Welcome to WSO2 Siddhi IO Email
               </span>
             </div>
           </a>
         
         
-          <a href="../1.0.0-M7/" title="1.0.0-M7" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../1.0.3/" title="1.0.3" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                1.0.0-M7
+                1.0.3
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
