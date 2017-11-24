@@ -129,7 +129,7 @@
         </plugins>
   </build>
     <properties>
-        <siddhi.version>4.0.0-alpha</siddhi.version>
+        <siddhi.version>4.0.0-beta</siddhi.version>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
         <jacoco.maven.version>0.7.9</jacoco.maven.version>
