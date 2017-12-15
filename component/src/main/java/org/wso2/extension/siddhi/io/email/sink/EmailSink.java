@@ -195,6 +195,13 @@ import java.util.Map;
                                 + "define stream fooStream (name string, age int, country string);"),
         },
         systemParameter = {
+                @SystemParameter(name = "mail.smtp.ssl.trust",
+                                 description = "If set, and a socket factory hasn't been specified, enables use of a "
+                                         + "MailSSLSocketFactory. If set to \"*\", all hosts are trusted. If set to a"
+                                         + " whitespace separated list of hosts, those hosts are trusted. Otherwise, "
+                                         + "trust depends on the certificate the server presents.",
+                                 defaultValue = "*",
+                                 possibleParameters = "String"),
                 @SystemParameter(name = "mail.smtp.connectiontimeout",
                                  description = "Socket connection timeout value in milliseconds. ",
                                  defaultValue = "infinite timeout",
@@ -536,6 +543,12 @@ public class EmailSink extends Sink {
             }
         }
         initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_PORT, port);
+
+        //Default we trust all the hosts (smtp servers). If user need to trust set of hosts then, it is required to
+        //set 'ssl.trust' system property in deployment yaml under email sink configuration.
+        String trust = configReader.readConfig(EmailConstants.MAIL_PUBLISHER_TRUST,
+                EmailConstants.EMAIL_RECEIVER_DEFAULT_TRUST);
+        initProperties.put(EmailConstants.MAIL_PUBLISHER_TRUST, trust);
 
         //to is a dynamic variable, if that option is not exist,
         // check whether default value for the 'to' is given in the configurations.

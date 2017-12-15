@@ -32,6 +32,7 @@ public class EmailConstants {
     public static final String MAIL_PUBLISHER_PASSWORD = "password";
     public static final String MAIL_PUBLISHER_HOST_NAME = "host";
     public static final String MAIL_PUBLISHER_SSL_ENABLE = "ssl.enable";
+    public static final String MAIL_PUBLISHER_TRUST = "mail.smtp.ssl.trust";
     public static final String MAIL_PUBLISHER_PORT = "port";
     public static final String MAIL_PUBLISHER_AUTH = "auth";
     public static final String MAIL_PUBLISHER_CONTENT_TYPE = "content.type";
@@ -48,6 +49,7 @@ public class EmailConstants {
     public static final String MAIL_PUBLISHER_DEFAULT_PORT = "465";
     public static final String MAIL_PUBLISHER_DEFAULT_AUTH = "true";
     public static final String MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE = "text/plain";
+    public static final String MAIL_PUBLISHER_DEFAULY_TRUST = "*";
 
     /**
      * Required carbon transport properties to send the email.
@@ -80,6 +82,8 @@ public class EmailConstants {
     public static final String FOLDER = "folder";
     public static final String MOVE_TO_FOLDER = "move.to.folder";
     public static final String EMAIL_SEARCH_TERM = "search.term";
+    public static final String EMAIL_RECEIVER_TRUST = "ssl.trust";
+
 
     /**
      * Default values for the email source configurations.
@@ -91,6 +95,7 @@ public class EmailConstants {
     public static final String DEFAULT_POLLING_INTERVAL = "600";
     public static final String EMAIL_RECEIVER_DEFAULT_CONTENT_TYPE = "text/plain";
     public static final String DEFAULT_AUTO_ACKNOWLEDGE = "false";
+    public static final String EMAIL_RECEIVER_DEFAULT_TRUST = "*";
 
     /**
      * Required carbon transport properties to receive the email.
