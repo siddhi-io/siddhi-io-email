@@ -318,7 +318,7 @@ import java.util.stream.Stream;
                                 + "If set to '*', all hosts are trusted."
                                 + "If set to a whitespace separated list of hosts, those hosts are trusted."
                                 + "Otherwise, trust depends on the certificate the server presents.",
-                        defaultValue = "None",
+                        defaultValue = "*",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.ssl.socketFactory",
                         description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
@@ -435,7 +435,7 @@ import java.util.stream.Stream;
                                 + "If set to '*', all hosts are trusted."
                                 + "If set to a whitespace separated list of hosts, those hosts are trusted."
                                 + "Otherwise, trust depends on the certificate the server presents.",
-                        defaultValue = "Depends on the certificate the server presents",
+                        defaultValue = "*",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory",
                         description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
@@ -861,5 +861,11 @@ public class EmailSource extends Source {
             + "' and '" + EmailConstants.TEXT_PLAIN + "' but found: " + contentType + ".");
         }
         properties.put(EmailConstants.TRANSPORT_MAIL_RECEIVER_CONTENT_TYPE, contentType);
+
+        //Default we trust all the hosts (imap and pop3 servers). If user need to trust set of hosts then,
+        // it is required to set 'ssl.trust' system property in deployment yaml under email source configuration.
+        String trust = configReader.readConfig("mail." + store + "." + EmailConstants.EMAIL_RECEIVER_TRUST,
+                EmailConstants.EMAIL_RECEIVER_DEFAULT_TRUST);
+        properties.put("mail." + store + "." + EmailConstants.EMAIL_RECEIVER_TRUST, trust);
     }
 }
