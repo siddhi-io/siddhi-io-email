@@ -84,7 +84,6 @@ public class EmailConstants {
     public static final String EMAIL_SEARCH_TERM = "search.term";
     public static final String EMAIL_RECEIVER_TRUST = "ssl.trust";
 
-
     /**
      * Default values for the email source configurations.
      */
