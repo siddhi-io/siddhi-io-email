@@ -4,7 +4,7 @@
 
 ### email *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a>*
 
-<p style="word-wrap: break-word">The email sink uses <code>smtp</code> server to publish events via emails. The format of the events can be <code>text</code>, <code>xml</code>, or <code>json</code>. You can configure parameters for an email sink in the stream definition or the <code>&lt;SP_HOME&gt;/conf/deplyment.yaml</code> file. The email source first checks the stream definition for parameters. If no parameters are configured there, the email source checks the <code>deployment.yaml</code> file. If the parameter configurations are not available in either place, the default values are considered (i.e., if they are available). If you need to configure server system parameters that are not provided as options in the stream definition, those should be defined in the <code>yaml</code>file under email sink properties. For more information about SMTP server parameters, see [SMTP Transport] (https://javaee.github.io/javamail/SMTP-Transport)</p>
+<p style="word-wrap: break-word">The email sink uses 'smtp' server to publish events via emails. Events can be published in the 'text', 'xml' and 'json' formats. The user can define email sink parameters in either the 'deployment.yaml' file or the stream definition. The email sink first checks whether parameters are given in stream definition, and if they are not provided there, it checks the 'deployment.yaml' file. If it is not given in both places, the default values are taken for the optional parameters. If you need to configure server system parameters that are not given as options in the stream definition, it is required to define them in the 'deployment.yaml' file under email sink properties. For more information about SMTP server parameters, see [JavaMail Transport - SMTP Transport](https://javaee.github.io/javamail/SMTP-Transport)Further, some email accounts require the 'access to less secure apps' option to be enabled ( you can enable it for gmail accounts via thehttps://myaccount.google.com/lesssecureapps URL).</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
@@ -23,7 +23,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">username</td>
-        <td style="vertical-align: top; word-wrap: break-word">Username of the email account that is used to send emails. e.g., 'abc' is the username of <code>abc@gmail.com</code>).</td>
+        <td style="vertical-align: top; word-wrap: break-word">The username of the email account that is used to send emails. e.g., 'abc' is the username for abc@gmail.com.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -39,7 +39,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">password</td>
-        <td style="vertical-align: top; word-wrap: break-word">The password of the email account that is used to send emails.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The password of the email account that is used to send mails.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -47,7 +47,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">host</td>
-        <td style="vertical-align: top; word-wrap: break-word">The host name of the smtp server. The email address should always be <code>&lt;USERNAME&gt;@&lt;HOST_NAME&gt;.com'. (e.g., If </code>gmail` is the host name, the email address should always be a gmail account.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The host name of the SMTP server. e.g., 'smtp.gmail.com' which is the default value.). This value is only valid if the email account is a gmail account.</td>
         <td style="vertical-align: top">smtp.gmail.com</td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
@@ -55,15 +55,15 @@
     </tr>
     <tr>
         <td style="vertical-align: top">port</td>
-        <td style="vertical-align: top; word-wrap: break-word">The port that is used to create the connection.</td>
-        <td style="vertical-align: top">`465` which is the default value is only valid if SSL is enabled.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The port that is used to create the connection. The default value 465 is valid only if SSL is enabled.</td>
+        <td style="vertical-align: top">'465'</td>
         <td style="vertical-align: top">INT</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>
     <tr>
         <td style="vertical-align: top">ssl.enable</td>
-        <td style="vertical-align: top; word-wrap: break-word">This parameter specifies whether the connection should be established through a secure connection or not. If the value is <code>true</code> the connection is established through the 493 port which is a secure connection.</td>
+        <td style="vertical-align: top; word-wrap: break-word">This parameter specifies whether the connection must be established via secure connection or not. The value can be either 'true' or 'false'. If it is 'true', then the connection is establish through the 493 port which is a secure connection.</td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">BOOL</td>
         <td style="vertical-align: top">Yes</td>
@@ -71,7 +71,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">auth</td>
-        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to <code>true</code> the <code>AUTH</code> command is used to authenticate the email server before publishing the processed messages as emails.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', then the 'AUTH' command is used to authenticate the user.</td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">BOOL</td>
         <td style="vertical-align: top">Yes</td>
@@ -79,7 +79,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">content.type</td>
-        <td style="vertical-align: top; word-wrap: break-word">The content type can be either <code>text/plain</code> or <code>text/html</code>.</td>
+        <td style="vertical-align: top; word-wrap: break-word">Content type can be either 'text/plain' or 'text/html'.</td>
         <td style="vertical-align: top">text/plain</td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
@@ -87,7 +87,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">subject</td>
-        <td style="vertical-align: top; word-wrap: break-word">The subject of the email to be sent.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The subject of the mail to be sent.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -95,7 +95,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">to</td>
-        <td style="vertical-align: top; word-wrap: break-word">The address of the email recipient. If there are multiple recipients, all the addresses are specified as a comma separated list.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The address(es) of the 'to' recipients. If there are more than one 'to' recipient, the addresses can be given as a comma separated list.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -103,7 +103,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">cc</td>
-        <td style="vertical-align: top; word-wrap: break-word">The addresses of the recipients that should be included in the CC (Carbon Copy) list. When there are multiple CC recipients, all the addresses are specified as a comma separated list.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The address(es) of the 'cc' recipients. If there are more than one 'cc' recipient, the addresses can be given as a comma separated list.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
@@ -111,7 +111,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">bcc</td>
-        <td style="vertical-align: top; word-wrap: break-word">The addresses of the recipients that should be included in the BCC (Blind Carbon Copy) list. When there are multiple BCC recipients, all the addresses are specified as a comma separated list.</td>
+        <td style="vertical-align: top; word-wrap: break-word">Address(es) of the 'bcc' recipients. If there are more than one bcc recipient, the addresses can be given as a comma separated list.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
@@ -129,61 +129,61 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.ssl.trust</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set, and a socket factory hasn't been specified, enables use of a MailSSLSocketFactory. If set to "*", all hosts are trusted. If set to a whitespace separated list of hosts, those hosts are trusted. Otherwise, trust depends on the certificate the server presents.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set and a socket factory has not been specified, it enables the use of a 'MailSSLSocketFactory'. If the value for this parameter is "*", all hosts are trusted. If the value is a whitespace separated list of hosts, those hosts are trusted. If the value is neither of the two mentioned, trust depends on the certificate that is presented by the server.</td>
         <td style="vertical-align: top">*</td>
         <td style="vertical-align: top">String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.connectiontimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket connection timeout value in milliseconds. </td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket connection timeout value in milliseconds. </td>
         <td style="vertical-align: top">infinite timeout</td>
         <td style="vertical-align: top">Any Integer</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.timeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket I/O timeout value in milliseconds. </td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket I/O timeout value in milliseconds. </td>
         <td style="vertical-align: top">infinite timeout</td>
         <td style="vertical-align: top">Any Integer</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.from</td>
-        <td style="vertical-align: top; word-wrap: break-word">Email address to use for SMTP MAIL command. This sets the envelope return address.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The email address that must be used for the SMTP MAIL command. This sets the envelope return address.</td>
         <td style="vertical-align: top">Defaults to msg.getFrom() or InternetAddress.getLocalAddress().</td>
         <td style="vertical-align: top">Valid email address</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.localport</td>
-        <td style="vertical-align: top; word-wrap: break-word">Local port number to bind to when creating the SMTP socket.</td>
-        <td style="vertical-align: top">Defaults to the port number picked by the Socket class.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The local port number to bind to when creating the SMTP socket.</td>
+        <td style="vertical-align: top">The port number picked by the Socket class is default.</td>
         <td style="vertical-align: top">Any Integer</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.ehlo</td>
-        <td style="vertical-align: top; word-wrap: break-word">If false, do not attempt to sign on with the EHLO command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'false', do not attempt to sign on with the 'EHLO' command.</td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.auth.login.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the AUTH LOGIN command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', it prevents the use of the 'AUTH LOGIN' command.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.auth.plain.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the AUTH PLAIN command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', it prevents the use of the 'AUTH PLAIN' command.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.auth.digest-md5.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the AUTH DIGEST-MD5 command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', it prevents the use of the 'AUTH DIGEST-MD5' command.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.auth.ntlm.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the AUTH NTLM command</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', it prevents the use of the 'AUTH NTLM' command</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
@@ -191,7 +191,7 @@
         <td style="vertical-align: top">mail.smtp.auth.ntlm.domain</td>
         <td style="vertical-align: top; word-wrap: break-word">The NTLM authentication domain.</td>
         <td style="vertical-align: top">None</td>
-        <td style="vertical-align: top">Valid NTLM authentication domain name</td>
+        <td style="vertical-align: top">A valid NTLM authentication domain name</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.auth.ntlm.flags</td>
@@ -201,25 +201,25 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.dsn.notify</td>
-        <td style="vertical-align: top; word-wrap: break-word">The NOTIFY option to the RCPT command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The 'NOTIFY' option to the 'RCPT' command.</td>
         <td style="vertical-align: top">None</td>
-        <td style="vertical-align: top">Either NEVER, or some combination of SUCCESS, FAILURE, and DELAY (separated by commas).</td>
+        <td style="vertical-align: top">Either 'NEVER', or some combination of 'SUCCESS', 'FAILURE', and 'DELAY' (separated by commas).</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.dsn.ret</td>
-        <td style="vertical-align: top; word-wrap: break-word">The RET option to the MAIL command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The 'RET' option to the 'MAIL' command.</td>
         <td style="vertical-align: top">None</td>
-        <td style="vertical-align: top">Either FULL or HDRS.</td>
+        <td style="vertical-align: top">Either 'FULL' or 'HDRS'.</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.sendpartial</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, and a message has some valid and some invalid addresses, send the message anyway, reporting the partial failure with a SendFailedException. If set to false (the default), the message is not sent to any of the recipients if there is an invalid recipient address.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true' and a message is being sent to both valid and invalid addresses, the message is sent anyway and a partial failure is reported via the 'SendFailedException'. If this is set to 'false', (which is default), the message is not sent to any of the recipients if there are one or more invalid recipient addresses.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.smtp.sasl.enable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, attempt to use the javax.security.sasl package to choose an authentication mechanism for login.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', the system attempts to use the 'javax.security.sasl' package to choose an authentication mechanism for login.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
@@ -330,17 +330,21 @@
 <span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span>
 ```
-define stream inputStream (name string, age int, country string);
-@sink(type='email', @map(type='json'),
- username='wso2',
- address='wso2@gmail.com',
-password='wso234',
-host='smtp.gmail.com',
-subject='Event from SP',
-to='towso2@gmail.com ,wso2two@gmail.com',
-cc='ccwso2@gmail.com')
+@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
 ```
-<p style="word-wrap: break-word">This query publishes events from the stream named <code>InputStream</code> in <code>json</code> format via an email sink. The output events are sent to the specified <code>to</code> and <code>cc</code> recipients. The email is sent using the <code>wso2@gmail.com</code> email account via a secure connection.)</p>
+<p style="word-wrap: break-word">Following example illustrates how to publish events via the email sinkwith values specified only for the required parameters. As shown below, it publishes events from the 'fooStream' in the JSON format via the email sink to the given 'to' recipients. The email is sent by the 'sender.account@gmail.com' user via secure connection.</p>
+
+<span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span>
+```
+@sink(type='email', @map(type ='json'), subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
+```
+<p style="word-wrap: break-word">Following example illustrates how to configure the query parameters and system parameters in the 'deployment.yaml' file.<br>&nbsp;Corresponding parameters need to be configured under name:'email' and namespace:'sink' as follows:<br><br>siddhi:<br>&nbsp;&nbsp;extensions:<br>&nbsp;&nbsp;&nbsp;&nbsp;-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extension:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:'email'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;namespace:'sink'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;properties:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username:sender.account<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br><br>As shown in the example, it publishes events from the 'fooStream' in the JSON format via the email sink to the given 'to' recipients. The email is sent by the 'sender.account@gmail.com' user via secure connection.</p>
+
+<span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span>
+```
+@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',host='smtp.gmail.com',port='465',ssl.enable='true',auth='true',content.type='text/html',subject='Alerts from Wso2 Stream Processor-{{name}}',to='to1.account@gmail.com, to2.account@gmail.com',cc='cc1.account@gmail.com, cc2.account@gmail.com',bcc='bcc1.account@gmail.com)define stream fooStream (name string, age int, country string);
+```
+<p style="word-wrap: break-word">Following example illustrates how to publish events via the email sink. As shown in the example, it publishes events from the fooStream in the XML format via the email sink as a text/html message to the given 'to','cc' and 'bcc' recipients using a secure connection. The value of the 'subject' attribute is published as the value of the'name'parameter in the corresponding output event.</p>
 
 ## Source
 
