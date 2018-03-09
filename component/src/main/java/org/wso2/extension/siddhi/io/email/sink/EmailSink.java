@@ -494,7 +494,7 @@ public class EmailSink extends Sink {
         String address = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_ADDRESS,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_ADDRESS, EmailConstants.EMPTY_STRING));
         if (address.isEmpty()) {
-            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_USERNAME + " is a mandatory parameter. "
+            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_ADDRESS + " is a mandatory parameter. "
                     + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_FROM, address);
