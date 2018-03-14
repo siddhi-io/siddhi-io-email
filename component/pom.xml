@@ -33,8 +33,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.transport</groupId>
-            <artifactId>org.wso2.carbon.transport.email</artifactId>
+            <groupId>org.wso2.transport.email</groupId>
+            <artifactId>transport-email</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
