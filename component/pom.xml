@@ -161,7 +161,7 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <!-- check and remove-->
                         <Private-Package>
-                            org.wso2.carbon.transport.email.*,
+                            org.wso2.transport.email.*,
                             org.wso2.carbon.connector.framework.server.polling.*,
                             javax.mail.*;
                             com.sun.mail*;
