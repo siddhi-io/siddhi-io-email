@@ -19,11 +19,11 @@
 package org.wso2.extension.siddhi.io.email.source;
 
 import org.apache.log4j.Logger;
-import org.wso2.carbon.transport.email.contract.EmailMessageListener;
-import org.wso2.carbon.transport.email.contract.message.EmailBaseMessage;
-import org.wso2.carbon.transport.email.contract.message.EmailTextMessage;
 import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
+import org.wso2.transport.email.contract.EmailMessageListener;
+import org.wso2.transport.email.contract.message.EmailBaseMessage;
+import org.wso2.transport.email.contract.message.EmailTextMessage;
 
 /**
  * The class implementing Email Source message listener to listen incoming email Messages.

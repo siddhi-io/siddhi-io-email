@@ -20,11 +20,6 @@ package org.wso2.extension.siddhi.io.email.source;
 
 import com.sun.mail.util.MailConnectException;
 import org.apache.log4j.Logger;
-import org.wso2.carbon.transport.email.connector.factory.EmailConnectorFactoryImpl;
-import org.wso2.carbon.transport.email.contract.EmailConnectorFactory;
-import org.wso2.carbon.transport.email.contract.EmailMessageListener;
-import org.wso2.carbon.transport.email.contract.EmailServerConnector;
-import org.wso2.carbon.transport.email.exception.EmailConnectorException;
 import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.siddhi.annotation.Example;
@@ -39,6 +34,11 @@ import org.wso2.siddhi.core.stream.input.source.Source;
 import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.siddhi.core.util.config.ConfigReader;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
+import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
+import org.wso2.transport.email.contract.EmailConnectorFactory;
+import org.wso2.transport.email.contract.EmailMessageListener;
+import org.wso2.transport.email.contract.EmailServerConnector;
+import org.wso2.transport.email.exception.EmailConnectorException;
 
 import java.net.ConnectException;
 import java.time.Duration;
