@@ -21,12 +21,6 @@ package org.wso2.extension.siddhi.io.email.sink;
 
 import com.sun.mail.util.MailConnectException;
 import org.apache.log4j.Logger;
-import org.wso2.carbon.transport.email.connector.factory.EmailConnectorFactoryImpl;
-import org.wso2.carbon.transport.email.contract.EmailClientConnector;
-import org.wso2.carbon.transport.email.contract.EmailConnectorFactory;
-import org.wso2.carbon.transport.email.contract.message.EmailBaseMessage;
-import org.wso2.carbon.transport.email.contract.message.EmailTextMessage;
-import org.wso2.carbon.transport.email.exception.EmailConnectorException;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.siddhi.annotation.Example;
 import org.wso2.siddhi.annotation.Extension;
@@ -42,6 +36,12 @@ import org.wso2.siddhi.core.util.transport.DynamicOptions;
 import org.wso2.siddhi.core.util.transport.Option;
 import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.siddhi.query.api.definition.StreamDefinition;
+import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
+import org.wso2.transport.email.contract.EmailClientConnector;
+import org.wso2.transport.email.contract.EmailConnectorFactory;
+import org.wso2.transport.email.contract.message.EmailBaseMessage;
+import org.wso2.transport.email.contract.message.EmailTextMessage;
+import org.wso2.transport.email.exception.EmailConnectorException;
 
 import java.net.ConnectException;
 import java.util.HashMap;
@@ -499,7 +499,7 @@ public class EmailSink extends Sink {
         String address = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_ADDRESS,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_ADDRESS, EmailConstants.EMPTY_STRING));
         if (address.isEmpty()) {
-            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_USERNAME + " is a mandatory parameter. "
+            throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_ADDRESS + " is a mandatory parameter. "
                     + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_FROM, address);
