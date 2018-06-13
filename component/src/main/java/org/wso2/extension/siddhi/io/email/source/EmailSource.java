@@ -147,7 +147,7 @@ import java.util.stream.Stream;
                 optional = true,
                 defaultValue = "true") },
         examples = {
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
+                @Example(description = "Above example illustrates how to receive events in `xml` format"
                         + " using email source. In this example only mandatory parameters are defined in the "
                         + " in the stream definition. For other parameters default values are taken."
                         + " since search term is not defined, it poll and take all new messages in the inbox folder",
@@ -157,7 +157,7 @@ import java.util.stream.Stream;
                                 + ")" +
                                 "define stream inputStream (name string, age int, country string);"),
 
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
+                @Example(description = "Above example illustrates how to receive events in `xml` format"
                         + " using email source. The email source polls the mail account in every 500 seconds"
                         + " to check whether new mails has been arrived and processes new mails only if"
                         + " if it satisfy the properties given under email search term (email messages which come from"
