@@ -131,7 +131,7 @@ import java.util.Map;
 
         },
         examples = {
-                @Example(description = "Following example illustrates how to publish events using the email sink"
+                @Example(description = "Above example illustrates how to publish events using the email sink"
                         + "using mandatory parameters. As in the example, it publishes events come "
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
@@ -146,20 +146,19 @@ import java.util.Map;
                                 + ")"
                                 + "define stream fooStream (email string, loginId int, name string);"),
 
-                @Example(description = "Following example illustrates how to configure the query parameters and "
-                        + "system parameters in the deployment ymal file.\n "
+                @Example(description = "Above example illustrates how to configure the query parameters and "
+                        + "system parameters in the 'deployment.ymal' file of WSO2 Stream Processor.\n "
                         + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
                         + "follows\n"
                         + "\nsiddhi:\n"
-                        + "  extensions:\n"
-                        + "    -\n"
-                        + "      extension:\n"
-                        + "        name:'email'\n"
-                        + "        namespace:'sink'\n"
-                        + "        properties:\n"
-                        + "          username:sender.account\n"
-                        + "          address:sender.account@gmail.com\n"
-                        + "          address:sender.account@gmail.com\n"
+                        + "    extensions:\n"
+                        + "      -  extension:\n"
+                        + "           name:'email'\n"
+                        + "           namespace:'sink'\n"
+                        + "           properties:\n"
+                        + "             username: <sender's email username>\n"
+                        + "             address: <sender's email address>\n"
+                        + "             password: <sender's email password>\n"
                         + "\nAs in the example, it publishes events come"
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
@@ -171,7 +170,7 @@ import java.util.Map;
                                 + ")"
                                 + "define stream fooStream (email string, loginId int, name string);"),
 
-                @Example(description = "Following example illustrates how to publish events using the email sink."
+                @Example(description = "Above example illustrates how to publish events using the email sink."
                         + " According to the example, it publishes events come from the fooStream in xml"
                         + " format via email sink as a text/html message"
                         + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
