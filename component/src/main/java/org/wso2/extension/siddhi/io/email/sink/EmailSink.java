@@ -40,12 +40,13 @@ import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
 import org.wso2.transport.email.contract.message.EmailBaseMessage;
-import org.wso2.transport.email.contract.message.EmailTextMessage;
+import org.wso2.transport.email.contract.message.EmailMessage;
 import org.wso2.transport.email.exception.EmailConnectorException;
 
 import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * This the class implementing email sink.
@@ -127,7 +128,15 @@ import java.util.Map;
                                 + " then addresses can be given as a comma separated list.",
                            type = DataType.STRING,
                            optional = true,
-                           defaultValue = "None")
+                           defaultValue = "None"),
+                @Parameter(name = "attachments",
+                        description = "File paths of the files that needs to be attached to the email.\n" +
+                                "These paths should be absolute paths.\n" +
+                                "They can be either a directories or files. If it's a directory all the files inside " +
+                                " that directory will be attached.",
+                        type = DataType.STRING,
+                        optional = true,
+                        defaultValue = "None")
 
         },
         examples = {
@@ -376,6 +385,9 @@ public class EmailSink extends Sink {
     private Map<String, String> emailProperties = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
+    private String[] attachments;
+    private Option attachmentOption;
+    String files;
 
     /**
      * The initialization method for {@link Sink}, which will be called before other methods and validate
@@ -393,13 +405,13 @@ public class EmailSink extends Sink {
             ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.configReader = configReader;
         this.optionHolder = optionHolder;
-        validateAndGetRequiredParameters();
         //Server system properties starts with 'mail.smtp'.
         configReader.getAllConfigs().forEach((k, v)-> {
-            if (k.startsWith("mail.smtp")) {
+            if (k.startsWith("mail.smtp") || k.startsWith("mail.store")) {
                 initProperties.put(k, v);
             }
         });
+        validateAndGetRequiredParameters();
     }
 
     /**
@@ -457,7 +469,12 @@ public class EmailSink extends Sink {
             String bcc = optionBcc.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
         }
-        EmailBaseMessage emailBaseMessage = new EmailTextMessage(payload.toString());
+
+        if ((attachmentOption != null) && (!attachmentOption.isStatic())) {
+           attachments  = attachmentOption.getValue(dynamicOptions).split(",");
+        }
+
+        EmailBaseMessage emailBaseMessage = new EmailMessage(payload.toString(), attachments);
         emailBaseMessage.setHeaders(emailProperties);
         try {
             emailClientConnector.send(emailBaseMessage);
@@ -599,11 +616,23 @@ public class EmailSink extends Sink {
         } else {
             optionBcc = optionHolder.validateAndGetOption(EmailConstants.BCC);
         }
-        
+
+        String storeProtocol = optionHolder.validateAndGetStaticValue(
+                EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, configReader.readConfig(
+                        EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, EmailConstants.IMAP_STORE));
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, storeProtocol);
+
         String contentType = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                         EmailConstants.MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE));
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
+
+        if (optionHolder.isOptionExists(EmailConstants.ATTACHMENTS)) {
+            attachmentOption = optionHolder.validateAndGetOption(EmailConstants.ATTACHMENTS);
+            if (attachmentOption.isStatic()) {
+                attachments = attachmentOption.getValue().split(EmailConstants.COMMA_SEPERATOR);
+            }
+        }
     }
 
     /**
@@ -629,7 +658,7 @@ public class EmailSink extends Sink {
     @Override
     public String[] getSupportedDynamicOptions() {
         return new String[]{EmailConstants.SUBJECT, EmailConstants.TO,
-        EmailConstants.CC, EmailConstants.BCC};
+        EmailConstants.CC, EmailConstants.BCC, EmailConstants.ATTACHMENTS};
     }
 
     /**

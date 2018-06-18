@@ -40,6 +40,7 @@ public class EmailConstants {
     public static final String TO = "to";
     public static final String BCC = "bcc";
     public static final String CC = "cc";
+    public static final String ATTACHMENTS = "attachments";
 
     /**
      * Default values for the email sink configurations.
@@ -60,6 +61,7 @@ public class EmailConstants {
     public static final String TRANSPORT_MAIL_PUBLISHER_SSL_ENABLE = "mail.smtp.ssl.enable";
     public static final String TRANSPORT_MAIL_PUBLISHER_AUTH_ENABLE = "mail.smtp.auth";
     public static final String TRANSPORT_MAIL_PUBLISHER_PORT = "mail.smtp.port";
+    public static final String TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL = "mail.store.protocol";
     public static final String TRANSPORT_MAIL_HEADER_FROM = "From";
     public static final String TRANSPORT_MAIL_HEADER_TO = "To";
     public static final String TRANSPORT_MAIL_HEADER_CC = "Cc";
@@ -116,6 +118,7 @@ public class EmailConstants {
      */
     public static final String EMPTY_STRING = "";
 
+    public static final String COMMA_SEPERATOR = ",";
     /**
      * Valid store types.
      */
