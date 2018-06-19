@@ -40,11 +40,14 @@ import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
 import org.wso2.transport.email.contract.message.EmailBaseMessage;
+import org.wso2.transport.email.contract.message.EmailMultipartMessage;
 import org.wso2.transport.email.contract.message.EmailTextMessage;
 import org.wso2.transport.email.exception.EmailConnectorException;
 
 import java.net.ConnectException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,11 +130,18 @@ import java.util.Map;
                                 + " then addresses can be given as a comma separated list.",
                            type = DataType.STRING,
                            optional = true,
-                           defaultValue = "None")
-
+                           defaultValue = "None"),
+                @Parameter(name = "attachments",
+                        description = "File paths of the files that needs to be attached to the email.\n" +
+                                "These paths should be absolute paths.\n" +
+                                "They can be either a directories or files. If it's a directory all the files inside " +
+                                " that directory will be attached.",
+                        type = DataType.STRING,
+                        optional = true,
+                        defaultValue = "None")
         },
         examples = {
-                @Example(description = "Above example illustrates how to publish events using the email sink"
+                @Example(description = "Following example illustrates how to publish events using the email sink"
                         + "using mandatory parameters. As in the example, it publishes events come "
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
@@ -146,11 +156,10 @@ import java.util.Map;
                                 + ")"
                                 + "define stream fooStream (email string, loginId int, name string);"),
 
-                @Example(description = "Above example illustrates how to configure the query parameters and "
-                        + "system parameters in the 'deployment.ymal' file of WSO2 Stream Processor.\n "
+                @Example(description = "Following example illustrates how to configure the query parameters and "
+                        + "system parameters in the deployment ymal file.\n "
                         + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
                         + "follows\n"
-                        + "\nsiddhi:\n"
                         + "    extensions:\n"
                         + "      -  extension:\n"
                         + "           name:'email'\n"
@@ -170,7 +179,7 @@ import java.util.Map;
                                 + ")"
                                 + "define stream fooStream (email string, loginId int, name string);"),
 
-                @Example(description = "Above example illustrates how to publish events using the email sink."
+                @Example(description = "Following example illustrates how to publish events using the email sink."
                         + " According to the example, it publishes events come from the fooStream in xml"
                         + " format via email sink as a text/html message"
                         + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
@@ -192,6 +201,34 @@ import java.util.Map;
                                 + "bcc='bcc1.account@gmail.com"
                                 + ")"
                                 + "define stream fooStream (name string, age int, country string);"),
+
+                @Example(description = "Following example illustrates how to publish events using the"
+                        + "email sink. Here files are also attached to the email."
+                        + " According to the example, it publishes events come from the fooStream in xml"
+                        + " format via email sink as a text/html message"
+                        + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
+                        + " `subject` attribute will be the value of the `name` parameter in the corresponding"
+                        + " output event.\n"
+                        + " Also to the same email message, the local file(s) related to the path received for the "
+                        + "attribute attachments is/are attached.",
+
+                        syntax =  "@sink(type='email', @map(type ='json'), "
+                                + "username='sender.account', "
+                                + "address='sender.account@gmail.com',"
+                                + "password='account.password',"
+                                + "host='smtp.gmail.com',"
+                                + "port='465',"
+                                + "ssl.enable='true',"
+                                + "auth='true',"
+                                + "content.type='text/html',"
+                                + "subject='Alerts from Wso2 Stream Processor-{{name}}',"
+                                + "to='to1.account@gmail.com, to2.account@gmail.com',"
+                                + "cc='cc1.account@gmail.com, cc2.account@gmail.com',"
+                                + "bcc='bcc1.account@gmail.com"
+                                + "attachments= '{{attachments}}'"
+                                + ")"
+                                + "define stream fooStream (name string, age int, country string, attachments string)"
+                                + ";"),
         },
         systemParameter = {
                 @SystemParameter(name = "mail.smtp.ssl.trust",
@@ -375,6 +412,8 @@ public class EmailSink extends Sink {
     private Map<String, String> emailProperties = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
+    private List<String> attachments;
+    private Option attachmentOption;
 
     /**
      * The initialization method for {@link Sink}, which will be called before other methods and validate
@@ -392,13 +431,13 @@ public class EmailSink extends Sink {
             ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.configReader = configReader;
         this.optionHolder = optionHolder;
-        validateAndGetRequiredParameters();
         //Server system properties starts with 'mail.smtp'.
         configReader.getAllConfigs().forEach((k, v)-> {
-            if (k.startsWith("mail.smtp")) {
+            if (k.startsWith("mail.smtp") || k.startsWith("mail.store")) {
                 initProperties.put(k, v);
             }
         });
+        validateAndGetRequiredParameters();
     }
 
     /**
@@ -456,7 +495,18 @@ public class EmailSink extends Sink {
             String bcc = optionBcc.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
         }
-        EmailBaseMessage emailBaseMessage = new EmailTextMessage(payload.toString());
+
+        if ((attachmentOption != null) && (!attachmentOption.isStatic())) {
+           attachments  =
+                   Arrays.asList(attachmentOption.getValue(dynamicOptions).split(EmailConstants.COMMA_SEPERATOR));
+        }
+
+        EmailBaseMessage emailBaseMessage;
+        if (attachmentOption != null) {
+            emailBaseMessage = new EmailMultipartMessage(payload.toString(), attachments);
+        } else {
+            emailBaseMessage = new EmailTextMessage(payload.toString());
+        }
         emailBaseMessage.setHeaders(emailProperties);
         try {
             emailClientConnector.send(emailBaseMessage);
@@ -598,11 +648,23 @@ public class EmailSink extends Sink {
         } else {
             optionBcc = optionHolder.validateAndGetOption(EmailConstants.BCC);
         }
-        
+
+        String storeProtocol = optionHolder.validateAndGetStaticValue(
+                EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, configReader.readConfig(
+                        EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, EmailConstants.IMAP_STORE));
+        initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, storeProtocol);
+
         String contentType = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                         EmailConstants.MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE));
         emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
+
+        if (optionHolder.isOptionExists(EmailConstants.ATTACHMENTS)) {
+            attachmentOption = optionHolder.validateAndGetOption(EmailConstants.ATTACHMENTS);
+            if (attachmentOption.isStatic()) {
+                attachments = Arrays.asList(attachmentOption.getValue().split(EmailConstants.COMMA_SEPERATOR));
+            }
+        }
     }
 
     /**
@@ -628,7 +690,7 @@ public class EmailSink extends Sink {
     @Override
     public String[] getSupportedDynamicOptions() {
         return new String[]{EmailConstants.SUBJECT, EmailConstants.TO,
-        EmailConstants.CC, EmailConstants.BCC};
+        EmailConstants.CC, EmailConstants.BCC, EmailConstants.ATTACHMENTS};
     }
 
     /**
