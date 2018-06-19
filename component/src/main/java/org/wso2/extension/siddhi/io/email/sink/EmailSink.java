@@ -160,16 +160,14 @@ import java.util.Map;
                         + "system parameters in the deployment ymal file.\n "
                         + "Corresponding parameters need to be configure under name:'email' and namespace:'sink' as "
                         + "follows\n"
-                        + "\nsiddhi:\n"
-                        + "  extensions:\n"
-                        + "    -\n"
-                        + "      extension:\n"
-                        + "        name:'email'\n"
-                        + "        namespace:'sink'\n"
-                        + "        properties:\n"
-                        + "          username:sender.account\n"
-                        + "          address:sender.account@gmail.com\n"
-                        + "          address:sender.account@gmail.com\n"
+                        + "    extensions:\n"
+                        + "      -  extension:\n"
+                        + "           name:'email'\n"
+                        + "           namespace:'sink'\n"
+                        + "           properties:\n"
+                        + "             username: <sender's email username>\n"
+                        + "             address: <sender's email address>\n"
+                        + "             password: <sender's email password>\n"
                         + "\nAs in the example, it publishes events come"
                         + "from the fooStream in json format via email sink "
                         + "to the given 'to' recipients."
@@ -416,7 +414,6 @@ public class EmailSink extends Sink {
     private OptionHolder optionHolder;
     private List<String> attachments;
     private Option attachmentOption;
-    String files;
 
     /**
      * The initialization method for {@link Sink}, which will be called before other methods and validate
