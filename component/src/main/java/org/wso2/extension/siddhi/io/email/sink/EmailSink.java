@@ -134,10 +134,11 @@ import java.util.Map;
                 @Parameter(name = "attachments",
                         description = "File paths of the files that needs to be attached to the email.\n" +
                                 "These paths should be absolute paths.\n" +
-                                "They can be either a directories or files. If it's a directory all the files inside " +
-                                " that directory will be attached.",
+                                "They can be either a directories or files\n. " +
+                                "If it's a directory, all the files at its first level will be attached.",
                         type = DataType.STRING,
                         optional = true,
+                        dynamic = true,
                         defaultValue = "None")
         },
         examples = {
