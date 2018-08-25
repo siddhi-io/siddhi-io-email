@@ -134,7 +134,7 @@ import java.util.Map;
                 @Parameter(name = "attachments",
                         description = "File paths of the files that needs to be attached to the email.\n" +
                                 "These paths should be absolute paths.\n" +
-                                "They can be either a directories or files\n. " +
+                                "They can be either directories or files\n. " +
                                 "If it's a directory, all the files at its first level will be attached.",
                         type = DataType.STRING,
                         optional = true,
@@ -205,7 +205,7 @@ import java.util.Map;
                                 + "define stream fooStream (name string, age int, country string);"),
 
                 @Example(description = "Following example illustrates how to publish events using the"
-                        + "email sink. Here files are also attached to the email."
+                        + " email sink. Here files are also attached to the email."
                         + " According to the example, it publishes events come from the fooStream in xml"
                         + " format via email sink as a text/html message"
                         + " to the given `to`,`cc` and `bcc` recipients using a secure connection. `name` in the"
