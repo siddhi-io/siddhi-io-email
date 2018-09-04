@@ -458,7 +458,7 @@ public class EmailSink extends Sink {
         } catch (EmailConnectorException e) {
             if (e.getCause() instanceof MailConnectException) {
                 if (e.getCause().getCause() instanceof ConnectException) {
-                    throw new ConnectionUnavailableException("Error is encountered while connecting the smtp"
+                    throw new ConnectionUnavailableException("Error is encountered while connecting to the smtp"
                             + " server." +  e.getMessage(), e.getCause());
                 } else {
                     throw new RuntimeException("Error is encountered while connecting to the smtp server." +

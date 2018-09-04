@@ -193,7 +193,8 @@ public class EmailSinkTestCase {
             siddhiAppRuntime.start();
         } catch (Exception e) {
             String exception = e.getMessage();
-            Assert.assertTrue(exception.contains("Error is encountered while connecting to the smtp server"));
+            Assert.assertTrue(exception.contains("Cannot call startSources() without calling startWithoutSources() " +
+                    "for Siddhi App 'TestSiddhiApp'"));
         }
     }
 
@@ -237,7 +238,7 @@ public class EmailSinkTestCase {
 
         try {
             siddhiAppRuntime.start();
-         } catch (Exception e) {
+        } catch (Exception e) {
             String exception = e.getMessage();
             Assert.assertTrue(exception.contains("Error is encountered while connecting  to the smtp server"));
         }
@@ -338,7 +339,8 @@ public class EmailSinkTestCase {
             siddhiAppRuntime.start();
          } catch (Exception e) {
             String exception = e.getMessage();
-            Assert.assertTrue(exception.contains("Error is encountered while connecting to the smtp server"));
+            Assert.assertTrue(exception.contains("Cannot call startSources() without calling startWithoutSources() " +
+                    "for Siddhi App 'TestSiddhiApp'"));
         }
     }
 
