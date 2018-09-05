@@ -55,117 +55,120 @@ import java.util.stream.Stream;
  * The class implementing Email source.
  */
 @Extension(name = "email", namespace = "source",
-        description = "Email source allows user to receive events via emails. Email source can be configured using "
-                + "'imap' or 'pop3' server to receive events. This allows user to filter the messages"
-                + " which satisfy the given criteria under 'search term' option. The user can define email"
-                + " source parameters in either 'deployment yaml' file or stream definition."
-                + " So that email source checks whether parameters are given in"
-                + " stream definition and 'ymal' file respectively. If it is not given in both places,"
-                + " then default values are taken if defaults values are available."
-                + " If user need to configure server system parameters which are not given as options in"
-                + " stream definition then it is needed to define them in 'yaml' file under email source properties."
-                + " (Refer link: https://javaee.github.io/javamail/IMAP-Store , "
-                + " https://javaee.github.io/javamail/POP3-Store to more information about"
-                + " imap and pop3 server system parameters).",
+        description = "The 'Email' source allows you to receive events via emails. An 'Email' source can be " +
+                "configured using the 'imap' or 'pop3' server to receive events. This allows you to filter the " +
+                "messages that satisfy the criteria specified under the 'search term' option. The email source " +
+                "parameters can be defined in either the '<SP_HOME>/conf/<PROFILE>/deployment yaml' file or the " +
+                "stream definition. If the parameter configurations are not available in either place, the default " +
+                "values are considered (i.e., if default values are available). If you need to configure server " +
+                "system parameters that are not provided as options in the stream definition, they need to be " +
+                "defined in the 'deployment yaml' file under 'email source properties'. For more information about" +
+                " 'imap' and 'pop3' server system parameters, see the following.\n" +
+                "[JavaMail Reference Implementation - IMAP Store](https://javaee.github.io/javamail/IMAP-Store)\n" +
+                "[JavaMail Reference Implementation - POP3 Store Store](https://javaee.github.io/javamail/POP3-Store)",
+
         parameters = {
-        @Parameter(name = "username",
-                description = "user name of the email account. (e.g. wso2mail is the username of wso2mail@gmail.com"
-                        + "mail account.",
-                type = { DataType.STRING}),
-        @Parameter(name = "password",
-                description = "password of the email account",
-                type = { DataType.STRING }),
-        @Parameter(name = "store",
-                description = "Store type that used to receive emails. it can be either imap or pop3.",
-                type = {DataType.STRING },
-                optional = true,
-                defaultValue = "imap"),
-        @Parameter(name = "host",
-                description = "Host name of the server "
-                        + "(e.g. host name for a gmail account with imap store : 'imap.gmail.com'). "
-                        + "The default value imap.gmail.com' is only valid if email account is a gmail account"
-                        + " with imap enable.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "If store type is 'imap' then default value is "
-                        + "'imap.gmail.com' and if store type is 'pop3' then"
-                        + "default value is 'pop3.gmail.com'."),
-        @Parameter(name = "port",
-                description = "The port which is used to create the connection.",
-                type = {DataType.INT},
-                optional = true,
-                defaultValue = "'993' the default value is valid only if store is imap and ssl enable"),
-        @Parameter(name = "folder",
-                description = "Name of the folder to fetch email.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "INBOX"),
-        @Parameter(name = "search.term",
-                description = "Option which includes conditions as a key value pairs to search emails."
-                        + " String search term should define ':' separated key and"
-                        + " value with ',' separated key value pairs."
-                        + " Currently, this string search term only supported keys: subject, from, to, bcc, and cc."
-                        + " As an example: subject:DAS , from:carbon , bcc:wso2 string search term create"
-                        + " a search term instance which filter emails contain 'DAS' in the subject, 'carbon'"
-                        + " in the from address and 'wso2' in one of the bcc addresses. It does sub string matching"
-                        + " which is case insensitive. But if '@' contains in the given value except for"
-                        + " 'subject' key, then it check whether address is equal or not. As a example from: abc@"
-                        + " string search term check whether 'from' address is equal to 'abc' before '@' Symbol.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "None"),
-        @Parameter(name = "polling.interval",
-                description = "Interval that email source should poll the account to check for new mails arrivals "
-                        + "in seconds.",
-                type = { DataType.LONG },
-                optional = true,
-                defaultValue = "600"),
-        @Parameter(name = "action.after.processed",
-                description = "Action that email source should carry out for the processed mail. "
-                        + "FLAGGED : set the flag as falgged. "
-                        + "SEEN : set the flag as read. "
-                        + "ANSWERED : set the flag as answered. "
-                        + "DELETE : delete tha mail after the polling cycle. "
-                        + "MOVE : move the the mail to the folder given in folder.to.move. "
-                        + "If folder is pop3, then only option available is 'DELETE",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "NONE"),
-        @Parameter(name = "folder.to.move",
-                description = "The name of the folder, which mail has to move after processing."
-                        + "If the action after process is 'MOVE' then it is mandatory to define the folder to move.",
-                type = { DataType.STRING }),
-        @Parameter(name = "content.type",
-                description = "Content type of the email. It can be either 'text/plain' or 'text/html.'",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "text/plain"),
-        @Parameter(name = "ssl.enable",
-                description = "If it is 'true' then use a secure port to establish the connection. The possible values"
-                        + " are 'true or false.",
-                type = { DataType.BOOL },
-                optional = true,
-                defaultValue = "true") },
+                @Parameter(name = "username",
+                        description = "The user name of the email account. e.g., 'wso2mail' is the username of the " +
+                                "'wso2mail@gmail.com' mail account.",
+                        type = { DataType.STRING}),
+                @Parameter(name = "password",
+                        description = "The password of the email account",
+                        type = { DataType.STRING }),
+                @Parameter(name = "store",
+                        description = "The store type that used to receive emails. Possible values are 'imap' and " +
+                                "'pop3'.",
+                        type = {DataType.STRING },
+                        optional = true,
+                        defaultValue = "imap"),
+                @Parameter(name = "host",
+                        description = "The host name of the server "
+                                + "(e.g., 'imap.gmail.com' is the host name for a gmail account with an IMAP store.). "
+                                + "The default value 'imap.gmail.com' is only valid if the email account is a gmail" +
+                                " account with IMAP enabled.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "If store type is 'imap', then the default value is "
+                                + "'imap.gmail.com'. If the store type is 'pop3', then the"
+                                + "default value is 'pop3.gmail.com'."),
+                @Parameter(name = "port",
+                        description = "The port that is used to create the connection.",
+                        type = {DataType.INT},
+                        optional = true,
+                        defaultValue = "'993', the default value is valid only if the store is 'imap' and " +
+                                "ssl-enabled."),
+                @Parameter(name = "folder",
+                        description = "The name of the folder to which the emails should be fetched.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "INBOX"),
+                @Parameter(name = "search.term",
+                        description = "The option that includes conditions such as key-value pairs to search for " +
+                                "emails. In a string search term, the key and the value should be separated by a " +
+                                "semicolon (';'). Each key-value pair must be within inverted commas (' '). The " +
+                                "string search term can define multiple comma-separated key-value pairs. This string" +
+                                " search term currently supports only the 'subject', 'from', 'to', 'bcc', and 'cc'" +
+                                " keys. e.g., if you enter 'subject:DAS, from:carbon, bcc:wso2', the search term " +
+                                "creates a search term instance that filters emails that contain 'DAS' in the " +
+                                "subject, 'carbon' in the 'from' address, and 'wso2' in one of the 'bcc' addresses." +
+                                " The string search term carries out sub string matching that is case-sensitive." +
+                                " If '@' in included in the value for any key other than the 'subject' key, it" +
+                                " checks for an address that is equal to the value given. e.g., If you search for" +
+                                " 'abc@', the string search terms looks for an address that contains 'abc' before the" +
+                                " '@' symbol.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "None"),
+                @Parameter(name = "polling.interval",
+                        description = "This defines the time interval in seconds at which th email source should poll" +
+                                " the account to check for new mail arrivals."
+                                + "in seconds.",
+                        type = { DataType.LONG },
+                        optional = true,
+                        defaultValue = "600"),
+                @Parameter(name = "action.after.processed",
+                        description = "The action to be performed by the email source for the processed mail. " +
+                                "Possible values are as follows:\n"
+                                + "'FLAGGED': Sets the flag as 'flagged'.\n"
+                                + "'SEEN': Sets the flag as 'read'.\n"
+                                + "'ANSWERED': Sets the flag as 'answered'.\n"
+                                + "'DELETE': Deletes tha mail after the polling cycle.\n"
+                                + "'MOVE': Moves the mail to the folder specified in the 'folder.to.move' " +
+                                "parameter.\n" +
+                                " If the folder specified is 'pop3', then the only option available is 'DELETE'.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "NONE"),
+                @Parameter(name = "folder.to.move",
+                        description = "The name of the folder to which the mail must be moved once it is processed." +
+                                " If the action after processing is 'MOVE', it is required to specify a value for " +
+                                "this parameter.",
+                        type = { DataType.STRING }),
+                @Parameter(name = "content.type",
+                        description = "The content type of the email. It can be either 'text/plain' or 'text/html.'",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "text/plain"),
+                @Parameter(name = "ssl.enable",
+                        description = "If this is set to 'true', a secure port is used to establish the connection." +
+                                " The possible values are 'true' and 'false'.",
+                        type = { DataType.BOOL },
+                        optional = true,
+                        defaultValue = "true") },
         examples = {
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
-                        + " using email source. In this example only mandatory parameters are defined in the "
-                        + " in the stream definition. For other parameters default values are taken."
-                        + " since search term is not defined, it poll and take all new messages in the inbox folder",
-                        syntax = "@source(type='email', @map(type='xml'), "
+                @Example(syntax = "@source(type='email', @map(type='xml'), "
                                 + "username='receiver.account', "
                                 + "password='account.password',"
                                 + ")" +
-                                "define stream inputStream (name string, age int, country string);"),
+                                "define stream inputStream (name string, age int, country string);",
+                        description = "This example illustrates how to receive events in 'xml' format via the email" +
+                                " source. In this example, only the required parameters are defined in the " +
+                                "stream definition. The default values are taken for the other parameters. The search" +
+                                " term is not defined, and therefore, all the new messages in the inbox folder are " +
+                                "polled and taken."
+                ),
 
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
-                        + " using email source. The email source polls the mail account in every 500 seconds"
-                        + " to check whether new mails has been arrived and processes new mails only if"
-                        + " if it satisfy the properties given under email search term (email messages which come from"
-                        + "`from.account@.<host name>`, contains `cc.account` in cc receipts list, and"
-                        + " `Stream Processor` words in the mail subject)"
-                        + " In the example, action after processes is defined as the `DELETE`, so that"
-                        + " after processing the event, corresponding mail is deleted from the mail folder.",
-                        syntax = "@source(type='email', @map(type='xml'), "
+                @Example(syntax = "@source(type='email', @map(type='xml'), "
                                 + "username='receiver.account', "
                                 + "password='account.password',"
                                 + "store = 'imap',"
@@ -176,55 +179,66 @@ import java.util.stream.Stream;
                                 + "action.after.processed='DELETE',"
                                 + "content.type='text/html,"
                                 + ")" +
-                                "define stream inputStream (name string, age int, country string);"),
+                                "define stream inputStream (name string, age int, country string);",
+                        description = "This example illustrates how to receive events in 'xml' format via the email" +
+                                " source. The email source polls the mail account every 500 seconds to check whether" +
+                                " any new mails have arrived. It processes new mails only if they satisfy the " +
+                                "conditions specified for the email search term (the value " +
+                                "for 'from' of the email message should be 'from.account@.<host name>', and the " +
+                                "message should contain 'cc.account' in the cc receipient list and the word " +
+                                "'Stream Processor' in the mail subject). in this example, the action after " +
+                                "processing is 'DELETE'. Therefore,after processing the event, corresponding mail is" +
+                                " deleted from the mail folder."
+                ),
         },
         systemParameter = {
                 @SystemParameter(name = "mail.imap.partialfetch",
-                        description = "Controls whether the IMAP partial-fetch capability should be used",
+                        description = "This determines whether the IMAP partial-fetch capability should be used.",
                         defaultValue = "true",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.fetchsize",
-                        description = "Partial fetch size in bytes.",
+                        description = "The partial fetch size in bytes.",
                         defaultValue = "16K",
                         possibleParameters = "value in bytes"),
                 @SystemParameter(name = "mail.imap.peek",
-                        description = "If set to true, use the IMAP PEEK option when fetching body parts,"
-                                + " to avoid setting the SEEN flag on messages."
-                                + " Defaults to false. Can be overridden on a per-message basis"
-                                + " by the setPeek method on IMAPMessage.",
+                        description = "If this is set to 'true', the IMAP PEEK option should be used when fetching" +
+                                " body parts to avoid setting the 'SEEN' flag on messages. The default value is " +
+                                "'false'. This can be overridden on a per-message basis by the 'setPeek method' in " +
+                                "'IMAPMessage'.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.connectiontimeout",
-                        description = "Socket connection timeout value in milliseconds."
-                                + " This timeout is implemented by java.net.Socket.",
+                        description = "The socket connection timeout value in milliseconds."
+                                + " This timeout is implemented by 'java.net.Socket'.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.timeout",
-                        description = "Socket read timeout value in milliseconds."
-                                + " This timeout is implemented by java.net.Socket.",
+                        description = "The socket read timeout value in milliseconds. This timeout is implemented by" +
+                                " 'java.net.Socket'.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.writetimeout",
-                        description = "Socket write timeout value in milliseconds. This timeout is implemented"
-                                + " by using a java.util.concurrent.ScheduledExecutorService per connection that "
-                                + "schedules a thread to close the socket if the timeout expires."
-                                + " Thus, the overhead of using this timeout is one thread per connection.",
+                        description = "The socket write timeout value in milliseconds. This timeout is implemented"
+                                + " by using a 'java.util.concurrent.ScheduledExecutorService' per connection that "
+                                + "schedules a thread to close the socket if the timeout period elapses."
+                                + " Therefore, the overhead of using this timeout is one thread per connection.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.statuscachetimeout",
-                        description = "Timeout value in milliseconds for cache of STATUS command response.",
+                        description = "The timeout value in milliseconds for the cache of 'STATUS' command response.",
                         defaultValue = "1000ms",
                         possibleParameters = "Time out in miliseconds"),
                 @SystemParameter(name = "mail.imap.appendbuffersize",
-                        description = "Maximum size of a message to buffer in memory when appending to an IMAP folder.",
+                        description = "The maximum size of a message to buffer in memory when appending to an IMAP" +
+                                " folder.",
                         defaultValue = "None",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.connectionpoolsize",
-                        description = "Maximum number of available connections in the connection pool.",
+                        description = "The maximum number of available connections in the connection pool.",
                         defaultValue = "1",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.connectionpooltimeout",
-                        description = "Timeout value in milliseconds for connection pool connections. ",
+                        description = "The timeout value in milliseconds for connection pool connections. ",
                         defaultValue = "45000ms",
                         possibleParameters = "Any Integer"),
                 @SystemParameter(name = "mail.imap.separatestoreconnection",
