@@ -367,7 +367,7 @@ import java.util.stream.Stream;
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.socks.host",
                         description = "This specifies the host name of a 'SOCKS5' proxy server that is"
-                                + " used for connections to the mail server.",
+                                + " used to connect to the mail server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.socks.port",
@@ -436,119 +436,130 @@ import java.util.stream.Stream;
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.socketFactory.fallback",
-                        description = "If set to true, failure to create a socket using the specified socket"
-                                + " factory class will cause the socket to be created using"
-                                + " the java.net.Socket class.",
+                        description = "If this parameter is set to 'true', failure to create a socket using the " +
+                                "specified socket factory class results in the socket being created using the " +
+                                "'java.net.Socket' class.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.socketFactory.port",
-                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        description = "This specifies the port to connect to when using the specified socket factory.",
                         defaultValue = "Default port",
                         possibleParameters = "Valid port number"),
                 @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
-                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        description = "If this parameter is set to 'true', check the server identity as specified by" +
+                                " RFC 2595. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.ssl.trust",
-                        description = "If set, and a socket factory hasn't been specified,"
-                                + " enables use of a MailSSLSocketFactory. "
-                                + "If set to '*', all hosts are trusted."
-                                + "If set to a whitespace separated list of hosts, those hosts are trusted."
-                                + "Otherwise, trust depends on the certificate the server presents.",
+                        description = "If this parameter is set and a socket factory has not been specified, it " +
+                                "is possible to use a 'MailSSLSocketFactory'. \n"
+                                + "If this parameter is set to '*', all the hosts are trusted.\n"
+                                + "If the parameter is set to a whitespace-separated list of hosts, only those hosts " +
+                                "are trusted.\n"
+                                + "If the parameter is not set to any of the values mentioned above, trust depends" +
+                                " on the certificate presented by the server.",
                         defaultValue = "*",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory",
-                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
-                                + " this class will be used to create POP3 SSL sockets.",
+                        description = "If this parameter is set to a class that extends the " +
+                                "'javax.net.ssl.SSLSocketFactory' class, this class is used to create 'POP3'" +
+                                " SSL sockets.",
                         defaultValue = "None",
                         possibleParameters = "SSL Socket Factory"),
                 @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
-                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        description = "If this parameter is set to 'true', the system checks the server identity as" +
+                                " specified by 'RFC 2595'. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.ssl.trust",
-                        description = " If set, and a socket factory hasn't been specified,"
-                                + " enables use of a MailSSLSocketFactory."
-                                + "If set to '*', all hosts are trusted."
-                                + "If set to a whitespace separated list of hosts, those hosts are trusted. ",
-                        defaultValue = "trust depends on the certificate the server presents.",
+                        description = " If this parameter is set and a socket factory has not been specified, it is" +
+                                " possible to use a 'MailSSLSocketFactory'.\n"
+                                + "If this parameter is set to '*', all the hosts are trusted.\n"
+                                + "If the parameter is set to a whitespace-separated list of hosts, only those hosts" +
+                                " are trusted.",
+                        defaultValue = "Trust depends on the certificate presented by the server.",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory",
-                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
-                                + " this class will be used to create POP3 SSL sockets.",
+                        description = "If this parameter is set to a class that extends the " +
+                                "'javax.net.ssl.SSLSocketFactory' class, this class is used to create 'POP3 SSL'" +
+                                " sockets.",
                         defaultValue = "None",
                         possibleParameters = "SSL Socket Factory"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory.class",
-                        description = "If set, specifies the name of a class that extends"
-                                + " the javax.net.ssl.SSLSocketFactory class."
-                                + " This class will be used to create POP3 SSL sockets. ",
+                        description = "If this parameter is set, it specifies the name of a class that extends"
+                                + " the 'javax.net.ssl.SSLSocketFactory' class."
+                                + " This class is used to create 'POP3 SSL' sockets. ",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory.p",
-                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        description = "This parameter pecifies the port to connect to when using the specified " +
+                                "socket factory.",
                         defaultValue = "995",
                         possibleParameters = "Valid Integer"),
                 @SystemParameter(name = "mail.pop3.ssl.protocols",
-                        description = "Specifies the SSL protocols that will be enabled for SSL connections."
-                                + " The property value is a whitespace separated list of tokens acceptable"
-                                + " to the javax.net.ssl.SSLSocket.setEnabledProtocols method.",
+                        description = "This parameter specifies the SSL protocols that are enabled for SSL connections."
+                                + " The property value is a whitespace-separated list of tokens acceptable"
+                                + " to the 'javax.net.ssl.SSLSocket.setEnabledProtocols' method.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.starttls.enable",
-                        description = "If true, enables the use of the STLS command (if supported by the server)"
-                                + " to switch the connection to a TLS-protected"
-                                + " connection before issuing any login commands",
+                        description = "If this parameter is set to 'true', it is possible to use the 'STLS' command" +
+                                " (if supported by the server) to switch the connection to a TLS-protected connection" +
+                                " before issuing any login commands.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.starttls.required",
-                        description = "If true, requires the use of the STLS command. If the server doesn't"
-                                + " support the STLS command, or the command fails, the connect method will fail.",
+                        description = "If this parameter is set to 'true', it is required to use the 'STLS' command." +
+                                " The connect method fails if the server does not support the 'STLS' command or if " +
+                                "the command fails.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.socks.host",
-                        description = "Specifies the host name of a SOCKS5 proxy server that will be used for"
-                                + " connections to the mail server.",
+                        description = "This parameter specifies the host name of a 'SOCKS5' proxy server that can " +
+                                "be used to connect to the mail server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.socks.port",
-                        description = "Specifies the port number for the SOCKS5 proxy server.",
+                        description = "This parameter specifies the port number for the 'SOCKS5' proxy server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.disabletop",
-                        description = "If set to true, the POP3 TOP command will not be used to"
+                        description = "If this parameter is set to 'true', the 'POP3 TOP' command is not used to"
                                 + " fetch message headers. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.forgettopheaders",
-                        description = "If set to true, the headers that might have been retrieved using the POP3"
-                                + " TOP command will be forgotten and replaced by headers retrieved"
-                                + " as part of the POP3 RETR command.",
+                        description = "If this parameter is set to 'true', the headers that might have been " +
+                                "retrieved using the 'POP3 TOP' command is forgotten and replaced by the headers" +
+                                " retrieved when the 'POP3 RETR' command is executed.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.filecache.enable",
-                        description = "If set to true, the POP3 provider will cache message data in a temporary"
-                                + " file rather than in memory. Messages are only added to the cache when accessing"
-                                + " the message content. Message headers are always cached in memory (on demand)."
-                                + " The file cache is removed when the folder is closed or the JVM terminates.",
+                        description = "If this parameter is set to 'true', the 'POP3' provider caches message data in" +
+                                " a temporary file instead of caching them in memory. Messages are only added to the" +
+                                " cache when accessing the message content. Message headers are always cached in " +
+                                "memory (on demand). The file cache is removed when the folder is closed or the JVM" +
+                                " terminates.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.filecache.dir",
-                        description = "If the file cache is enabled, this property can be used"
-                                + " to override the default directory used by the JDK for temporary files.",
+                        description = "If the file cache is enabled, this property is used to override the default" +
+                                " directory used by the JDK for temporary files.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.cachewriteto",
-                        description = "Controls the behavior of the writeTo method on a POP3 message object."
-                                + " If set to true, and the message content hasn't yet been cached, and ignoreList"
-                                + " is null, the message is cached before being written. Otherwise, the message "
-                                + "is streamed directly to the output stream without being cached.",
+                        description = "This parameter controls the behavior of the 'writeTo' method on a 'POP3' " +
+                                "message object. If the parameter is set to 'true', the message content has not been" +
+                                " cached yet, and the 'ignoreList' is null, the message is cached before being " +
+                                "written. If not, the message is streamed directly to the output stream without being" +
+                                " cached.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.keepmessagecontent",
-                        description = "If this property is set to true, a hard reference to the cached content"
-                                + " will be kept, preventing the memory from being reused until the folder"
-                                + " is closed or the cached content is explicitly invalidated"
-                                + " (using the invalidate method). ",
+                        description = "If this property is set to 'true', a hard reference to the cached content"
+                                + " is retained, preventing the memory from being reused until the folder"
+                                + " is closed, or until the cached content is explicitly invalidated (using the " +
+                                "'invalidate' method). ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
         })
