@@ -489,79 +489,79 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.partialfetch</td>
-        <td style="vertical-align: top; word-wrap: break-word">Controls whether the IMAP partial-fetch capability should be used</td>
+        <td style="vertical-align: top; word-wrap: break-word">This determines whether the IMAP partial-fetch capability should be used.</td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.fetchsize</td>
-        <td style="vertical-align: top; word-wrap: break-word">Partial fetch size in bytes.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The partial fetch size in bytes.</td>
         <td style="vertical-align: top">16K</td>
         <td style="vertical-align: top">value in bytes</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.peek</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, use the IMAP PEEK option when fetching body parts, to avoid setting the SEEN flag on messages. Defaults to false. Can be overridden on a per-message basis by the setPeek method on IMAPMessage.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', the IMAP PEEK option should be used when fetching body parts to avoid setting the 'SEEN' flag on messages. The default value is 'false'. This can be overridden on a per-message basis by the 'setPeek method' in 'IMAPMessage'.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.connectiontimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket connection timeout value in milliseconds. This timeout is implemented by java.net.Socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket connection timeout value in milliseconds. This timeout is implemented by 'java.net.Socket'.</td>
         <td style="vertical-align: top">infinity timeout</td>
         <td style="vertical-align: top">Any Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.timeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket read timeout value in milliseconds. This timeout is implemented by java.net.Socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket read timeout value in milliseconds. This timeout is implemented by 'java.net.Socket'.</td>
         <td style="vertical-align: top">infinity timeout</td>
         <td style="vertical-align: top">Any Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.writetimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket write timeout value in milliseconds. This timeout is implemented by using a java.util.concurrent.ScheduledExecutorService per connection that schedules a thread to close the socket if the timeout expires. Thus, the overhead of using this timeout is one thread per connection.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket write timeout value in milliseconds. This timeout is implemented by using a 'java.util.concurrent.ScheduledExecutorService' per connection that schedules a thread to close the socket if the timeout period elapses. Therefore, the overhead of using this timeout is one thread per connection.</td>
         <td style="vertical-align: top">infinity timeout</td>
         <td style="vertical-align: top">Any Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.statuscachetimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Timeout value in milliseconds for cache of STATUS command response.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The timeout value in milliseconds for the cache of 'STATUS' command response.</td>
         <td style="vertical-align: top">1000ms</td>
         <td style="vertical-align: top">Time out in miliseconds</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.appendbuffersize</td>
-        <td style="vertical-align: top; word-wrap: break-word">Maximum size of a message to buffer in memory when appending to an IMAP folder.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The maximum size of a message to buffer in memory when appending to an IMAP folder.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Any Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.connectionpoolsize</td>
-        <td style="vertical-align: top; word-wrap: break-word">Maximum number of available connections in the connection pool.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The maximum number of available connections in the connection pool.</td>
         <td style="vertical-align: top">1</td>
         <td style="vertical-align: top">Any Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.connectionpooltimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Timeout value in milliseconds for connection pool connections. </td>
+        <td style="vertical-align: top; word-wrap: break-word">The timeout value in milliseconds for connection pool connections. </td>
         <td style="vertical-align: top">45000ms</td>
         <td style="vertical-align: top">Any Integer</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.separatestoreconnection</td>
-        <td style="vertical-align: top; word-wrap: break-word">Flag to indicate whether to use a dedicated store connection for store commands.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', it indicates that a dedicated store connection needs to be used for store commands.</td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.auth.login.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the non-standard AUTHENTICATE LOGIN command, instead using the plain LOGIN command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', it is not possible to use the non-standard 'AUTHENTICATE LOGIN' command instead of the plain 'LOGIN' command.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.auth.plain.disable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, prevents use of the AUTHENTICATE PLAIN command.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this is set to 'true', the 'AUTHENTICATE PLAIN' command cannot be used.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
@@ -573,43 +573,43 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.proxyauth.user</td>
-        <td style="vertical-align: top; word-wrap: break-word">If the server supports the PROXYAUTH extension, this property specifies the name of the user to act as. Authenticate to the server using the administrator's credentials. After authentication, the IMAP provider will issue the PROXYAUTH command with the user name specified in this property.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If the server supports the PROXYAUTH extension, this property specifies the name of the user to act as. Authentication to log in to the server is carried out using the administrator's credentials. After authentication, the IMAP provider issues the 'PROXYAUTH' command with the user name specified in this property.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid string value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.localaddress</td>
-        <td style="vertical-align: top; word-wrap: break-word">Local address (host name) to bind to when creating the IMAP socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The local address (host name) to bind to when creating the IMAP socket.</td>
         <td style="vertical-align: top">Defaults to the address picked by the Socket class.</td>
         <td style="vertical-align: top">Valid string value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.localport</td>
-        <td style="vertical-align: top; word-wrap: break-word">Local port number to bind to when creating the IMAP socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The local port number to bind to when creating the IMAP socket.</td>
         <td style="vertical-align: top">Defaults to the port number picked by the Socket class.</td>
         <td style="vertical-align: top">Valid String value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.sasl.enable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, attempt to use the javax.security.sasl package to choose an authentication mechanism for login.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', the system attempts to use the 'javax.security.sasl' package to choose an authentication mechanism for the login.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.sasl.mechanisms</td>
-        <td style="vertical-align: top; word-wrap: break-word">A space or comma separated list of SASL mechanism names to try to use.</td>
+        <td style="vertical-align: top; word-wrap: break-word">A list of SASL mechanism names that the system should to try to use. The names can be separated by spaces or commas.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid string value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.sasl.authorizationid</td>
         <td style="vertical-align: top; word-wrap: break-word">The authorization ID to use in the SASL authentication.</td>
-        <td style="vertical-align: top">If not set, the authentication ID (user name) is used.</td>
+        <td style="vertical-align: top">If this parameter is not set, the authentication ID (username) is used.</td>
         <td style="vertical-align: top">Valid string value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.sasl.realm</td>
-        <td style="vertical-align: top; word-wrap: break-word">The realm to use with SASL authentication mechanisms that require a realm, such as DIGEST-MD5.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The realm to use with SASL authentication mechanisms that require a realm, such as 'DIGEST-MD5'.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid string value</td>
     </tr>
@@ -627,79 +627,79 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socketFactory</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to a class that implements the javax.net.SocketFactory interface, this class will be used to create IMAP sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to a class that implements the 'javax.net.SocketFactory' interface, this class is used to create IMAP sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid SocketFactory</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socketFactory.class</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set, specifies the name of a class that implements the javax.net.SocketFactory interface. This class will be used to create IMAP sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set, it specifies the name of a class that implements the 'javax.net.SocketFactory' interface. This class is used to create IMAP sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid string</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socketFactory.fallback</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, failure to create a socket using the specified socket factory class will cause the socket to be created using the java.net.Socket class. </td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', failure to create a socket using the specified socket factory class results in the socket being created using the 'java.net.Socket' class. </td>
         <td style="vertical-align: top">true</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socketFactory.port</td>
-        <td style="vertical-align: top; word-wrap: break-word">Specifies the port to connect to when using the specified socket factory. Default port is used when not set.</td>
+        <td style="vertical-align: top; word-wrap: break-word">This specifies the port to connect to when using the specified socket factory. If this parameter is not set, the default port is used.</td>
         <td style="vertical-align: top">143</td>
         <td style="vertical-align: top">Valid Integer</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.checkserveridentity</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, check the server identity as specified by RFC 2595.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', the system checks the server identity as specified by RFC 2595.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.trust</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set, and a socket factory hasn't been specified, enables use of a MailSSLSocketFactory.If set to '*', all hosts are trusted.If set to a whitespace separated list of hosts, those hosts are trusted.Otherwise, trust depends on the certificate the server presents.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set and a socket factory has not been specified, it enables the use of a 'MailSSLSocketFactory'.<br>If this parameter is set to '*', all the hosts are trusted.<br>If this parameter specifies list of hosts separated by white spaces, only those hosts are trusted.<br>If the parameter is not set to any of the values mentioned above, trust depends on the certificate presented by the server.</td>
         <td style="vertical-align: top">*</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.socketFactory</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to a class that extends the javax.net.ssl.SSLSocketFactory class, this class will be used to create IMAP SSL sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to a class that extends the 'javax.net.ssl.SSLSocketFactory' class this class is used to create IMAP SSL sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">SSL Socket Factory</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.socketFactory.class</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set, specifies the name of a class that extends the javax.net.ssl.SSLSocketFactory class. This class will be used to create IMAP SSL sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set, it specifies the name of a class that extends the 'javax.net.ssl.SSLSocketFactory' class. This class is used to create IMAP SSL sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.socketFactory.port</td>
-        <td style="vertical-align: top; word-wrap: break-word">Specifies the port to connect to when using the specified socket factory.</td>
-        <td style="vertical-align: top">the default port will be used-993</td>
+        <td style="vertical-align: top; word-wrap: break-word">This specifies the port to connect to when using the specified socket factory.</td>
+        <td style="vertical-align: top">the default port 993 is used.</td>
         <td style="vertical-align: top">valid port number</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.ssl.protocols</td>
-        <td style="vertical-align: top; word-wrap: break-word">Specifies the SSL protocols that will be enabled for SSL connections. The property value is a whitespace separated list of tokens acceptable to the javax.net.ssl.SSLSocket.setEnabledProtocols method.</td>
+        <td style="vertical-align: top; word-wrap: break-word">This specifies the SSL protocols that are enabled for SSL connections. The property value is a whitespace-separated list of tokens acceptable to the 'javax.net.ssl.SSLSocket.setEnabledProtocols' method.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid string</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.starttls.enable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', it is possible to use the 'STARTTLS' command (if supported by the server) to switch the connection to a TLS-protected connection before issuing any login commands.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socks.host</td>
-        <td style="vertical-align: top; word-wrap: break-word">Specifies the host name of a SOCKS5 proxy server that will be used for connections to the mail server.</td>
+        <td style="vertical-align: top; word-wrap: break-word">This specifies the host name of a 'SOCKS5' proxy server that is used for connections to the mail server.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.socks.port</td>
-        <td style="vertical-align: top; word-wrap: break-word">Specifies the port number for the SOCKS5 proxy server. This should only need to be used if the proxy server is not using the standard port number of 1080.</td>
+        <td style="vertical-align: top; word-wrap: break-word">This specifies the port number for the 'SOCKS5' proxy server. This is needed if the proxy server is not using the standard port number 1080.</td>
         <td style="vertical-align: top">1080</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
@@ -711,61 +711,61 @@
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.enableimapevents</td>
-        <td style="vertical-align: top; word-wrap: break-word">Enable special IMAP-specific events to be delivered to the Store's ConnectionListener. If true, unsolicited responses received during the Store's idle method will be sent as ConnectionEvents with a type of IMAPStore.RESPONSE. The event's message will be the raw IMAP response string.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this property is set to 'true', it enables special IMAP-specific events to be delivered to the 'ConnectionListener' of the store. The unsolicited responses received during the idle method of the store are sent as connection events with 'IMAPStore.RESPONSE' as the type. The event's message is the raw IMAP response string.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.imap.folder.class</td>
-        <td style="vertical-align: top; word-wrap: break-word">Class name of a subclass of com.sun.mail.imap.IMAPFolder. The subclass can be used to provide support for additional IMAP commands. The subclass must have public constructors of the form public MyIMAPFolder(String fullName, char separator, IMAPStore store, Boolean isNamespace) and public MyIMAPFolder(ListInfo li, IMAPStore store)</td>
+        <td style="vertical-align: top; word-wrap: break-word">The class name of a subclass of 'com.sun.mail.imap.IMAPFolder'. The subclass can be used to provide support for additional IMAP commands. The subclass must have public constructors of the form 'public MyIMAPFolder'(String fullName, char separator, IMAPStore store, Boolean isNamespace) and public 'MyIMAPFolder'(ListInfo li, IMAPStore store)</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.connectiontimeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket connection timeout value in milliseconds.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket connection timeout value in milliseconds.</td>
         <td style="vertical-align: top">Infinite timeout</td>
         <td style="vertical-align: top">Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.timeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">Socket I/O timeout value in milliseconds. </td>
+        <td style="vertical-align: top; word-wrap: break-word">The socket I/O timeout value in milliseconds. </td>
         <td style="vertical-align: top">Infinite timeout</td>
         <td style="vertical-align: top">Integer value</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.message.class</td>
-        <td style="vertical-align: top; word-wrap: break-word">Class name of a subclass of com.sun.mail.pop3.POP3Message</td>
+        <td style="vertical-align: top; word-wrap: break-word">The class name of a subclass of 'com.sun.mail.pop3.POP3Message'.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.localaddress</td>
-        <td style="vertical-align: top; word-wrap: break-word">Local address (host name) to bind to when creating the POP3 socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The local address (host name) to bind to when creating the POP3 socket.</td>
         <td style="vertical-align: top">Defaults to the address picked by the Socket class.</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.localport</td>
-        <td style="vertical-align: top; word-wrap: break-word">Local port number to bind to when creating the POP3 socket.</td>
+        <td style="vertical-align: top; word-wrap: break-word">The local port number to bind to when creating the POP3 socket.</td>
         <td style="vertical-align: top">Defaults to the port number picked by the Socket class.</td>
         <td style="vertical-align: top">Valid port number</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.apop.enable</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to true, use APOP instead of USER/PASS to login to the POP3 server, if the POP3 server supports APOP. APOP sends a digest of the password rather than the clear text password.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to 'true', use 'APOP' instead of 'USER/PASS' to log in to the 'POP3' server (if the 'POP3' server supports 'APOP'). APOP sends a digest of the password instead of clearing the text password.</td>
         <td style="vertical-align: top">false</td>
         <td style="vertical-align: top">true or false</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.socketFactory</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set to a class that implements the javax.net.SocketFactory interface, this class will be used to create POP3 sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set to a class that implements the 'javax.net.SocketFactory' interface, this class is used to create 'POP3' sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Socket Factory</td>
     </tr>
     <tr>
         <td style="vertical-align: top">mail.pop3.socketFactory.class</td>
-        <td style="vertical-align: top; word-wrap: break-word">If set, specifies the name of a class that implements the javax.net. SocketFactory interface. This class will be used to create POP3 sockets.</td>
+        <td style="vertical-align: top; word-wrap: break-word">If this parameter is set, it specifies the name of a class that implements the 'javax.net.SocketFactory' interface. This class is used to create 'POP3' sockets.</td>
         <td style="vertical-align: top">None</td>
         <td style="vertical-align: top">Valid String</td>
     </tr>
