@@ -138,7 +138,7 @@
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
         <xml.mapper.version>4.0.18</xml.mapper.version>
         <text.mapper.version>1.0.22</text.mapper.version>
-        <json.mapper.version>4.0.31</json.mapper.version>
+        <json.mapper.version>4.0.32</json.mapper.version>
         <carbon.messaging.version>3.0.1</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
