@@ -498,8 +498,8 @@ public class EmailSink extends Sink {
             String bcc = optionBcc.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
         }
-        if ((optionContentType != null)) {
-            String contentType  = optionContentType.getValue(dynamicOptions);
+        if (optionContentType != null) {
+            String contentType = optionContentType.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
         }
 
@@ -659,7 +659,7 @@ public class EmailSink extends Sink {
         //content.type is a dynamic variable, if that option is not exist,
         // check whether default value for the 'content.type' is given in the configurations.
         if (!optionHolder.isOptionExists(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE)) {
-            String  contentType = configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
+            String contentType = configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                     EmailConstants.EMPTY_STRING);
             if (!contentType.isEmpty()) {
                 emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
