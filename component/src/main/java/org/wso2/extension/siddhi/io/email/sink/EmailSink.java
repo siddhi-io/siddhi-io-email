@@ -410,6 +410,7 @@ public class EmailSink extends Sink {
     private Option optionTo;
     private Option optionCc;
     private Option optionBcc;
+    private Option optionContentType;
     private Map<String, String> initProperties = new HashMap<>();
     private Map<String, String> emailProperties = new HashMap<>();
     private ConfigReader configReader;
@@ -496,6 +497,10 @@ public class EmailSink extends Sink {
         if (optionBcc != null) {
             String bcc = optionBcc.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+        }
+        if ((optionContentType != null)) {
+            String contentType  = optionContentType.getValue(dynamicOptions);
+            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
         }
 
         if ((attachmentOption != null) && (!attachmentOption.isStatic())) {
@@ -651,15 +656,22 @@ public class EmailSink extends Sink {
             optionBcc = optionHolder.validateAndGetOption(EmailConstants.BCC);
         }
 
+        //content.type is a dynamic variable, if that option is not exist,
+        // check whether default value for the 'content.type' is given in the configurations.
+        if (!optionHolder.isOptionExists(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE)) {
+            String  contentType = configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
+                    EmailConstants.EMPTY_STRING);
+            if (!contentType.isEmpty()) {
+                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
+            }
+        } else {
+            optionContentType = optionHolder.validateAndGetOption(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE);
+        }
+
         String storeProtocol = optionHolder.validateAndGetStaticValue(
                 EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, configReader.readConfig(
                         EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, EmailConstants.IMAP_STORE));
         initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_STORE_PROTOCOL, storeProtocol);
-
-        String contentType = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
-                configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
-                        EmailConstants.MAIL_PUBLISHER_DEFAULT_CONTENT_TYPE));
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
 
         if (optionHolder.isOptionExists(EmailConstants.ATTACHMENTS)) {
             attachmentOption = optionHolder.validateAndGetOption(EmailConstants.ATTACHMENTS);
@@ -692,7 +704,8 @@ public class EmailSink extends Sink {
     @Override
     public String[] getSupportedDynamicOptions() {
         return new String[]{EmailConstants.SUBJECT, EmailConstants.TO,
-        EmailConstants.CC, EmailConstants.BCC, EmailConstants.ATTACHMENTS};
+                EmailConstants.CC, EmailConstants.BCC, EmailConstants.ATTACHMENTS,
+                EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE};
     }
 
     /**
