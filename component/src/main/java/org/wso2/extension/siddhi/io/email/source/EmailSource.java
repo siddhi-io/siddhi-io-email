@@ -55,117 +55,120 @@ import java.util.stream.Stream;
  * The class implementing Email source.
  */
 @Extension(name = "email", namespace = "source",
-        description = "Email source allows user to receive events via emails. Email source can be configured using "
-                + "'imap' or 'pop3' server to receive events. This allows user to filter the messages"
-                + " which satisfy the given criteria under 'search term' option. The user can define email"
-                + " source parameters in either 'deployment yaml' file or stream definition."
-                + " So that email source checks whether parameters are given in"
-                + " stream definition and 'ymal' file respectively. If it is not given in both places,"
-                + " then default values are taken if defaults values are available."
-                + " If user need to configure server system parameters which are not given as options in"
-                + " stream definition then it is needed to define them in 'yaml' file under email source properties."
-                + " (Refer link: https://javaee.github.io/javamail/IMAP-Store , "
-                + " https://javaee.github.io/javamail/POP3-Store to more information about"
-                + " imap and pop3 server system parameters).",
+        description = "The 'Email' source allows you to receive events via emails. An 'Email' source can be " +
+                "configured using the 'imap' or 'pop3' server to receive events. This allows you to filter the " +
+                "messages that satisfy the criteria specified under the 'search term' option. The email source " +
+                "parameters can be defined in either the '<SP_HOME>/conf/<PROFILE>/deployment yaml' file or the " +
+                "stream definition. If the parameter configurations are not available in either place, the default " +
+                "values are considered (i.e., if default values are available). If you need to configure server " +
+                "system parameters that are not provided as options in the stream definition, they need to be " +
+                "defined in the 'deployment yaml' file under 'email source properties'. For more information about" +
+                " 'imap' and 'pop3' server system parameters, see the following.\n" +
+                "[JavaMail Reference Implementation - IMAP Store](https://javaee.github.io/javamail/IMAP-Store)\n" +
+                "[JavaMail Reference Implementation - POP3 Store Store](https://javaee.github.io/javamail/POP3-Store)",
+
         parameters = {
-        @Parameter(name = "username",
-                description = "user name of the email account. (e.g. wso2mail is the username of wso2mail@gmail.com"
-                        + "mail account.",
-                type = { DataType.STRING}),
-        @Parameter(name = "password",
-                description = "password of the email account",
-                type = { DataType.STRING }),
-        @Parameter(name = "store",
-                description = "Store type that used to receive emails. it can be either imap or pop3.",
-                type = {DataType.STRING },
-                optional = true,
-                defaultValue = "imap"),
-        @Parameter(name = "host",
-                description = "Host name of the server "
-                        + "(e.g. host name for a gmail account with imap store : 'imap.gmail.com'). "
-                        + "The default value imap.gmail.com' is only valid if email account is a gmail account"
-                        + " with imap enable.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "If store type is 'imap' then default value is "
-                        + "'imap.gmail.com' and if store type is 'pop3' then"
-                        + "default value is 'pop3.gmail.com'."),
-        @Parameter(name = "port",
-                description = "The port which is used to create the connection.",
-                type = {DataType.INT},
-                optional = true,
-                defaultValue = "'993' the default value is valid only if store is imap and ssl enable"),
-        @Parameter(name = "folder",
-                description = "Name of the folder to fetch email.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "INBOX"),
-        @Parameter(name = "search.term",
-                description = "Option which includes conditions as a key value pairs to search emails."
-                        + " String search term should define ':' separated key and"
-                        + " value with ',' separated key value pairs."
-                        + " Currently, this string search term only supported keys: subject, from, to, bcc, and cc."
-                        + " As an example: subject:DAS , from:carbon , bcc:wso2 string search term create"
-                        + " a search term instance which filter emails contain 'DAS' in the subject, 'carbon'"
-                        + " in the from address and 'wso2' in one of the bcc addresses. It does sub string matching"
-                        + " which is case insensitive. But if '@' contains in the given value except for"
-                        + " 'subject' key, then it check whether address is equal or not. As a example from: abc@"
-                        + " string search term check whether 'from' address is equal to 'abc' before '@' Symbol.",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "None"),
-        @Parameter(name = "polling.interval",
-                description = "Interval that email source should poll the account to check for new mails arrivals "
-                        + "in seconds.",
-                type = { DataType.LONG },
-                optional = true,
-                defaultValue = "600"),
-        @Parameter(name = "action.after.processed",
-                description = "Action that email source should carry out for the processed mail. "
-                        + "FLAGGED : set the flag as falgged. "
-                        + "SEEN : set the flag as read. "
-                        + "ANSWERED : set the flag as answered. "
-                        + "DELETE : delete tha mail after the polling cycle. "
-                        + "MOVE : move the the mail to the folder given in folder.to.move. "
-                        + "If folder is pop3, then only option available is 'DELETE",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "NONE"),
-        @Parameter(name = "folder.to.move",
-                description = "The name of the folder, which mail has to move after processing."
-                        + "If the action after process is 'MOVE' then it is mandatory to define the folder to move.",
-                type = { DataType.STRING }),
-        @Parameter(name = "content.type",
-                description = "Content type of the email. It can be either 'text/plain' or 'text/html.'",
-                type = { DataType.STRING },
-                optional = true,
-                defaultValue = "text/plain"),
-        @Parameter(name = "ssl.enable",
-                description = "If it is 'true' then use a secure port to establish the connection. The possible values"
-                        + " are 'true or false.",
-                type = { DataType.BOOL },
-                optional = true,
-                defaultValue = "true") },
+                @Parameter(name = "username",
+                        description = "The user name of the email account. e.g., 'wso2mail' is the username of the " +
+                                "'wso2mail@gmail.com' mail account.",
+                        type = { DataType.STRING}),
+                @Parameter(name = "password",
+                        description = "The password of the email account",
+                        type = { DataType.STRING }),
+                @Parameter(name = "store",
+                        description = "The store type that used to receive emails. Possible values are 'imap' and " +
+                                "'pop3'.",
+                        type = {DataType.STRING },
+                        optional = true,
+                        defaultValue = "imap"),
+                @Parameter(name = "host",
+                        description = "The host name of the server "
+                                + "(e.g., 'imap.gmail.com' is the host name for a gmail account with an IMAP store.). "
+                                + "The default value 'imap.gmail.com' is only valid if the email account is a gmail" +
+                                " account with IMAP enabled.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "If store type is 'imap', then the default value is "
+                                + "'imap.gmail.com'. If the store type is 'pop3', then the"
+                                + "default value is 'pop3.gmail.com'."),
+                @Parameter(name = "port",
+                        description = "The port that is used to create the connection.",
+                        type = {DataType.INT},
+                        optional = true,
+                        defaultValue = "'993', the default value is valid only if the store is 'imap' and " +
+                                "ssl-enabled."),
+                @Parameter(name = "folder",
+                        description = "The name of the folder to which the emails should be fetched.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "INBOX"),
+                @Parameter(name = "search.term",
+                        description = "The option that includes conditions such as key-value pairs to search for " +
+                                "emails. In a string search term, the key and the value should be separated by a " +
+                                "semicolon (';'). Each key-value pair must be within inverted commas (' '). The " +
+                                "string search term can define multiple comma-separated key-value pairs. This string" +
+                                " search term currently supports only the 'subject', 'from', 'to', 'bcc', and 'cc'" +
+                                " keys. e.g., if you enter 'subject:DAS, from:carbon, bcc:wso2', the search term " +
+                                "creates a search term instance that filters emails that contain 'DAS' in the " +
+                                "subject, 'carbon' in the 'from' address, and 'wso2' in one of the 'bcc' addresses." +
+                                " The string search term carries out sub string matching that is case-sensitive." +
+                                " If '@' in included in the value for any key other than the 'subject' key, it" +
+                                " checks for an address that is equal to the value given. e.g., If you search for" +
+                                " 'abc@', the string search terms looks for an address that contains 'abc' before the" +
+                                " '@' symbol.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "None"),
+                @Parameter(name = "polling.interval",
+                        description = "This defines the time interval in seconds at which th email source should poll" +
+                                " the account to check for new mail arrivals."
+                                + "in seconds.",
+                        type = { DataType.LONG },
+                        optional = true,
+                        defaultValue = "600"),
+                @Parameter(name = "action.after.processed",
+                        description = "The action to be performed by the email source for the processed mail. " +
+                                "Possible values are as follows:\n"
+                                + "'FLAGGED': Sets the flag as 'flagged'.\n"
+                                + "'SEEN': Sets the flag as 'read'.\n"
+                                + "'ANSWERED': Sets the flag as 'answered'.\n"
+                                + "'DELETE': Deletes tha mail after the polling cycle.\n"
+                                + "'MOVE': Moves the mail to the folder specified in the 'folder.to.move' " +
+                                "parameter.\n" +
+                                " If the folder specified is 'pop3', then the only option available is 'DELETE'.",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "NONE"),
+                @Parameter(name = "folder.to.move",
+                        description = "The name of the folder to which the mail must be moved once it is processed." +
+                                " If the action after processing is 'MOVE', it is required to specify a value for " +
+                                "this parameter.",
+                        type = { DataType.STRING }),
+                @Parameter(name = "content.type",
+                        description = "The content type of the email. It can be either 'text/plain' or 'text/html.'",
+                        type = { DataType.STRING },
+                        optional = true,
+                        defaultValue = "text/plain"),
+                @Parameter(name = "ssl.enable",
+                        description = "If this is set to 'true', a secure port is used to establish the connection." +
+                                " The possible values are 'true' and 'false'.",
+                        type = { DataType.BOOL },
+                        optional = true,
+                        defaultValue = "true") },
         examples = {
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
-                        + " using email source. In this example only mandatory parameters are defined in the "
-                        + " in the stream definition. For other parameters default values are taken."
-                        + " since search term is not defined, it poll and take all new messages in the inbox folder",
-                        syntax = "@source(type='email', @map(type='xml'), "
+                @Example(syntax = "@source(type='email', @map(type='xml'), "
                                 + "username='receiver.account', "
                                 + "password='account.password',"
                                 + ")" +
-                                "define stream inputStream (name string, age int, country string);"),
+                                "define stream inputStream (name string, age int, country string);",
+                        description = "This example illustrates how to receive events in 'xml' format via the email" +
+                                " source. In this example, only the required parameters are defined in the " +
+                                "stream definition. The default values are taken for the other parameters. The search" +
+                                " term is not defined, and therefore, all the new messages in the inbox folder are " +
+                                "polled and taken."
+                ),
 
-                @Example(description = "Following example illustrates how to receive events in `xml` format"
-                        + " using email source. The email source polls the mail account in every 500 seconds"
-                        + " to check whether new mails has been arrived and processes new mails only if"
-                        + " if it satisfy the properties given under email search term (email messages which come from"
-                        + "`from.account@.<host name>`, contains `cc.account` in cc receipts list, and"
-                        + " `Stream Processor` words in the mail subject)"
-                        + " In the example, action after processes is defined as the `DELETE`, so that"
-                        + " after processing the event, corresponding mail is deleted from the mail folder.",
-                        syntax = "@source(type='email', @map(type='xml'), "
+                @Example(syntax = "@source(type='email', @map(type='xml'), "
                                 + "username='receiver.account', "
                                 + "password='account.password',"
                                 + "store = 'imap',"
@@ -176,69 +179,80 @@ import java.util.stream.Stream;
                                 + "action.after.processed='DELETE',"
                                 + "content.type='text/html,"
                                 + ")" +
-                                "define stream inputStream (name string, age int, country string);"),
+                                "define stream inputStream (name string, age int, country string);",
+                        description = "This example illustrates how to receive events in 'xml' format via the email" +
+                                " source. The email source polls the mail account every 500 seconds to check whether" +
+                                " any new mails have arrived. It processes new mails only if they satisfy the " +
+                                "conditions specified for the email search term (the value " +
+                                "for 'from' of the email message should be 'from.account@.<host name>', and the " +
+                                "message should contain 'cc.account' in the cc receipient list and the word " +
+                                "'Stream Processor' in the mail subject). in this example, the action after " +
+                                "processing is 'DELETE'. Therefore,after processing the event, corresponding mail is" +
+                                " deleted from the mail folder."
+                ),
         },
         systemParameter = {
                 @SystemParameter(name = "mail.imap.partialfetch",
-                        description = "Controls whether the IMAP partial-fetch capability should be used",
+                        description = "This determines whether the IMAP partial-fetch capability should be used.",
                         defaultValue = "true",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.fetchsize",
-                        description = "Partial fetch size in bytes.",
+                        description = "The partial fetch size in bytes.",
                         defaultValue = "16K",
                         possibleParameters = "value in bytes"),
                 @SystemParameter(name = "mail.imap.peek",
-                        description = "If set to true, use the IMAP PEEK option when fetching body parts,"
-                                + " to avoid setting the SEEN flag on messages."
-                                + " Defaults to false. Can be overridden on a per-message basis"
-                                + " by the setPeek method on IMAPMessage.",
+                        description = "If this is set to 'true', the IMAP PEEK option should be used when fetching" +
+                                " body parts to avoid setting the 'SEEN' flag on messages. The default value is " +
+                                "'false'. This can be overridden on a per-message basis by the 'setPeek method' in " +
+                                "'IMAPMessage'.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.connectiontimeout",
-                        description = "Socket connection timeout value in milliseconds."
-                                + " This timeout is implemented by java.net.Socket.",
+                        description = "The socket connection timeout value in milliseconds."
+                                + " This timeout is implemented by 'java.net.Socket'.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.timeout",
-                        description = "Socket read timeout value in milliseconds."
-                                + " This timeout is implemented by java.net.Socket.",
+                        description = "The socket read timeout value in milliseconds. This timeout is implemented by" +
+                                " 'java.net.Socket'.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.writetimeout",
-                        description = "Socket write timeout value in milliseconds. This timeout is implemented"
-                                + " by using a java.util.concurrent.ScheduledExecutorService per connection that "
-                                + "schedules a thread to close the socket if the timeout expires."
-                                + " Thus, the overhead of using this timeout is one thread per connection.",
+                        description = "The socket write timeout value in milliseconds. This timeout is implemented"
+                                + " by using a 'java.util.concurrent.ScheduledExecutorService' per connection that "
+                                + "schedules a thread to close the socket if the timeout period elapses."
+                                + " Therefore, the overhead of using this timeout is one thread per connection.",
                         defaultValue = "infinity timeout",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.statuscachetimeout",
-                        description = "Timeout value in milliseconds for cache of STATUS command response.",
+                        description = "The timeout value in milliseconds for the cache of 'STATUS' command response.",
                         defaultValue = "1000ms",
                         possibleParameters = "Time out in miliseconds"),
                 @SystemParameter(name = "mail.imap.appendbuffersize",
-                        description = "Maximum size of a message to buffer in memory when appending to an IMAP folder.",
+                        description = "The maximum size of a message to buffer in memory when appending to an IMAP" +
+                                " folder.",
                         defaultValue = "None",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.connectionpoolsize",
-                        description = "Maximum number of available connections in the connection pool.",
+                        description = "The maximum number of available connections in the connection pool.",
                         defaultValue = "1",
                         possibleParameters = "Any Integer value"),
                 @SystemParameter(name = "mail.imap.connectionpooltimeout",
-                        description = "Timeout value in milliseconds for connection pool connections. ",
+                        description = "The timeout value in milliseconds for connection pool connections. ",
                         defaultValue = "45000ms",
                         possibleParameters = "Any Integer"),
                 @SystemParameter(name = "mail.imap.separatestoreconnection",
-                        description = "Flag to indicate whether to use a dedicated store connection"
-                                + " for store commands.",
+                        description = "If this parameter is set to 'true', it indicates that a dedicated store " +
+                                "connection needs to be used for store commands.",
                         defaultValue = "true",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.auth.login.disable",
-                        description = "If true, prevents use of the non-standard AUTHENTICATE LOGIN command,"
-                                + " instead using the plain LOGIN command.",
+                        description = "If this is set to 'true', it is not possible to use the non-standard " +
+                                "'AUTHENTICATE LOGIN' command instead of the plain 'LOGIN' command.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.auth.plain.disable",
-                        description = "If true, prevents use of the AUTHENTICATE PLAIN command.",
+                        description = "If this is set to 'true', the 'AUTHENTICATE PLAIN' command cannot be used.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.auth.ntlm.disable",
@@ -247,36 +261,37 @@ import java.util.stream.Stream;
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.proxyauth.user",
                         description = "If the server supports the PROXYAUTH extension, this property"
-                                + " specifies the name of the user to act as. Authenticate to the server"
-                                + " using the administrator's credentials. After authentication,"
-                                + " the IMAP provider will issue the PROXYAUTH command with"
-                                + " the user name specified in this property.",
+                                + " specifies the name of the user to act as. Authentication to log in to the server"
+                                + " is carried out using the administrator's credentials. After authentication,"
+                                + " the IMAP provider issues the 'PROXYAUTH' command with the user name specified " +
+                                "in this property.",
                         defaultValue = "None",
                         possibleParameters = "Valid string value"),
                 @SystemParameter(name = "mail.imap.localaddress",
-                        description = "Local address (host name) to bind to when creating the IMAP socket.",
+                        description = "The local address (host name) to bind to when creating the IMAP socket.",
                         defaultValue = "Defaults to the address picked by the Socket class.",
                         possibleParameters = "Valid string value"),
                 @SystemParameter(name = "mail.imap.localport",
-                        description = "Local port number to bind to when creating the IMAP socket.",
+                        description = "The local port number to bind to when creating the IMAP socket.",
                         defaultValue = "Defaults to the port number picked by the Socket class.",
                         possibleParameters = "Valid String value"),
                 @SystemParameter(name = "mail.imap.sasl.enable",
-                        description = "If set to true, attempt to use the javax.security."
-                                + "sasl package to choose an authentication mechanism for login.",
+                        description = "If this parameter is set to 'true', the system attempts to use the " +
+                                "'javax.security.sasl' package to choose an authentication mechanism for the login.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.sasl.mechanisms",
-                        description = "A space or comma separated list of SASL mechanism names to try to use.",
+                        description = "A list of SASL mechanism names that the system should to try to use. The " +
+                                "names can be separated by spaces or commas.",
                         defaultValue = "None",
                         possibleParameters = "Valid string value"),
                 @SystemParameter(name = "mail.imap.sasl.authorizationid",
                         description = "The authorization ID to use in the SASL authentication.",
-                        defaultValue = "If not set, the authentication ID (user name) is used.",
+                        defaultValue = "If this parameter is not set, the authentication ID (username) is used.",
                         possibleParameters = "Valid string value"),
                 @SystemParameter(name = "mail.imap.sasl.realm",
                         description = "The realm to use with SASL authentication mechanisms that require a realm, "
-                                + "such as DIGEST-MD5.",
+                                + "such as 'DIGEST-MD5'.",
                         defaultValue = "None",
                         possibleParameters = "Valid string value"),
                 @SystemParameter(name = "mail.imap.auth.ntlm.domain",
@@ -288,74 +303,77 @@ import java.util.stream.Stream;
                         defaultValue = "None",
                         possibleParameters = "Valid integer value"),
                 @SystemParameter(name = "mail.imap.socketFactory",
-                        description = "If set to a class that implements the javax.net.SocketFactory interface,"
-                                + " this class will be used to create IMAP sockets.",
+                        description = "If this parameter is set to a class that implements the " +
+                                "'javax.net.SocketFactory' interface, this class is used to create IMAP sockets.",
                         defaultValue = "None",
                         possibleParameters = "Valid SocketFactory"),
                 @SystemParameter(name = "mail.imap.socketFactory.class",
-                        description = "If set, specifies the name of a class that implements the "
-                                + "javax.net.SocketFactory interface. This class will be used to create IMAP sockets.",
+                        description = "If this parameter is set, it specifies the name of a class that implements the "
+                                + "'javax.net.SocketFactory' interface. This class is used to create IMAP sockets.",
                         defaultValue = "None",
                         possibleParameters = "Valid string"),
                 @SystemParameter(name = "mail.imap.socketFactory.fallback",
-                        description = "If set to true, failure to create a socket using"
-                                + " the specified socket factory class will cause the socket to be created using"
-                                + " the java.net.Socket class. ",
+                        description = "If this parameter is set to 'true', failure to create a socket using"
+                                + " the specified socket factory class results in the socket being created using"
+                                + " the 'java.net.Socket' class. ",
                         defaultValue = "true",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.socketFactory.port",
-                        description = "Specifies the port to connect to when using the specified socket factory."
-                                + " Default port is used when not set.",
+                        description = "This specifies the port to connect to when using the specified socket factory."
+                                + " If this parameter is not set, the default port is used.",
                         defaultValue = "143",
                         possibleParameters = "Valid Integer"),
                 @SystemParameter(name = "mail.imap.ssl.checkserveridentity",
-                        description = "If set to true, check the server identity as specified by RFC 2595.",
+                        description = "If this parameter is set to 'true', the system checks the server identity as" +
+                                " specified by RFC 2595.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.ssl.trust",
-                        description = "If set, and a socket factory hasn't been specified,"
-                                + " enables use of a MailSSLSocketFactory."
-                                + "If set to '*', all hosts are trusted."
-                                + "If set to a whitespace separated list of hosts, those hosts are trusted."
-                                + "Otherwise, trust depends on the certificate the server presents.",
+                        description = "If this parameter is set and a socket factory has not been specified, it " +
+                                "enables the use of a 'MailSSLSocketFactory'.\n" +
+                                "If this parameter is set to '*', all the hosts are trusted.\n" +
+                                "If this parameter specifies list of hosts separated by white spaces, only those " +
+                                "hosts are trusted.\n" +
+                                "If the parameter is not set to any of the values mentioned above, trust depends on" +
+                                " the certificate presented by the server.",
                         defaultValue = "*",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.ssl.socketFactory",
-                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
-                                + " this class will be used to create IMAP SSL sockets.",
+                        description = "If this parameter is set to a class that extends the " +
+                                "'javax.net.ssl.SSLSocketFactory' class this class is used to create IMAP SSL sockets.",
                         defaultValue = "None",
                         possibleParameters = "SSL Socket Factory"),
                 @SystemParameter(name = "mail.imap.ssl.socketFactory.class",
-                        description = "If set, specifies the name of a class that extends "
-                                + "the javax.net.ssl.SSLSocketFactory class."
-                                + " This class will be used to create IMAP SSL sockets.",
+                        description = "If this parameter is set, it specifies the name of a class that extends the" +
+                                " 'javax.net.ssl.SSLSocketFactory' class. This class is used to create IMAP SSL" +
+                                " sockets.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.ssl.socketFactory.port",
-                        description = "Specifies the port to connect to when using the specified socket factory.",
-                        defaultValue = "the default port will be used-993",
+                        description = "This specifies the port to connect to when using the specified socket factory.",
+                        defaultValue = "the default port 993 is used.",
                         possibleParameters = "valid port number"),
                 @SystemParameter(name = "mail.imap.ssl.protocols",
-                        description = "Specifies the SSL protocols that will be enabled for SSL connections."
-                                + " The property value is a whitespace separated list of tokens acceptable"
-                                + " to the javax.net.ssl.SSLSocket.setEnabledProtocols method.",
+                        description = "This specifies the SSL protocols that are enabled for SSL connections."
+                                + " The property value is a whitespace-separated list of tokens acceptable"
+                                + " to the 'javax.net.ssl.SSLSocket.setEnabledProtocols' method.",
                         defaultValue = "None",
                         possibleParameters = "Valid string"),
                 @SystemParameter(name = "mail.imap.starttls.enable",
-                        description = "If true, enables the use of the STARTTLS command"
+                        description = "If this parameter is set to 'true', it is possible to use the 'STARTTLS' command"
                                 + " (if supported by the server) to switch the connection to a"
                                 + " TLS-protected connection before issuing any login commands.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.socks.host",
-                        description = "Specifies the host name of a SOCKS5 proxy server that will be"
-                                + " used for connections to the mail server.",
+                        description = "This specifies the host name of a 'SOCKS5' proxy server that is"
+                                + " used to connect to the mail server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.socks.port",
-                        description = "Specifies the port number for the SOCKS5 proxy server."
-                                + " This should only need to be used if the proxy server is not using the standard"
-                                + " port number of 1080.",
+                        description = "This specifies the port number for the 'SOCKS5' proxy server."
+                                + " This is needed if the proxy server is not using the standard"
+                                + " port number 1080.",
                         defaultValue = "1080",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.imap.minidletime",
@@ -363,172 +381,185 @@ import java.util.stream.Stream;
                         defaultValue = "10 milliseconds",
                         possibleParameters = "time in seconds (Integer)"),
                 @SystemParameter(name = "mail.imap.enableimapevents",
-                        description = "Enable special IMAP-specific events to be delivered to the Store's"
-                                + " ConnectionListener. If true, unsolicited responses received during the Store's"
-                                + " idle method will be sent as ConnectionEvents with a type of IMAPStore.RESPONSE."
-                                + " The event's message will be the raw IMAP response string.",
+                        description = "If this property is set to 'true', it enables special IMAP-specific events " +
+                                "to be delivered to the 'ConnectionListener' of the store. The unsolicited responses" +
+                                " received during the idle method of the store are sent as connection events with " +
+                                "'IMAPStore.RESPONSE' as the type."
+                                + " The event's message is the raw IMAP response string.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.imap.folder.class",
-                        description = "Class name of a subclass of com.sun.mail.imap.IMAPFolder."
+                        description = "The class name of a subclass of 'com.sun.mail.imap.IMAPFolder'."
                                 + " The subclass can be used to provide support for additional IMAP commands."
-                                + " The subclass must have public constructors of the form public"
-                                + " MyIMAPFolder(String fullName, char separator,"
+                                + " The subclass must have public constructors of the form 'public"
+                                + " MyIMAPFolder'(String fullName, char separator,"
                                 + " IMAPStore store, Boolean isNamespace) "
-                                + "and public MyIMAPFolder(ListInfo li, IMAPStore store)",
+                                + "and public 'MyIMAPFolder'(ListInfo li, IMAPStore store)",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.connectiontimeout",
-                        description = "Socket connection timeout value in milliseconds.",
+                        description = "The socket connection timeout value in milliseconds.",
                         defaultValue = "Infinite timeout",
                         possibleParameters = "Integer value"),
                 @SystemParameter(name = "mail.pop3.timeout",
-                        description = "Socket I/O timeout value in milliseconds. ",
+                        description = "The socket I/O timeout value in milliseconds. ",
                         defaultValue = "Infinite timeout",
                         possibleParameters = "Integer value"),
                 @SystemParameter(name = "mail.pop3.message.class",
-                        description = "Class name of a subclass of com.sun.mail.pop3.POP3Message",
+                        description = "The class name of a subclass of 'com.sun.mail.pop3.POP3Message'.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.localaddress",
-                        description = "Local address (host name) to bind to when creating the POP3 socket.",
+                        description = "The local address (host name) to bind to when creating the POP3 socket.",
                         defaultValue = "Defaults to the address picked by the Socket class.",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.localport",
-                        description = "Local port number to bind to when creating the POP3 socket.",
+                        description = "The local port number to bind to when creating the POP3 socket.",
                         defaultValue =  "Defaults to the port number picked by the Socket class.",
                         possibleParameters = "Valid port number"),
                 @SystemParameter(name = "mail.pop3.apop.enable",
-                        description = "If set to true, use APOP instead of USER/PASS to login to the POP3 server,"
-                                + " if the POP3 server supports APOP. APOP sends a digest of the password"
-                                + " rather than the clear text password.",
+                        description = "If this parameter is set to 'true', use 'APOP' instead of 'USER/PASS' to log" +
+                                " in to the 'POP3' server"
+                                + " (if the 'POP3' server supports 'APOP'). APOP sends a digest of the password"
+                                + " instead of clearing the text password.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.socketFactory",
-                        description = "If set to a class that implements the javax.net.SocketFactory interface,"
-                                + " this class will be used to create POP3 sockets.",
+                        description = "If this parameter is set to a class that implements the " +
+                                "'javax.net.SocketFactory' interface, this class is used to create 'POP3' sockets.",
                         defaultValue = "None",
                         possibleParameters = "Socket Factory"),
                 @SystemParameter(name = "mail.pop3.socketFactory.class",
-                        description = "If set, specifies the name of a class that implements the javax.net."
-                                + " SocketFactory interface. "
-                                + "This class will be used to create POP3 sockets.",
+                        description = "If this parameter is set, it specifies the name of a class that implements " +
+                                "the 'javax.net.SocketFactory' interface. "
+                                + "This class is used to create 'POP3' sockets.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.socketFactory.fallback",
-                        description = "If set to true, failure to create a socket using the specified socket"
-                                + " factory class will cause the socket to be created using"
-                                + " the java.net.Socket class.",
+                        description = "If this parameter is set to 'true', failure to create a socket using the " +
+                                "specified socket factory class results in the socket being created using the " +
+                                "'java.net.Socket' class.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.socketFactory.port",
-                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        description = "This specifies the port to connect to when using the specified socket factory.",
                         defaultValue = "Default port",
                         possibleParameters = "Valid port number"),
                 @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
-                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        description = "If this parameter is set to 'true', check the server identity as specified by" +
+                                " RFC 2595. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.ssl.trust",
-                        description = "If set, and a socket factory hasn't been specified,"
-                                + " enables use of a MailSSLSocketFactory. "
-                                + "If set to '*', all hosts are trusted."
-                                + "If set to a whitespace separated list of hosts, those hosts are trusted."
-                                + "Otherwise, trust depends on the certificate the server presents.",
+                        description = "If this parameter is set and a socket factory has not been specified, it " +
+                                "is possible to use a 'MailSSLSocketFactory'. \n"
+                                + "If this parameter is set to '*', all the hosts are trusted.\n"
+                                + "If the parameter is set to a whitespace-separated list of hosts, only those hosts " +
+                                "are trusted.\n"
+                                + "If the parameter is not set to any of the values mentioned above, trust depends" +
+                                " on the certificate presented by the server.",
                         defaultValue = "*",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory",
-                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
-                                + " this class will be used to create POP3 SSL sockets.",
+                        description = "If this parameter is set to a class that extends the " +
+                                "'javax.net.ssl.SSLSocketFactory' class, this class is used to create 'POP3'" +
+                                " SSL sockets.",
                         defaultValue = "None",
                         possibleParameters = "SSL Socket Factory"),
                 @SystemParameter(name = "mail.pop3.ssl.checkserveridentity",
-                        description = "If set to true, check the server identity as specified by RFC 2595. ",
+                        description = "If this parameter is set to 'true', the system checks the server identity as" +
+                                " specified by 'RFC 2595'. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.ssl.trust",
-                        description = " If set, and a socket factory hasn't been specified,"
-                                + " enables use of a MailSSLSocketFactory."
-                                + "If set to '*', all hosts are trusted."
-                                + "If set to a whitespace separated list of hosts, those hosts are trusted. ",
-                        defaultValue = "trust depends on the certificate the server presents.",
+                        description = " If this parameter is set and a socket factory has not been specified, it is" +
+                                " possible to use a 'MailSSLSocketFactory'.\n"
+                                + "If this parameter is set to '*', all the hosts are trusted.\n"
+                                + "If the parameter is set to a whitespace-separated list of hosts, only those hosts" +
+                                " are trusted.",
+                        defaultValue = "Trust depends on the certificate presented by the server.",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory",
-                        description = "If set to a class that extends the javax.net.ssl.SSLSocketFactory class,"
-                                + " this class will be used to create POP3 SSL sockets.",
+                        description = "If this parameter is set to a class that extends the " +
+                                "'javax.net.ssl.SSLSocketFactory' class, this class is used to create 'POP3 SSL'" +
+                                " sockets.",
                         defaultValue = "None",
                         possibleParameters = "SSL Socket Factory"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory.class",
-                        description = "If set, specifies the name of a class that extends"
-                                + " the javax.net.ssl.SSLSocketFactory class."
-                                + " This class will be used to create POP3 SSL sockets. ",
+                        description = "If this parameter is set, it specifies the name of a class that extends"
+                                + " the 'javax.net.ssl.SSLSocketFactory' class."
+                                + " This class is used to create 'POP3 SSL' sockets. ",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.ssl.socketFactory.p",
-                        description = "Specifies the port to connect to when using the specified socket factory.",
+                        description = "This parameter pecifies the port to connect to when using the specified " +
+                                "socket factory.",
                         defaultValue = "995",
                         possibleParameters = "Valid Integer"),
                 @SystemParameter(name = "mail.pop3.ssl.protocols",
-                        description = "Specifies the SSL protocols that will be enabled for SSL connections."
-                                + " The property value is a whitespace separated list of tokens acceptable"
-                                + " to the javax.net.ssl.SSLSocket.setEnabledProtocols method.",
+                        description = "This parameter specifies the SSL protocols that are enabled for SSL connections."
+                                + " The property value is a whitespace-separated list of tokens acceptable"
+                                + " to the 'javax.net.ssl.SSLSocket.setEnabledProtocols' method.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.starttls.enable",
-                        description = "If true, enables the use of the STLS command (if supported by the server)"
-                                + " to switch the connection to a TLS-protected"
-                                + " connection before issuing any login commands",
+                        description = "If this parameter is set to 'true', it is possible to use the 'STLS' command" +
+                                " (if supported by the server) to switch the connection to a TLS-protected connection" +
+                                " before issuing any login commands.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.starttls.required",
-                        description = "If true, requires the use of the STLS command. If the server doesn't"
-                                + " support the STLS command, or the command fails, the connect method will fail.",
+                        description = "If this parameter is set to 'true', it is required to use the 'STLS' command." +
+                                " The connect method fails if the server does not support the 'STLS' command or if " +
+                                "the command fails.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.socks.host",
-                        description = "Specifies the host name of a SOCKS5 proxy server that will be used for"
-                                + " connections to the mail server.",
+                        description = "This parameter specifies the host name of a 'SOCKS5' proxy server that can " +
+                                "be used to connect to the mail server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.socks.port",
-                        description = "Specifies the port number for the SOCKS5 proxy server.",
+                        description = "This parameter specifies the port number for the 'SOCKS5' proxy server.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.disabletop",
-                        description = "If set to true, the POP3 TOP command will not be used to"
+                        description = "If this parameter is set to 'true', the 'POP3 TOP' command is not used to"
                                 + " fetch message headers. ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.forgettopheaders",
-                        description = "If set to true, the headers that might have been retrieved using the POP3"
-                                + " TOP command will be forgotten and replaced by headers retrieved"
-                                + " as part of the POP3 RETR command.",
+                        description = "If this parameter is set to 'true', the headers that might have been " +
+                                "retrieved using the 'POP3 TOP' command is forgotten and replaced by the headers" +
+                                " retrieved when the 'POP3 RETR' command is executed.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.filecache.enable",
-                        description = "If set to true, the POP3 provider will cache message data in a temporary"
-                                + " file rather than in memory. Messages are only added to the cache when accessing"
-                                + " the message content. Message headers are always cached in memory (on demand)."
-                                + " The file cache is removed when the folder is closed or the JVM terminates.",
+                        description = "If this parameter is set to 'true', the 'POP3' provider caches message data in" +
+                                " a temporary file instead of caching them in memory. Messages are only added to the" +
+                                " cache when accessing the message content. Message headers are always cached in " +
+                                "memory (on demand). The file cache is removed when the folder is closed or the JVM" +
+                                " terminates.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.filecache.dir",
-                        description = "If the file cache is enabled, this property can be used"
-                                + " to override the default directory used by the JDK for temporary files.",
+                        description = "If the file cache is enabled, this property is used to override the default" +
+                                " directory used by the JDK for temporary files.",
                         defaultValue = "None",
                         possibleParameters = "Valid String"),
                 @SystemParameter(name = "mail.pop3.cachewriteto",
-                        description = "Controls the behavior of the writeTo method on a POP3 message object."
-                                + " If set to true, and the message content hasn't yet been cached, and ignoreList"
-                                + " is null, the message is cached before being written. Otherwise, the message "
-                                + "is streamed directly to the output stream without being cached.",
+                        description = "This parameter controls the behavior of the 'writeTo' method on a 'POP3' " +
+                                "message object. If the parameter is set to 'true', the message content has not been" +
+                                " cached yet, and the 'ignoreList' is null, the message is cached before being " +
+                                "written. If not, the message is streamed directly to the output stream without being" +
+                                " cached.",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
                 @SystemParameter(name = "mail.pop3.keepmessagecontent",
-                        description = "If this property is set to true, a hard reference to the cached content"
-                                + " will be kept, preventing the memory from being reused until the folder"
-                                + " is closed or the cached content is explicitly invalidated"
-                                + " (using the invalidate method). ",
+                        description = "If this property is set to 'true', a hard reference to the cached content"
+                                + " is retained, preventing the memory from being reused until the folder"
+                                + " is closed, or until the cached content is explicitly invalidated (using the " +
+                                "'invalidate' method). ",
                         defaultValue = "false",
                         possibleParameters = "true or false"),
         })
