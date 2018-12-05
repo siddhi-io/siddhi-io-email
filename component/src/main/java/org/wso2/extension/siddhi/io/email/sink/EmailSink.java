@@ -546,12 +546,14 @@ public class EmailSink extends Sink {
                         throw new ConnectionUnavailableException("Error is encountered while connecting the smtp" 
                                 + " server by the email ClientConnector.", e);
                     } else {
-                        throw new RuntimeException("Error is encountered while sending the message by the email"
-                                + " ClientConnector with properties: " + emailProperties.toString() , e);
+                        log.error("Error is encountered while sending the message by the email, a socket connection " +
+                                "attempt failed for " + " ClientConnector with properties: " +
+                                emailProperties.toString() + ", events dropped '" + payload.toString() + "'", e);
                     }
                 } else {
-                    throw new RuntimeException("Error is encountered while sending the message by the email"
-                            + " ClientConnector with properties: " + emailProperties.toString() , e);
+                    log.error("Error is encountered while sending the message by the email"
+                            + " ClientConnector with properties: " + emailProperties.toString() +
+                            ", events dropped '" + payload.toString() + "'", e);
                 }
         }
     }
