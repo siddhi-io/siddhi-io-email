@@ -546,8 +546,8 @@ public class EmailSink extends Sink {
                         throw new ConnectionUnavailableException("Error is encountered while connecting the smtp" 
                                 + " server by the email ClientConnector.", e);
                     } else {
-                        log.error("Error is encountered while sending the message by the email, a socket connection " +
-                                "attempt failed for " + " ClientConnector with properties: " +
+                        log.error("Error is encountered while sending the message by the email sink, " +
+                                "a socket connection attempt failed for the SMTP client connector with properties: " +
                                 emailProperties.toString() + ", events dropped '" + payload.toString() + "'", e);
                     }
                 } else {
