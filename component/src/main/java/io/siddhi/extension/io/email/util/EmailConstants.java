@@ -41,6 +41,7 @@ public class EmailConstants {
     public static final String BCC = "bcc";
     public static final String CC = "cc";
     public static final String ATTACHMENTS = "attachments";
+    public static final String MAIL_PUBLISHER_POOL_SIZE = "pool.size";
 
     /**
      * Default values for the email sink configurations.
