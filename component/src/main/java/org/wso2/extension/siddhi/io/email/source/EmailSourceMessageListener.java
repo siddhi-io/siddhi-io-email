@@ -18,9 +18,9 @@
  */
 package org.wso2.extension.siddhi.io.email.source;
 
+import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.input.source.SourceEventListener;
 import org.apache.log4j.Logger;
-import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
 import org.wso2.transport.email.contract.EmailMessageListener;
 import org.wso2.transport.email.contract.message.EmailBaseMessage;
 import org.wso2.transport.email.contract.message.EmailTextMessage;
