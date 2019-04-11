@@ -20,22 +20,25 @@
 package org.wso2.extension.siddhi.io.email.sink;
 
 import com.sun.mail.util.MailConnectException;
+import io.siddhi.annotation.Example;
+import io.siddhi.annotation.Extension;
+import io.siddhi.annotation.Parameter;
+import io.siddhi.annotation.SystemParameter;
+import io.siddhi.annotation.util.DataType;
+import io.siddhi.core.config.SiddhiAppContext;
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
+import io.siddhi.core.stream.output.sink.Sink;
+import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
+import io.siddhi.core.util.transport.DynamicOptions;
+import io.siddhi.core.util.transport.Option;
+import io.siddhi.core.util.transport.OptionHolder;
+import io.siddhi.query.api.definition.StreamDefinition;
 import org.apache.log4j.Logger;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
-import org.wso2.siddhi.annotation.Example;
-import org.wso2.siddhi.annotation.Extension;
-import org.wso2.siddhi.annotation.Parameter;
-import org.wso2.siddhi.annotation.SystemParameter;
-import org.wso2.siddhi.annotation.util.DataType;
-import org.wso2.siddhi.core.config.SiddhiAppContext;
-import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
-import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.stream.output.sink.Sink;
-import org.wso2.siddhi.core.util.config.ConfigReader;
-import org.wso2.siddhi.core.util.transport.DynamicOptions;
-import org.wso2.siddhi.core.util.transport.Option;
-import org.wso2.siddhi.core.util.transport.OptionHolder;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
@@ -448,12 +451,12 @@ public class EmailSink extends Sink {
      * @param optionHolder      Option holder containing static and dynamic configuration related
      *                          to the {@link Sink}
      * @param configReader      to read the sink related system configuration.
-     * @param siddhiAppContext  the context of the {@link org.wso2.siddhi.query.api.SiddhiApp} used to
+     * @param siddhiAppContext  the context of the {@link io.siddhi.query.api.SiddhiApp} used to
      *                          get siddhi related utilty functions.
      */
     @Override
-    protected void init(StreamDefinition streamDefinition, OptionHolder optionHolder,
-            ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    protected StateFactory init(StreamDefinition streamDefinition, OptionHolder optionHolder,
+                                ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.configReader = configReader;
         this.optionHolder = optionHolder;
         //Server system properties starts with 'mail.smtp'.
@@ -463,6 +466,7 @@ public class EmailSink extends Sink {
             }
         });
         validateAndGetRequiredParameters();
+        return null;
     }
 
     /**
@@ -503,7 +507,8 @@ public class EmailSink extends Sink {
      *                                        such that the  system will take care retrying for connection
      */
     @Override
-    public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
+    public void publish(Object payload, DynamicOptions dynamicOptions, State state)
+            throws ConnectionUnavailableException {
         if (optionSubject != null) {
             String subject = optionSubject.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
@@ -731,29 +736,6 @@ public class EmailSink extends Sink {
     }
 
     /**
-     * Used to collect the serializable state of the processing element, that need to be
-     * persisted for reconstructing the element to the same state on a different point of time
-     * This is also used to identify the internal states and debuging
-     *
-     * @return all internal states should be return as an map with meaning full keys
-     */
-    @Override
-    public Map<String, Object> currentState() {
-        return null;
-    }
-
-    /**
-     * Used to restore serialized state of the processing element, for reconstructing
-     * the element to the same state as if was on a previous point of time.
-     *
-     * @param restoreState is the stateful objects of the processing element as a map.
-     *              This map will have the  same keys that is created upon calling currentState() method.
-     */
-    @Override
-    public void restoreState(Map<String, Object> restoreState) {
-    }
-
-    /**
      * Returns the list of classes which this sink can consume.
      *
      * @return array of supported classes , if extension can support of any types of classes
@@ -762,5 +744,10 @@ public class EmailSink extends Sink {
     @Override
     public Class[] getSupportedInputEventClasses() {
         return new Class[]{String.class};
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposedServiceDeploymentInfo() {
+        return null;
     }
 }

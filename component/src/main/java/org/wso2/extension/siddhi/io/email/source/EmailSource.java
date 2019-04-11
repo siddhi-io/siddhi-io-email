@@ -19,21 +19,24 @@
 package org.wso2.extension.siddhi.io.email.source;
 
 import com.sun.mail.util.MailConnectException;
+import io.siddhi.annotation.Example;
+import io.siddhi.annotation.Extension;
+import io.siddhi.annotation.Parameter;
+import io.siddhi.annotation.SystemParameter;
+import io.siddhi.annotation.util.DataType;
+import io.siddhi.core.config.SiddhiAppContext;
+import io.siddhi.core.exception.ConnectionUnavailableException;
+import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
+import io.siddhi.core.stream.input.source.Source;
+import io.siddhi.core.stream.input.source.SourceEventListener;
+import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
+import io.siddhi.core.util.transport.OptionHolder;
 import org.apache.log4j.Logger;
 import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
 import org.wso2.extension.siddhi.io.email.util.EmailConstants;
-import org.wso2.siddhi.annotation.Example;
-import org.wso2.siddhi.annotation.Extension;
-import org.wso2.siddhi.annotation.Parameter;
-import org.wso2.siddhi.annotation.SystemParameter;
-import org.wso2.siddhi.annotation.util.DataType;
-import org.wso2.siddhi.core.config.SiddhiAppContext;
-import org.wso2.siddhi.core.exception.ConnectionUnavailableException;
-import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
-import org.wso2.siddhi.core.stream.input.source.Source;
-import org.wso2.siddhi.core.stream.input.source.SourceEventListener;
-import org.wso2.siddhi.core.util.config.ConfigReader;
-import org.wso2.siddhi.core.util.transport.OptionHolder;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
 import org.wso2.transport.email.contract.EmailMessageListener;
@@ -584,11 +587,12 @@ public class EmailSource extends Source {
      *                            Listener will then pass on the events to the appropriate mappers for processing .
      * @param optionHolder        Option holder containing static configuration related to the {@link Source}
      * @param configReader        to read the {@link Source} related system configuration.
-     * @param siddhiAppContext    the context of the {@link org.wso2.siddhi.query.api.SiddhiApp} used to get siddhi
+     * @param siddhiAppContext    the context of the {@link io.siddhi.query.api.SiddhiApp} used to get siddhi
      *                            related utilty functions.
      */
-    @Override public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
-            String[] requiredProperties, ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    @Override public StateFactory init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
+                                       String[] requiredProperties, ConfigReader configReader,
+                                       SiddhiAppContext siddhiAppContext) {
         this.sourceEventListener = sourceEventListener;
         this.configReader = configReader;
         this.optionHolder = optionHolder;
@@ -611,6 +615,7 @@ public class EmailSource extends Source {
 
             emailMessageListener = new EmailSourceMessageListener(sourceEventListener,
                     requiredProperties, contentType);
+            return null;
     }
 
     /**
@@ -620,7 +625,8 @@ public class EmailSource extends Source {
      *                           initial successful connection(can be used when events are receving asynchronasily)
      * @throws ConnectionUnavailableException if it cannot connect to the source backend immediately.
      */
-    @Override public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
+    @Override public void connect(ConnectionCallback connectionCallback, State state)
+            throws ConnectionUnavailableException {
         try {
             emailServerConnector.init();
             emailServerConnector.start(emailMessageListener);
@@ -642,6 +648,11 @@ public class EmailSource extends Source {
                         + "exist from the Siddhi App execution." + e.getMessage(), e);
             }
         }
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposeServiceDeploymentInfo() {
+        return null;
     }
 
     /**
@@ -700,27 +711,6 @@ public class EmailSource extends Source {
                         "Error is encountered while resuming" + " the Email Source." + e.getMessage(), e);
             }
         }
-    }
-
-    /**
-     * Used to collect the serializable state of the processing element, that need to be
-     * persisted for the reconstructing the element to the same state on a different point of time
-     *
-     * @return stateful objects of the processing element as a map
-     */
-    @Override public Map<String, Object> currentState() {
-            // no state to restore
-            return null;
-    }
-
-    /**
-     * Used to restore serialized state of the processing element, for reconstructing
-     *
-     * @param map stateful objects of the element as a map.
-     *              This is the same map that is created upon calling currentState() method.
-     */
-    @Override public void restoreState(Map<String, Object> map) {
-            // no state to restore
     }
 
     /**
