@@ -28,8 +28,11 @@ import io.siddhi.annotation.util.DataType;
 import io.siddhi.core.config.SiddhiAppContext;
 import io.siddhi.core.exception.ConnectionUnavailableException;
 import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
 import io.siddhi.core.stream.output.sink.Sink;
 import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.DynamicOptions;
 import io.siddhi.core.util.transport.Option;
 import io.siddhi.core.util.transport.OptionHolder;
@@ -452,8 +455,8 @@ public class EmailSink extends Sink {
      *                          get siddhi related utilty functions.
      */
     @Override
-    protected void init(StreamDefinition streamDefinition, OptionHolder optionHolder,
-            ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    protected StateFactory init(StreamDefinition streamDefinition, OptionHolder optionHolder,
+                                ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
         this.configReader = configReader;
         this.optionHolder = optionHolder;
         //Server system properties starts with 'mail.smtp'.
@@ -463,6 +466,7 @@ public class EmailSink extends Sink {
             }
         });
         validateAndGetRequiredParameters();
+        return null;
     }
 
     /**
@@ -503,7 +507,8 @@ public class EmailSink extends Sink {
      *                                        such that the  system will take care retrying for connection
      */
     @Override
-    public void publish(Object payload, DynamicOptions dynamicOptions) throws ConnectionUnavailableException {
+    public void publish(Object payload, DynamicOptions dynamicOptions, State state)
+            throws ConnectionUnavailableException {
         if (optionSubject != null) {
             String subject = optionSubject.getValue(dynamicOptions);
             emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
@@ -739,5 +744,10 @@ public class EmailSink extends Sink {
     @Override
     public Class[] getSupportedInputEventClasses() {
         return new Class[]{String.class};
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposedServiceDeploymentInfo() {
+        return null;
     }
 }

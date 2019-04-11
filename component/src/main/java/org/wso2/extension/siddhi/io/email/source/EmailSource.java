@@ -27,9 +27,12 @@ import io.siddhi.annotation.util.DataType;
 import io.siddhi.core.config.SiddhiAppContext;
 import io.siddhi.core.exception.ConnectionUnavailableException;
 import io.siddhi.core.exception.SiddhiAppCreationException;
+import io.siddhi.core.stream.ServiceDeploymentInfo;
 import io.siddhi.core.stream.input.source.Source;
 import io.siddhi.core.stream.input.source.SourceEventListener;
 import io.siddhi.core.util.config.ConfigReader;
+import io.siddhi.core.util.snapshot.state.State;
+import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.OptionHolder;
 import org.apache.log4j.Logger;
 import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
@@ -587,8 +590,9 @@ public class EmailSource extends Source {
      * @param siddhiAppContext    the context of the {@link io.siddhi.query.api.SiddhiApp} used to get siddhi
      *                            related utilty functions.
      */
-    @Override public void init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
-            String[] requiredProperties, ConfigReader configReader, SiddhiAppContext siddhiAppContext) {
+    @Override public StateFactory init(SourceEventListener sourceEventListener, OptionHolder optionHolder,
+                                       String[] requiredProperties, ConfigReader configReader,
+                                       SiddhiAppContext siddhiAppContext) {
         this.sourceEventListener = sourceEventListener;
         this.configReader = configReader;
         this.optionHolder = optionHolder;
@@ -611,6 +615,7 @@ public class EmailSource extends Source {
 
             emailMessageListener = new EmailSourceMessageListener(sourceEventListener,
                     requiredProperties, contentType);
+            return null;
     }
 
     /**
@@ -620,7 +625,8 @@ public class EmailSource extends Source {
      *                           initial successful connection(can be used when events are receving asynchronasily)
      * @throws ConnectionUnavailableException if it cannot connect to the source backend immediately.
      */
-    @Override public void connect(ConnectionCallback connectionCallback) throws ConnectionUnavailableException {
+    @Override public void connect(ConnectionCallback connectionCallback, State state)
+            throws ConnectionUnavailableException {
         try {
             emailServerConnector.init();
             emailServerConnector.start(emailMessageListener);
@@ -642,6 +648,11 @@ public class EmailSource extends Source {
                         + "exist from the Siddhi App execution." + e.getMessage(), e);
             }
         }
+    }
+
+    @Override
+    protected ServiceDeploymentInfo exposeServiceDeploymentInfo() {
+        return null;
     }
 
     /**
