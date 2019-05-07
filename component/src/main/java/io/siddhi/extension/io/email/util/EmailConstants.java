@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.extension.siddhi.io.email.util;
+package io.siddhi.extension.io.email.util;
 
 /**
  * The class implementing Email Constants.

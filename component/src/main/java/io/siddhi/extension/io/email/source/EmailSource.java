@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.extension.siddhi.io.email.source;
+package io.siddhi.extension.io.email.source;
 
 import com.sun.mail.util.MailConnectException;
 import io.siddhi.annotation.Example;
@@ -34,9 +34,9 @@ import io.siddhi.core.util.config.ConfigReader;
 import io.siddhi.core.util.snapshot.state.State;
 import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.OptionHolder;
+import io.siddhi.extension.io.email.source.exception.EmailSourceAdaptorRuntimeException;
+import io.siddhi.extension.io.email.util.EmailConstants;
 import org.apache.log4j.Logger;
-import org.wso2.extension.siddhi.io.email.source.exception.EmailSourceAdaptorRuntimeException;
-import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
 import org.wso2.transport.email.contract.EmailMessageListener;

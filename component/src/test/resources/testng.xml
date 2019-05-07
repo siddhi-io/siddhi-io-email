@@ -22,11 +22,11 @@
 <suite name="Email-IO-Test-Suite">
     <test name="email-tests" enabled="true" preserve-order="true">
         <classes>
-            <class name="org.wso2.extension.siddhi.io.email.sink.EmailSinkTestCase"/>
-            <class name="org.wso2.extension.siddhi.io.email.source.EmailSourceImapTestCase"/>
-            <class name="org.wso2.extension.siddhi.io.email.source.EmailSourceActionAfterProcessedTestCase"/>
-            <class name="org.wso2.extension.siddhi.io.email.source.MailServerSslConnectionTestCase"/>
-            <class name="org.wso2.extension.siddhi.io.email.source.SearchTermTestCase"/>
+            <class name="io.siddhi.extension.io.email.sink.EmailSinkTestCase"/>
+            <class name="io.siddhi.extension.io.email.source.EmailSourceImapTestCase"/>
+            <class name="io.siddhi.extension.io.email.source.EmailSourceActionAfterProcessedTestCase"/>
+            <class name="io.siddhi.extension.io.email.source.MailServerSslConnectionTestCase"/>
+            <class name="io.siddhi.extension.io.email.source.SearchTermTestCase"/>
         </classes>
     </test>
 </suite>

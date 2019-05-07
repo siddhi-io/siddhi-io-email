@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.email.source.exception;
+package io.siddhi.extension.io.email.source.exception;
 
 /**
  * Class implementing the email source adapter runtime exception.
