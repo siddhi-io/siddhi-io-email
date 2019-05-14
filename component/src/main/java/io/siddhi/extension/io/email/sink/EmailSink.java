@@ -17,7 +17,7 @@
  *
  */
 
-package org.wso2.extension.siddhi.io.email.sink;
+package io.siddhi.extension.io.email.sink;
 
 import com.sun.mail.util.MailConnectException;
 import io.siddhi.annotation.Example;
@@ -36,9 +36,9 @@ import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.DynamicOptions;
 import io.siddhi.core.util.transport.Option;
 import io.siddhi.core.util.transport.OptionHolder;
+import io.siddhi.extension.io.email.util.EmailConstants;
 import io.siddhi.query.api.definition.StreamDefinition;
 import org.apache.log4j.Logger;
-import org.wso2.extension.siddhi.io.email.util.EmailConstants;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
 import org.wso2.transport.email.contract.EmailConnectorFactory;

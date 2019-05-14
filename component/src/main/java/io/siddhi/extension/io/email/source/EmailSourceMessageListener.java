@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.extension.siddhi.io.email.source;
+package io.siddhi.extension.io.email.source;
 
 import io.siddhi.core.exception.SiddhiAppCreationException;
 import io.siddhi.core.stream.input.source.SourceEventListener;

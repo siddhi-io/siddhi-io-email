@@ -21,7 +21,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>siddhi-io-email-parent</artifactId>
-        <groupId>org.wso2.extension.siddhi.io.email</groupId>
+        <groupId>io.siddhi.extension.io.email</groupId>
         <version>2.0.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -66,17 +66,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.extension.siddhi.map.xml</groupId>
+            <groupId>io.siddhi.extension.map.xml</groupId>
             <artifactId>siddhi-map-xml</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.extension.siddhi.map.text</groupId>
+            <groupId>io.siddhi.extension.map.text</groupId>
             <artifactId>siddhi-map-text</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wso2.extension.siddhi.map.json</groupId>
+            <groupId>io.siddhi.extension.map.json</groupId>
             <artifactId>siddhi-map-json</artifactId>
             <scope>test</scope>
         </dependency>
@@ -167,7 +167,7 @@
                             com.sun.mail*;
                         </Private-Package>
                         <Export-Package>
-                            org.wso2.extension.siddhi.io.email.*
+                            io.siddhi.extension.io.email.*
                         </Export-Package>
                         <Import-Package>
                             io.siddhi.core.*;version="${siddhi.version.range}",

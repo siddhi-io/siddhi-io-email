@@ -1,4 +1,4 @@
-package org.wso2.extension.siddhi.io.email.sink;
+package io.siddhi.extension.io.email.sink;
 
 import com.icegreen.greenmail.user.UserException;
 import com.icegreen.greenmail.util.DummySSLSocketFactory;
