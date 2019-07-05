@@ -39,9 +39,9 @@
     </modules>
 
     <scm>
-        <connection>scm:git:https://github.com/wso2-extensions/siddhi-io-email.git</connection>
-        <url>https://github.com/wso2-extensions/siddhi-io-email.git</url>
-        <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-email.git
+        <connection>scm:git:https://github.com/siddhi-io/siddhi-io-email.git</connection>
+        <url>https://github.com/siddhi-io/siddhi-io-email.git</url>
+        <developerConnection>scm:git:https://github.com/siddhi-io/siddhi-io-email.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
