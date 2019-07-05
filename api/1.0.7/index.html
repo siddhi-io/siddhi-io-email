@@ -2,7 +2,7 @@
 
 
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
@@ -13,10 +13,6 @@
         <meta name="description" content="Siddhi IO Email Extension">
       
       
-        <link rel="canonical" href="https://wso2-extensions.github.io/siddhi-io-email/api/1.0.7/">
-      
-      
-        <meta name="author" content="WSO2">
       
       
         <meta name="lang:clipboard.copy" content="Copy to clipboard">
@@ -38,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../images/favicon.ico">
-      <meta name="generator" content="mkdocs-0.17.4, mkdocs-material-2.9.2">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
     
     
       
@@ -46,9 +42,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.ba0fd1a6.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.0284f74d.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.6079476c.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.01803549.css">
       
       
         
@@ -57,18 +53,47 @@
       
     
     
-      <script src="../../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
     
     
-      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
       
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
     <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    
+      
+        
+<script>
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+  /* Setup integration and send page view */
+  ga("create", "UA-103065-28", "auto")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+      
     
     
   </head>
@@ -81,24 +106,7 @@
       <defs>
         
         
-          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448"
-    viewBox="0 0 416 448" id="__github">
-  <path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19-18.125
-        8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19 18.125-8.5
-        18.125 8.5 10.75 19 3.125 20.5zM320 304q0 10-3.125 20.5t-10.75
-        19-18.125 8.5-18.125-8.5-10.75-19-3.125-20.5 3.125-20.5 10.75-19
-        18.125-8.5 18.125 8.5 10.75 19 3.125 20.5zM360
-        304q0-30-17.25-51t-46.75-21q-10.25 0-48.75 5.25-17.75 2.75-39.25
-        2.75t-39.25-2.75q-38-5.25-48.75-5.25-29.5 0-46.75 21t-17.25 51q0 22 8
-        38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0
-        37.25-1.75t35-7.375 30.5-15 20.25-25.75 8-38.375zM416 260q0 51.75-15.25
-        82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5-41.75
-        1.125q-19.5 0-35.5-0.75t-36.875-3.125-38.125-7.5-34.25-12.875-30.25-20.25-21.5-28.75q-15.5-30.75-15.5-82.75
-        0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25
-        30.875q36.75-8.75 77.25-8.75 37 0 70 8 26.25-20.5
-        46.75-30.25t47.25-9.75q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34
-        99.5z" />
-</svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
         
       </defs>
     </svg>
@@ -115,9 +123,9 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="https://wso2-extensions.github.io/siddhi-io-email/" title="Siddhi IO Email" class="md-header-nav__button md-logo">
+        <a href="../.." title="Siddhi IO Email" class="md-header-nav__button md-logo">
           
-            <img src="../../images/siddhi-logo-w.svg" width="24" height="24">
+            <img src="../../images/siddhi-logo.svg" width="24" height="24">
           
         </a>
       </div>
@@ -127,22 +135,21 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
-            
-              <span class="md-header-nav__topic">
-                Siddhi IO Email
-              </span>
-              <span class="md-header-nav__topic">
+            <span class="md-header-nav__topic">
+              Siddhi IO Email
+            </span>
+            <span class="md-header-nav__topic">
+              
                 1.0.7
-              </span>
-            
+              
+            </span>
           
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
         
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
           
-            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-            
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
@@ -165,7 +172,6 @@
     </div>
   </div>
 </div>
-          
         
       </div>
       
@@ -176,20 +182,18 @@
 
   
 
-
-  <a href="https://github.com/wso2-extensions/siddhi-io-email/" title="Go to repository" class="md-source" data-md-source="github">
-    
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      Siddhi-IO-Email
+<a href="https://github.com/siddhi-io/siddhi-io-email/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
     </div>
-  </a>
-
+  
+  <div class="md-source__repository">
+    Siddhi IO Email
+  </div>
+</a>
           </div>
         </div>
       
@@ -211,11 +215,11 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <span class="md-nav__button md-logo">
+    <a href="../.." title="Siddhi IO Email" class="md-nav__button md-logo">
       
-        <img src="../../images/siddhi-logo-w.svg" width="48" height="48">
+        <img src="../../images/siddhi-logo.svg" width="48" height="48">
       
-    </span>
+    </a>
     Siddhi IO Email
   </label>
   
@@ -225,20 +229,18 @@
 
   
 
-
-  <a href="https://github.com/wso2-extensions/siddhi-io-email/" title="Go to repository" class="md-source" data-md-source="github">
-    
-      <div class="md-source__icon">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <use xlink:href="#__github" width="24" height="24"></use>
-        </svg>
-      </div>
-    
-    <div class="md-source__repository">
-      Siddhi-IO-Email
+<a href="https://github.com/siddhi-io/siddhi-io-email/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
     </div>
-  </a>
-
+  
+  <div class="md-source__repository">
+    Siddhi IO Email
+  </div>
+</a>
     </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -249,8 +251,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Welcome" class="md-nav__link">
-      Welcome
+    <a href="../.." title="Information" class="md-nav__link">
+      Information
     </a>
   </li>
 
@@ -275,6 +277,30 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../latest/" title="latest" class="md-nav__link">
+      latest
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../2.0.2/" title="2.0.2" class="md-nav__link">
+      2.0.2
+    </a>
+  </li>
+
         
           
           
@@ -701,56 +727,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../1.0.0-M8/" title="1.0.0-M8" class="md-nav__link">
-      1.0.0-M8
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../1.0.0-M7/" title="1.0.0-M7" class="md-nav__link">
-      1.0.0-M7
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../1.0.0-M6/" title="1.0.0-M6" class="md-nav__link">
-      1.0.0-M6
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../1.0.0/" title="1.0.0" class="md-nav__link">
       1.0.0
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../latest/" title="latest" class="md-nav__link">
-      latest
     </a>
   </li>
 
@@ -848,18 +826,17 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/wso2-extensions/siddhi-io-email/edit/master/docs/api/1.0.7.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/siddhi-io/siddhi-io-email/blob/master/api/1.0.7.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="api-docs-v107">API Docs - v1.0.7<a class="headerlink" href="#api-docs-v107" title="Permanent link">&para;</a></h1>
-<h2 id="sink">Sink<a class="headerlink" href="#sink" title="Permanent link">&para;</a></h2>
-<h3 id="email-sink">email <em><a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#sink">(Sink)</a></em><a class="headerlink" href="#email-sink" title="Permanent link">&para;</a></h3>
+                <h1 id="api-docs-v107">API Docs - v1.0.7</h1>
+<h2 id="sink">Sink</h2>
+<h3 id="email-sink">email <em><a target="_blank" href="https://siddhi.io/en/v4.x/docs/query-guide/#sink">(Sink)</a></em></h3>
 <p style="word-wrap: break-word">The email sink uses 'smtp' server to publish events via emails. It can be published events in 'text', 'xml' or 'json' formats. The user can define email sink parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition or 'ymal' file respectively. If it is not given in both places, then default values are taken for the optional parameters. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email sink properties. (Refer link: https://javaee.github.io/javamail/SMTP-Transport to more information about smtp server parameters). Further, some email account required to enable 'access to less secure apps' option (for gmail account you can enable it via https://myaccount.google.com/lesssecureapps).</p>
 
 <p><span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span></p>
-<div class="codehilite"><pre><span></span>@sink(type=&quot;email&quot;, username=&quot;&lt;STRING&gt;&quot;, address=&quot;&lt;STRING&gt;&quot;, password=&quot;&lt;STRING&gt;&quot;, host=&quot;&lt;STRING&gt;&quot;, port=&quot;&lt;INT&gt;&quot;, ssl.enable=&quot;&lt;BOOL&gt;&quot;, auth=&quot;&lt;BOOL&gt;&quot;, content.type=&quot;&lt;STRING&gt;&quot;, subject=&quot;&lt;STRING&gt;&quot;, to=&quot;&lt;STRING&gt;&quot;, cc=&quot;&lt;STRING&gt;&quot;, bcc=&quot;&lt;STRING&gt;&quot;, @map(...)))
-</pre></div>
-
+<pre><code>@sink(type=&quot;email&quot;, username=&quot;&lt;STRING&gt;&quot;, address=&quot;&lt;STRING&gt;&quot;, password=&quot;&lt;STRING&gt;&quot;, host=&quot;&lt;STRING&gt;&quot;, port=&quot;&lt;INT&gt;&quot;, ssl.enable=&quot;&lt;BOOL&gt;&quot;, auth=&quot;&lt;BOOL&gt;&quot;, content.type=&quot;&lt;STRING&gt;&quot;, subject=&quot;&lt;STRING&gt;&quot;, to=&quot;&lt;STRING&gt;&quot;, cc=&quot;&lt;STRING&gt;&quot;, bcc=&quot;&lt;STRING&gt;&quot;, @map(...)))
+</code></pre>
 
 <p><span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
 <table>
@@ -1171,34 +1148,30 @@
 </table></p>
 <p><span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span></p>
-<div class="codehilite"><pre><span></span>@sink(type=&#39;email&#39;, @map(type =&#39;json&#39;), username=&#39;sender.account&#39;, address=&#39;sender.account@gmail.com&#39;,password=&#39;account.password&#39;,subject=&#39;Alerts from Wso2 Stream Processor&#39;,to=&#39;{{email}}&#39;,)define stream fooStream (email string, loginId int, name string);
-</pre></div>
-
+<pre><code>@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
+</code></pre>
 
 <p style="word-wrap: break-word">Following example illustrates how to publish events using the email sinkusing mandatory parameters. As in the example, it publishes events come from the fooStream in json format via email sink to the given 'to' recipients. The email is sent by the sender.account@gmail.com via secure connection.</p>
 
 <p><span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span></p>
-<div class="codehilite"><pre><span></span>@sink(type=&#39;email&#39;, @map(type =&#39;json&#39;), subject=&#39;Alerts from Wso2 Stream Processor&#39;,to=&#39;{{email}}&#39;,)define stream fooStream (email string, loginId int, name string);
-</pre></div>
-
+<pre><code>@sink(type='email', @map(type ='json'), subject='Alerts from Wso2 Stream Processor',to='{{email}}',)define stream fooStream (email string, loginId int, name string);
+</code></pre>
 
 <p style="word-wrap: break-word">Following example illustrates how to configure the query parameters and system parameters in the deployment ymal file.<br>&nbsp;Corresponding parameters need to be configure under name:'email' and namespace:'sink' as follows<br><br>siddhi:<br>&nbsp;&nbsp;extensions:<br>&nbsp;&nbsp;&nbsp;&nbsp;-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extension:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name:'email'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;namespace:'sink'<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;properties:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username:sender.account<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address:sender.account@gmail.com<br><br>As in the example, it publishes events comefrom the fooStream in json format via email sink to the given 'to' recipients. The email is sent by the sender.account@gmail.com via secure connection.</p>
 
 <p><span id="example-3" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 3</span></p>
-<div class="codehilite"><pre><span></span>@sink(type=&#39;email&#39;, @map(type =&#39;json&#39;), username=&#39;sender.account&#39;, address=&#39;sender.account@gmail.com&#39;,password=&#39;account.password&#39;,host=&#39;smtp.gmail.com&#39;,port=&#39;465&#39;,ssl.enable=&#39;true&#39;,auth=&#39;true&#39;,content.type=&#39;text/html&#39;,subject=&#39;Alerts from Wso2 Stream Processor-{{name}}&#39;,to=&#39;to1.account@gmail.com, to2.account@gmail.com&#39;,cc=&#39;cc1.account@gmail.com, cc2.account@gmail.com&#39;,bcc=&#39;bcc1.account@gmail.com)define stream fooStream (name string, age int, country string);
-</pre></div>
-
+<pre><code>@sink(type='email', @map(type ='json'), username='sender.account', address='sender.account@gmail.com',password='account.password',host='smtp.gmail.com',port='465',ssl.enable='true',auth='true',content.type='text/html',subject='Alerts from Wso2 Stream Processor-{{name}}',to='to1.account@gmail.com, to2.account@gmail.com',cc='cc1.account@gmail.com, cc2.account@gmail.com',bcc='bcc1.account@gmail.com)define stream fooStream (name string, age int, country string);
+</code></pre>
 
 <p style="word-wrap: break-word">Following example illustrates how to publish events using the email sink. According to the example, it publishes events come from the fooStream in xml format via email sink as a text/html message to the given <code>to</code>,<code>cc</code> and <code>bcc</code> recipients using a secure connection. <code>name</code> in the <code>subject</code> attribute will be the value of the <code>name</code> parameter in the corresponding output event</p>
 
-<h2 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h2>
-<h3 id="email-source">email <em><a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a></em><a class="headerlink" href="#email-source" title="Permanent link">&para;</a></h3>
+<h2 id="source">Source</h2>
+<h3 id="email-source">email <em><a target="_blank" href="https://siddhi.io/en/v4.x/docs/query-guide/#source">(Source)</a></em></h3>
 <p style="word-wrap: break-word">Email source allows user to receive events via emails. Email source can be configured using 'imap' or 'pop3' server to receive events. This allows user to filter the messages which satisfy the given criteria under 'search term' option. The user can define email source parameters in either 'deployment yaml' file or stream definition. So that email source checks whether parameters are given in stream definition and 'ymal' file respectively. If it is not given in both places, then default values are taken if defaults values are available. If user need to configure server system parameters which are not given as options in stream definition then it is needed to define them in 'yaml' file under email source properties. (Refer link: https://javaee.github.io/javamail/IMAP-Store ,  https://javaee.github.io/javamail/POP3-Store to more information about imap and pop3 server system parameters).</p>
 
 <p><span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span></p>
-<div class="codehilite"><pre><span></span>@source(type=&quot;email&quot;, username=&quot;&lt;STRING&gt;&quot;, password=&quot;&lt;STRING&gt;&quot;, store=&quot;&lt;STRING&gt;&quot;, host=&quot;&lt;STRING&gt;&quot;, port=&quot;&lt;INT&gt;&quot;, folder=&quot;&lt;STRING&gt;&quot;, search.term=&quot;&lt;STRING&gt;&quot;, polling.interval=&quot;&lt;LONG&gt;&quot;, action.after.processed=&quot;&lt;STRING&gt;&quot;, folder.to.move=&quot;&lt;STRING&gt;&quot;, content.type=&quot;&lt;STRING&gt;&quot;, ssl.enable=&quot;&lt;BOOL&gt;&quot;, @map(...)))
-</pre></div>
-
+<pre><code>@source(type=&quot;email&quot;, username=&quot;&lt;STRING&gt;&quot;, password=&quot;&lt;STRING&gt;&quot;, store=&quot;&lt;STRING&gt;&quot;, host=&quot;&lt;STRING&gt;&quot;, port=&quot;&lt;INT&gt;&quot;, folder=&quot;&lt;STRING&gt;&quot;, search.term=&quot;&lt;STRING&gt;&quot;, polling.interval=&quot;&lt;LONG&gt;&quot;, action.after.processed=&quot;&lt;STRING&gt;&quot;, folder.to.move=&quot;&lt;STRING&gt;&quot;, content.type=&quot;&lt;STRING&gt;&quot;, ssl.enable=&quot;&lt;BOOL&gt;&quot;, @map(...)))
+</code></pre>
 
 <p><span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
 <table>
@@ -1726,16 +1699,14 @@
 </table></p>
 <p><span id="examples" class="md-typeset" style="display: block; font-weight: bold;">Examples</span>
 <span id="example-1" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 1</span></p>
-<div class="codehilite"><pre><span></span>@source(type=&#39;email&#39;, @map(type=&#39;xml&#39;), username=&#39;receiver.account&#39;, password=&#39;account.password&#39;,)define stream inputStream (name string, age int, country string);
-</pre></div>
-
+<pre><code>@source(type='email', @map(type='xml'), username='receiver.account', password='account.password',)define stream inputStream (name string, age int, country string);
+</code></pre>
 
 <p style="word-wrap: break-word">Following example illustrates how to receive events in <code>xml</code> format using email source. In this example only mandatory parameters are defined in the  in the stream definition. For other parameters default values are taken. since search term is not defined, it poll and take all new messages in the inbox folder</p>
 
 <p><span id="example-2" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 2</span></p>
-<div class="codehilite"><pre><span></span>@source(type=&#39;email&#39;, @map(type=&#39;xml&#39;), username=&#39;receiver.account&#39;, password=&#39;account.password&#39;,store = &#39;imap&#39;,host = &#39;imap.gmail.com&#39;,port = &#39;993&#39;,searchTerm = &#39;subject:Stream Processor, from: from.account@ , cc: cc.account&#39;,polling.interval=&#39;500&#39;,action.after.processed=&#39;DELETE&#39;,content.type=&#39;text/html,)define stream inputStream (name string, age int, country string);
-</pre></div>
-
+<pre><code>@source(type='email', @map(type='xml'), username='receiver.account', password='account.password',store = 'imap',host = 'imap.gmail.com',port = '993',searchTerm = 'subject:Stream Processor, from: from.account@ , cc: cc.account',polling.interval='500',action.after.processed='DELETE',content.type='text/html,)define stream inputStream (name string, age int, country string);
+</code></pre>
 
 <p style="word-wrap: break-word">Following example illustrates how to receive events in <code>xml</code> format using email source. The email source polls the mail account in every 500 seconds to check whether new mails has been arrived and processes new mails only if if it satisfy the properties given under email search term (email messages which come from<code>from.account@.&lt;host name&gt;</code>, contains <code>cc.account</code> in cc receipts list, and <code>Stream Processor</code> words in the mail subject) In the example, action after processes is defined as the <code>DELETE</code>, so that after processing the event, corresponding mail is deleted from the mail folder.</p>
                 
@@ -1795,7 +1766,7 @@
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2011 - 2018 WSO2
+            Siddhi - Documentation
           </div>
         
         powered by
@@ -1805,33 +1776,30 @@
           Material for MkDocs</a>
       </div>
       
-        
   <div class="md-footer-social">
     <link rel="stylesheet" href="../../assets/fonts/font-awesome.css">
     
-      <a href="https://github.com/wso2/siddhi" class="md-footer-social__link fa fa-github"></a>
+      <a href="https://github.com/siddhi-io/siddhi" class="md-footer-social__link fa fa-github"></a>
+    
+      <a href="https://medium.com/siddhi-io" class="md-footer-social__link fa fa-medium"></a>
+    
+      <a href="https://twitter.com/siddhi_io" class="md-footer-social__link fa fa-twitter"></a>
     
       <a href="https://www.linkedin.com/groups/13553064" class="md-footer-social__link fa fa-linkedin"></a>
     
   </div>
 
-      
     </div>
   </div>
 </footer>
       
     </div>
     
-      <script src="../../assets/javascripts/application.a59e2a89.js"></script>
+      <script src="../../assets/javascripts/application.245445c6.js"></script>
       
-      <script>app.initialize({version:"0.17.4",url:{base:"../.."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
-        <script src="../../javascripts/extra.js"></script>
-      
-    
-    
-      
-        <script>!function(e,a,t,n,o,c,i){e.GoogleAnalyticsObject=o,e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),i=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",i.parentNode.insertBefore(c,i)}(window,document,"script",0,"ga"),ga("create","UA-103065-28","auto"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");if(Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var a=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",a,e.href)})}),document.forms.search){var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})}</script>
+        <script src="../../assets/javascripts/extra.js"></script>
       
     
   </body>
