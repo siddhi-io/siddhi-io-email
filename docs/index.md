@@ -2,7 +2,7 @@ Siddhi IO Email
 ======================================
 
   [![Jenkins Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-email/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-email/)
-  [![GitHub Release](https://img.shields.io/github/release/siddhi-io/siddhi-io-email/all.svg)](https://github.com/siddhi-io/siddhi-io-email/releases)
+  [![GitHub Release](https://img.shields.io/github/release/siddhi-io/siddhi-io-email.svg)](https://github.com/siddhi-io/siddhi-io-email/releases)
   [![GitHub Release Date](https://img.shields.io/github/release-date/siddhi-io/siddhi-io-email.svg)](https://github.com/siddhi-io/siddhi-io-email/releases)
   [![GitHub Open Issues](https://img.shields.io/github/issues-raw/siddhi-io/siddhi-io-email.svg)](https://github.com/siddhi-io/siddhi-io-email/issues)
   [![GitHub Last Commit](https://img.shields.io/github/last-commit/siddhi-io/siddhi-io-email.svg)](https://github.com/siddhi-io/siddhi-io-email/commits/master)
