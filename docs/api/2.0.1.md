@@ -2,7 +2,7 @@
 
 ## Sink
 
-### email *<a target="_blank" href="http://siddhi.io/documentation/siddhi-5.x/query-guide-5.x/#sink">(Sink)</a>*
+### email *<a target="_blank" href="https://siddhi.io/en/v5.0/docs/query-guide/#sink">(Sink)</a>*
 
 <p style="word-wrap: break-word">The email sink uses the 'smtp' server to publish events via emails. The events can be published in 'text', 'xml' or 'json' formats. The user can define email sink parameters in either the '&lt;SP_HOME&gt;/conf/&lt;PROFILE&gt;/deployment yaml' file or in the stream definition. The email sink first checks the stream definition for parameters, and if they are no configured there, it checks the 'deployment.yaml' file. If the parameters are not configured in either place, default values are considered for optional parameters. If you need to configure server system parameters that are not provided as options in the stream definition, then those parameters need to be defined them in the 'deployment.yaml' file under 'email sink properties'.<br><br>For more information about the SMTP server parameters, see  https://javaee.github.io/javamail/SMTP-Transport.<br><br>Further, some email accounts are required to enable the 'access to less secure apps' option. For gmail accounts, you can enable this option via https://myaccount.google.com/lesssecureapps.</p>
 
@@ -362,7 +362,7 @@
 
 ## Source
 
-### email *<a target="_blank" href="http://siddhi.io/documentation/siddhi-5.x/query-guide-5.x/#source">(Source)</a>*
+### email *<a target="_blank" href="https://siddhi.io/en/v5.0/docs/query-guide/#source">(Source)</a>*
 
 <p style="word-wrap: break-word">The 'Email' source allows you to receive events via emails. An 'Email' source can be configured using the 'imap' or 'pop3' server to receive events. This allows you to filter the messages that satisfy the criteria specified under the 'search term' option. The email source parameters can be defined in either the '&lt;SP_HOME&gt;/conf/&lt;PROFILE&gt;/deployment yaml' file or the stream definition. If the parameter configurations are not available in either place, the default values are considered (i.e., if default values are available). If you need to configure server system parameters that are not provided as options in the stream definition, they need to be defined in the 'deployment yaml' file under 'email source properties'. For more information about 'imap' and 'pop3' server system parameters, see the following.<br>[JavaMail Reference Implementation - IMAP Store](https://javaee.github.io/javamail/IMAP-Store)<br>[JavaMail Reference Implementation - POP3 Store Store](https://javaee.github.io/javamail/POP3-Store)</p>
 
