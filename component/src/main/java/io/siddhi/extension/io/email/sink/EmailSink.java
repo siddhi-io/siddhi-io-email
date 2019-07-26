@@ -586,7 +586,7 @@ public class EmailSink extends Sink {
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_PASSWORD, ""));
         if (password.isEmpty()) {
             throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_PASSWORD + " is a mandatory parameter. "
-                    + "It should be defined in either stream definition or deployment 'ymal' file.");
+                    + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
         initProperties.put(EmailConstants.TRANSPORT_MAIL_PUBLISHER_PASSWORD, password);
 
@@ -639,7 +639,7 @@ public class EmailSink extends Sink {
           String  to = configReader.readConfig(EmailConstants.TO, EmailConstants.EMPTY_STRING);
             if (to.isEmpty()) {
                 throw new SiddhiAppCreationException(EmailConstants.TO + " is a mandatory parameter. "
-                        + "It should be defined in either stream definition or deployment 'ymal' file.");
+                        + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
                 emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
             }
@@ -653,7 +653,7 @@ public class EmailSink extends Sink {
             String subject = configReader.readConfig(EmailConstants.SUBJECT, EmailConstants.EMPTY_STRING);
             if (subject.isEmpty()) {
                 throw new SiddhiAppCreationException(EmailConstants.SUBJECT + " is a mandatory parameter. "
-                        + "It should be defined in either stream definition or deployment 'ymal' file.");
+                        + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
                 emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
             }
