@@ -90,6 +90,11 @@
                 <version>${transport.email.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-pool.wso2</groupId>
+                <artifactId>commons-pool</artifactId>
+                <version>${commons.pool.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.extension.siddhi.map.xml</groupId>
                 <artifactId>siddhi-map-xml</artifactId>
                 <version>${xml.mapper.version}</version>
@@ -134,7 +139,7 @@
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <testng.version>6.8</testng.version>
         <jacoco.maven.version>0.7.9</jacoco.maven.version>
-        <transport.email.version>6.0.49</transport.email.version>
+        <transport.email.version>6.1.0</transport.email.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
         <xml.mapper.version>4.0.18</xml.mapper.version>
@@ -142,6 +147,7 @@
         <json.mapper.version>4.0.32</json.mapper.version>
         <carbon.messaging.version>3.0.1</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
     </properties>
 
 </project>
