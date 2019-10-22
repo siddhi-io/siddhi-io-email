@@ -19,6 +19,7 @@
 
 package io.siddhi.extension.io.email.sink;
 
+import com.sun.mail.smtp.SMTPSendFailedException;
 import com.sun.mail.util.MailConnectException;
 import io.siddhi.annotation.Example;
 import io.siddhi.annotation.Extension;
@@ -36,8 +37,10 @@ import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.DynamicOptions;
 import io.siddhi.core.util.transport.Option;
 import io.siddhi.core.util.transport.OptionHolder;
+import io.siddhi.extension.io.email.sink.transport.EmailClientConnectionPoolManager;
 import io.siddhi.extension.io.email.util.EmailConstants;
 import io.siddhi.query.api.definition.StreamDefinition;
+import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.apache.log4j.Logger;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
@@ -149,7 +152,13 @@ import java.util.Map;
                         type = DataType.STRING,
                         optional = true,
                         dynamic = true,
-                        defaultValue = "None")
+                        defaultValue = "None"),
+                @Parameter(
+                        name = "connection.pool.size",
+                        description = "Number of concurrent Email client connections.",
+                        type = DataType.INT,
+                        optional = true,
+                        defaultValue = "1")
         },
         examples = {
                 @Example(syntax = "@sink(type='email', @map(type ='json'), "
@@ -424,13 +433,11 @@ import java.util.Map;
                                          "scenarios, 'sendmail' responds slowly after many 'NOOP' commands. This is" +
                                          " avoided by using 'RSET' instead.",
                                  defaultValue = "false",
-                                 possibleParameters = "true or false"),
-
+                                 possibleParameters = "true or false")
                 }
 )
 public class EmailSink extends Sink {
     private static final Logger log = Logger.getLogger(EmailSink.class);
-    private EmailClientConnector emailClientConnector;
     private Option optionSubject;
     private Option optionTo;
     private Option optionCc;
@@ -478,10 +485,9 @@ public class EmailSink extends Sink {
      */
     @Override
     public void connect() throws ConnectionUnavailableException {
-        EmailConnectorFactory emailConnectorFactory = new EmailConnectorFactoryImpl();
         try {
-            emailClientConnector = emailConnectorFactory.createEmailClientConnector();
-            emailClientConnector.init(initProperties);
+            EmailConnectorFactory emailConnectorFactory = new EmailConnectorFactoryImpl();
+            EmailClientConnectionPoolManager.initializeConnectionPool(emailConnectorFactory, initProperties);
         } catch (EmailConnectorException e) {
             if (e.getCause() instanceof MailConnectException) {
                 if (e.getCause().getCause() instanceof ConnectException) {
@@ -542,22 +548,44 @@ public class EmailSink extends Sink {
             emailBaseMessage = new EmailTextMessage(payload.toString());
         }
         emailBaseMessage.setHeaders(emailProperties);
-        try {
-            emailClientConnector.send(emailBaseMessage);
-        } catch (EmailConnectorException e) {
+        GenericKeyedObjectPool objectPool = EmailClientConnectionPoolManager.getConnectionPool();
+        if (objectPool != null) {
+            EmailClientConnector connection = null;
+            try {
+                connection = (EmailClientConnector)
+                        objectPool.borrowObject(EmailConstants.EMAIL_CLIENT_CONNECTION_POOL_ID);
+                if (connection != null) {
+                    connection.send(emailBaseMessage);
+                }
+            } catch (Exception e) {
                 //calling super class logs the exception and retry
                 if (e.getCause() instanceof MailConnectException) {
                     if (e.getCause().getCause() instanceof ConnectException) {
-                        throw new ConnectionUnavailableException("Error is encountered while connecting the smtp" 
+                        throw new ConnectionUnavailableException("Error is encountered while connecting the smtp"
                                 + " server by the email ClientConnector.", e);
                     } else {
                         throw new RuntimeException("Error is encountered while sending the message by the email"
-                                + " ClientConnector with properties: " + emailProperties.toString() , e);
+                                + " ClientConnector with properties: " + emailProperties.toString(), e);
                     }
+                } else if (e.getCause() instanceof SMTPSendFailedException) {
+                    throw new ConnectionUnavailableException("Error encountered while connecting " +
+                            "to the mail server by the email client connector.", e);
                 } else {
                     throw new RuntimeException("Error is encountered while sending the message by the email"
-                            + " ClientConnector with properties: " + emailProperties.toString() , e);
+                            + " ClientConnector with properties: " + emailProperties.toString(), e);
                 }
+            } finally {
+                if (connection != null) {
+                    try {
+                        objectPool.returnObject(EmailConstants.EMAIL_CLIENT_CONNECTION_POOL_ID, connection);
+                    } catch (Exception e) {
+                        log.error("Error in returning the email client connection object to the pool. " +
+                                e.getMessage(), e);
+                    }
+                }
+            }
+        } else {
+            log.error("Error in obtaining connection pool to publish emails to the server.");
         }
     }
 
@@ -706,6 +734,14 @@ public class EmailSink extends Sink {
                 attachments = Arrays.asList(attachmentOption.getValue().split(EmailConstants.COMMA_SEPERATOR));
             }
         }
+        String connectionPoolSize = optionHolder.validateAndGetStaticValue(EmailConstants.PUBLISHER_POOL_SIZE,
+                configReader.readConfig(EmailConstants.PUBLISHER_POOL_SIZE, "1"));
+        try {
+            this.initProperties.put(EmailConstants.PUBLISHER_POOL_SIZE, connectionPoolSize);
+        } catch (NumberFormatException e) {
+            throw new SiddhiAppCreationException(EmailConstants.PUBLISHER_POOL_SIZE
+                    + " parameter only excepts an Integer value.", e);
+        }
     }
 
     /**
@@ -713,6 +749,7 @@ public class EmailSink extends Sink {
      * Implementation of this method should contain the steps needed to disconnect from the sink.
      */
     @Override public void disconnect() {
+        EmailClientConnectionPoolManager.uninitializeConnectionPool();
     }
 
     /**
