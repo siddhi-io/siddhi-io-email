@@ -155,7 +155,16 @@ import java.util.Map;
                         description = "Number of concurrent Email client connections.",
                         type = DataType.INT,
                         optional = true,
-                        defaultValue = "1")
+                        defaultValue = "1"),
+                @Parameter(
+                        name = "header.custom.header.name",
+                        description = "Parameter to be used to add custom mail headers. Any parameter which starts "
+                                + "with header. will be treated as custom headers user want to set in the outgoing "
+                                + "email message. custom.header.name part will be used as custom header name and "
+                                + "users can change is as their preference.",
+                        type = DataType.STRING,
+                        optional = true,
+                        defaultValue = "None")
         },
         examples = {
                 @Example(syntax = "@sink(type='email', @map(type ='json'), "
@@ -246,6 +255,23 @@ import java.util.Map;
                                 + "The attachments included in the email message are the local files available in " +
                                 "the path specified as the value for the 'attachments' attribute."
                 ),
+
+                @Example(syntax = "@sink(type='email', @map(type ='json'), "
+                        + "username='sender.account', "
+                        + "address='sender.account@gmail.com',"
+                        + "password='account.password',"
+                        + "subject='Alerts from Wso2 Stream Processor',"
+                        + "to='{{email}}',"
+                        + "header.X-any-custom-header='header-value'"
+                        + ")"
+                        + "define stream FooStream (email string, loginId int, name string);",
+                         description = "This example illustrates how to publish events via an email sink based on " +
+                                 "the values provided for the mandatory parameters. As shown in the example, it " +
+                                 "publishes events from the 'FooStream' in 'json' format as emails to the specified" +
+                                 " 'to' recipients via the email sink. The email is sent from the " +
+                                 "'sender.account@gmail.com' email address via a secure connection and email will "
+                                 + "have a header named X-any-custom-header with the value header-value."
+                )
         },
         systemParameter = {
                 @SystemParameter(name = "mail.smtp.ssl.trust",
@@ -442,6 +468,7 @@ public class EmailSink extends Sink {
     private Option optionContentType;
     private Map<String, String> initProperties = new HashMap<>();
     private Map<String, String> emailProperties = new HashMap<>();
+    private Map<String, String> customHeaders = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
     private List<String> attachments;
@@ -542,6 +569,7 @@ public class EmailSink extends Sink {
         } else {
             emailBaseMessage = new EmailTextMessage(payload.toString());
         }
+        emailProperties.putAll(customHeaders);
         emailBaseMessage.setHeaders(emailProperties);
         GenericKeyedObjectPool objectPool = EmailClientConnectionPoolManager.getConnectionPool();
         if (objectPool != null) {
@@ -737,6 +765,14 @@ public class EmailSink extends Sink {
             throw new SiddhiAppCreationException(EmailConstants.PUBLISHER_POOL_SIZE
                     + " parameter only excepts an Integer value.", e);
         }
+        //Handle custom headers
+        for (Map.Entry<String, String> entry : configReader.getAllConfigs().entrySet()) {
+            if (entry.getKey().startsWith(EmailConstants.HEADER)) {
+                String headerName = entry.getKey().substring((EmailConstants.HEADER + ".").length());
+                customHeaders.put(EmailConstants.MAIL_CUSTOM_HEADER_IDENTIFIER + headerName, entry.getValue());
+            }
+        }
+
     }
 
     /**
