@@ -634,7 +634,8 @@ public class EmailSinkTestCase {
         masterConfigs.put("sink.email.host", "localhost");
         masterConfigs.put("sink.email.ssl.enable", "false");
         masterConfigs.put("sink.email.auth", "false");
-        masterConfigs.put("sink.email.header.email-header-name", "custom-email-header-value");
+        masterConfigs.put("sink.email.headers", "'email-header-name1:custom-email-header-value1',"
+                + "'email-header-name2:custom-email-header-value2'");
 
         SiddhiManager siddhiManager = new SiddhiManager();
         InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
@@ -664,9 +665,11 @@ public class EmailSinkTestCase {
 
         mailServer.waitForIncomingEmail(5000, 1);
         MimeMessage[] messages = mailServer.getReceivedMessages();
-        assertEquals(messages.length, 1, "Send two messages.");
-        Assert.assertEquals(messages[0].getHeader("email-header-name").length, 1);
-        Assert.assertEquals(messages[0].getHeader("email-header-name")[0], "custom-email-header-value");
+        assertEquals(messages.length, 1, "Send one messages.");
+        Assert.assertEquals(messages[0].getHeader("email-header-name1").length, 1);
+        Assert.assertEquals(messages[0].getHeader("email-header-name1")[0], "custom-email-header-value1");
+        Assert.assertEquals(messages[0].getHeader("email-header-name2").length, 1);
+        Assert.assertEquals(messages[0].getHeader("email-header-name2")[0], "custom-email-header-value2");
         siddhiAppRuntime.shutdown();
     }
 }

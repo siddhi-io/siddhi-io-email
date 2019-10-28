@@ -157,11 +157,10 @@ import java.util.Map;
                         optional = true,
                         defaultValue = "1"),
                 @Parameter(
-                        name = "header.custom.header.name",
-                        description = "Parameter to be used to add custom mail headers. Any parameter which starts "
-                                + "with header. will be treated as custom headers user want to set in the outgoing "
-                                + "email message. custom.header.name part will be used as custom header name and "
-                                + "users can change is as their preference.",
+                        name = "headers",
+                        description = "Parameter to be used to add custom mail headers. "
+                                + "There can be any number of headers concatenated in following format. " +
+                                "\"'header1:value1','header2:value2'\". ",
                         type = DataType.STRING,
                         optional = true,
                         defaultValue = "None")
@@ -262,7 +261,7 @@ import java.util.Map;
                         + "password='account.password',"
                         + "subject='Alerts from Wso2 Stream Processor',"
                         + "to='{{email}}',"
-                        + "header.X-any-custom-header='header-value'"
+                        + "headers='X-any-custom-header:header-value'"
                         + ")"
                         + "define stream FooStream (email string, loginId int, name string);",
                          description = "This example illustrates how to publish events via an email sink based on " +
@@ -765,14 +764,29 @@ public class EmailSink extends Sink {
             throw new SiddhiAppCreationException(EmailConstants.PUBLISHER_POOL_SIZE
                     + " parameter only excepts an Integer value.", e);
         }
-        //Handle custom headers
-        for (Map.Entry<String, String> entry : configReader.getAllConfigs().entrySet()) {
-            if (entry.getKey().startsWith(EmailConstants.HEADER)) {
-                String headerName = entry.getKey().substring((EmailConstants.HEADER + ".").length());
-                customHeaders.put(EmailConstants.MAIL_CUSTOM_HEADER_IDENTIFIER + headerName, entry.getValue());
-            }
+
+        String headers = configReader.readConfig(EmailConstants.HEADERS, EmailConstants.EMPTY_STRING);
+        if (!headers.isEmpty()) {
+            customHeaders = getHeaderMap(headers);
         }
 
+    }
+
+    private Map<String, String> getHeaderMap(String headers) {
+        headers = headers.trim();
+        headers = headers.substring(1, headers.length() - 1);
+        Map<String, String> customHeaders = new HashMap<>();
+        String[] headerArray = headers.split(EmailConstants.HEADER_SPLITTER_REGEX);
+        for (String headerValue : headerArray) {
+            String[] header = headerValue.split(EmailConstants.HEADER_NAME_VALUE_SPLITTER, 2);
+            if (header.length > 1) {
+                customHeaders.put(EmailConstants.MAIL_CUSTOM_HEADER_IDENTIFIER + header[0], header[1]);
+            } else {
+                throw new SiddhiAppCreationException(
+                        "Invalid header format. Please include as 'key1:value1','key2:value2',..");
+            }
+        }
+        return customHeaders;
     }
 
     /**
