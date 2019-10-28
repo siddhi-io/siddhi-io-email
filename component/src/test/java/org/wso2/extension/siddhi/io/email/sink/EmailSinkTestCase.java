@@ -620,4 +620,56 @@ public class EmailSinkTestCase {
         assertTrue(messages[0].getSubject().contains("FooStream"));
         siddhiAppRuntime.shutdown();
     }
+
+    @Test(description = "Configure Siddhi to send email with custom headers")
+    public void emailSinkTest12() throws IOException, MessagingException, InterruptedException {
+        log.info("EmailSinkTest12 : Configure Siddhi to send email with custom headers");
+        // setup user on the mail server
+        mailServer = new GreenMail(ServerSetupTest.SMTP);
+        mailServer.start();
+        mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("sink.email.port", "3025");
+        masterConfigs.put("sink.email.host", "localhost");
+        masterConfigs.put("sink.email.ssl.enable", "false");
+        masterConfigs.put("sink.email.auth", "false");
+        masterConfigs.put("sink.email.headers", "'email-header-name1:custom-email-header-value1',"
+                + "'email-header-name2:custom-email-header-value2'");
+
+        SiddhiManager siddhiManager = new SiddhiManager();
+        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
+        inMemoryConfigManager.generateConfigReader("sink", "email");
+        siddhiManager.setConfigManager(inMemoryConfigManager);
+        String streams = "" +
+                "@App:name('TestSiddhiApp')"
+                + "define stream FooStream (symbol string, price float, volume long); "
+                + "@sink(type='email', @map(type='text') ,"
+                + " username ='" + USERNAME + "',"
+                + " address ='" + ADDRESS + "',"
+                + " password= '" + PASSWORD + "',"
+                + " subject='FooStream-{{symbol}}' ,"
+                + " to='to@localhost')"
+                + " define stream BarStream (symbol string, price float, volume long); ";
+
+        String query = "" +
+                "from FooStream " +
+                "select * " +
+                "insert into BarStream; ";
+
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        InputHandler stockStream = siddhiAppRuntime.getInputHandler("FooStream");
+        siddhiAppRuntime.start();
+
+        stockStream.send(new Object[]{"WSO2", 55.6f, 100L});
+
+        mailServer.waitForIncomingEmail(5000, 1);
+        MimeMessage[] messages = mailServer.getReceivedMessages();
+        assertEquals(messages.length, 1, "Send one messages.");
+        Assert.assertEquals(messages[0].getHeader("email-header-name1").length, 1);
+        Assert.assertEquals(messages[0].getHeader("email-header-name1")[0], "custom-email-header-value1");
+        Assert.assertEquals(messages[0].getHeader("email-header-name2").length, 1);
+        Assert.assertEquals(messages[0].getHeader("email-header-name2")[0], "custom-email-header-value2");
+        siddhiAppRuntime.shutdown();
+    }
 }

@@ -133,6 +133,12 @@ public class EmailConstants {
      public static final String TEXT_PLAIN = "text/plain";
      public static final String TEXT_HTML = "text/html";
 
+    //Constants for custom mail header implementation
+    public static final String MAIL_CUSTOM_HEADER_IDENTIFIER = "customHeader_";
+    public static final String HEADERS = "headers";
+    public static final String HEADER_SPLITTER_REGEX = "','";
+    public static final String HEADER_NAME_VALUE_SPLITTER = ":";
+
     /**
      * valid action for processed mail if store type is imap.
      */
