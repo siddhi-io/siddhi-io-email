@@ -142,9 +142,9 @@
         <transport.email.version>6.1.0</transport.email.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
-        <xml.mapper.version>5.0.2</xml.mapper.version>
-        <text.mapper.version>2.0.1</text.mapper.version>
-        <json.mapper.version>5.0.2</json.mapper.version>
+        <xml.mapper.version>5.0.4</xml.mapper.version>
+        <text.mapper.version>2.0.4</text.mapper.version>
+        <json.mapper.version>5.0.6</json.mapper.version>
         <carbon.messaging.version>3.0.1</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>
