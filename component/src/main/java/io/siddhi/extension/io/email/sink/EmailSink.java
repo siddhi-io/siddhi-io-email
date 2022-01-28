@@ -41,7 +41,8 @@ import io.siddhi.extension.io.email.sink.transport.EmailClientConnectionPoolMana
 import io.siddhi.extension.io.email.util.EmailConstants;
 import io.siddhi.query.api.definition.StreamDefinition;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailClientConnector;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
@@ -437,7 +438,7 @@ import java.util.Map;
                 }
 )
 public class EmailSink extends Sink {
-    private static final Logger log = Logger.getLogger(EmailSink.class);
+    private static final Logger log = LogManager.getLogger(EmailSink.class);
     private Option optionSubject;
     private Option optionTo;
     private Option optionCc;

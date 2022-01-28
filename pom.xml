@@ -69,9 +69,27 @@
                 <version>${siddhi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.log4j.wso2</groupId>
-                <artifactId>log4j</artifactId>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
                 <version>${log4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.mail</groupId>
+                        <artifactId>mail</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.jms</groupId>
+                        <artifactId>jms</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jdmk</groupId>
+                        <artifactId>jmxtools</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.jmx</groupId>
+                        <artifactId>jmxri</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.sun.mail</groupId>
@@ -88,6 +106,12 @@
                 <groupId>org.wso2.transport.email</groupId>
                 <artifactId>transport-email</artifactId>
                 <version>${transport.email.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>commons-pool.wso2</groupId>
@@ -104,18 +128,36 @@
                 <groupId>io.siddhi.extension.map.text</groupId>
                 <artifactId>siddhi-map-text</artifactId>
                 <version>${text.mapper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>io.siddhi.extension.map.json</groupId>
                 <artifactId>siddhi-map-json</artifactId>
                 <version>${json.mapper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.icegreen</groupId>
                 <artifactId>greenmail</artifactId>
                 <version>${com.icegreen.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -134,17 +176,17 @@
         </plugins>
   </build>
     <properties>
-        <siddhi.version>5.1.13</siddhi.version>
+        <siddhi.version>5.1.21-SNAPSHOT</siddhi.version>
         <siddhi.version.range>[5.0.0,6.0.0)</siddhi.version.range>
-        <log4j.version>1.2.17.wso2v1</log4j.version>
+        <log4j.version>2.17.1</log4j.version>
         <testng.version>6.8</testng.version>
         <jacoco.maven.version>0.7.9</jacoco.maven.version>
         <transport.email.version>6.1.0</transport.email.version>
         <com.icegreen.version>1.5.5</com.icegreen.version>
         <com.sun.mail.version>1.5.6</com.sun.mail.version>
-        <xml.mapper.version>5.0.4</xml.mapper.version>
+        <xml.mapper.version>5.2.2-SNAPSHOT</xml.mapper.version>
         <text.mapper.version>2.0.4</text.mapper.version>
-        <json.mapper.version>5.0.6</json.mapper.version>
+        <json.mapper.version>5.2.2-SNAPSHOT</json.mapper.version>
         <carbon.messaging.version>3.0.1</carbon.messaging.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons.pool.version>1.5.6.wso2v1</commons.pool.version>

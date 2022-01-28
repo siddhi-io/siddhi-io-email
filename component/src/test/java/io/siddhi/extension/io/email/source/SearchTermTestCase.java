@@ -30,6 +30,8 @@ import io.siddhi.core.event.Event;
 import io.siddhi.core.stream.output.StreamCallback;
 import io.siddhi.core.util.EventPrinter;
 import io.siddhi.core.util.SiddhiTestHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -47,8 +49,7 @@ import javax.mail.internet.MimeMessage;
  * Class implementing to test the email source with and without SSL connection.
  */
 public class SearchTermTestCase {
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
-            .getLogger(EmailSourceActionAfterProcessedTestCase.class);
+    private static final Logger log = LogManager.getLogger(SearchTermTestCase.class);
     private static final String PASSWORD = "password";
     private static final String USERNAME = "to";
     private static final String ADDRESS = "to@localhost";

@@ -20,7 +20,8 @@ package io.siddhi.extension.io.email.source;
 
 import io.siddhi.core.exception.SiddhiAppCreationException;
 import io.siddhi.core.stream.input.source.SourceEventListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.transport.email.contract.EmailMessageListener;
 import org.wso2.transport.email.contract.message.EmailBaseMessage;
 import org.wso2.transport.email.contract.message.EmailTextMessage;
@@ -29,7 +30,7 @@ import org.wso2.transport.email.contract.message.EmailTextMessage;
  * The class implementing Email Source message listener to listen incoming email Messages.
  */
 class EmailSourceMessageListener implements EmailMessageListener {
-    private static final Logger log = Logger.getLogger(EmailSourceMessageListener.class);
+    private static final Logger log = LogManager.getLogger(EmailSourceMessageListener.class);
     private SourceEventListener sourceEventListener;
     private String[] requiredProperties;
     private String contentType;
