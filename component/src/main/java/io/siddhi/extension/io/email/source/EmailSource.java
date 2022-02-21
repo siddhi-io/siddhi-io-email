@@ -36,7 +36,8 @@ import io.siddhi.core.util.snapshot.state.StateFactory;
 import io.siddhi.core.util.transport.OptionHolder;
 import io.siddhi.extension.io.email.source.exception.EmailSourceAdaptorRuntimeException;
 import io.siddhi.extension.io.email.util.EmailConstants;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.wso2.transport.email.connector.factory.EmailConnectorFactoryImpl;
 import org.wso2.transport.email.contract.EmailConnectorFactory;
 import org.wso2.transport.email.contract.EmailMessageListener;
@@ -569,7 +570,7 @@ import java.util.stream.Stream;
 
 public class EmailSource extends Source {
 
-    private static final Logger log = Logger.getLogger(EmailSource.class);
+    private static final Logger log = LogManager.getLogger(EmailSource.class);
     private SourceEventListener sourceEventListener;
     private ConfigReader configReader;
     private OptionHolder optionHolder;

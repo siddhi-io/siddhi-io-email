@@ -30,6 +30,8 @@ import io.siddhi.core.stream.output.StreamCallback;
 import io.siddhi.core.util.EventPrinter;
 import io.siddhi.core.util.SiddhiTestHelper;
 import io.siddhi.core.util.config.InMemoryConfigManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -55,8 +57,7 @@ import javax.mail.internet.MimeMessage;
  * EmailSourceActionAfterProcessedTest case .
  */
 public class EmailSourceActionAfterProcessedTestCase {
-    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
-            .getLogger(EmailSourceActionAfterProcessedTestCase.class);
+    private static final Logger log = LogManager.getLogger(EmailSourceActionAfterProcessedTestCase.class);
     private static final String PASSWORD = "analytics123";
     private static final String USERNAME = "analytics";
     private static final String ADDRESS = "analytics@localhost";

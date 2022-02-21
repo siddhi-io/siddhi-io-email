@@ -8,7 +8,8 @@ import io.siddhi.core.SiddhiAppRuntime;
 import io.siddhi.core.SiddhiManager;
 import io.siddhi.core.stream.input.InputHandler;
 import io.siddhi.core.util.config.InMemoryConfigManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ import static org.testng.Assert.assertTrue;
  * Class implementing test cases for the sink.
  */
 public class EmailSinkTestCase {
-    private static final Logger log = Logger.getLogger(EmailSinkTestCase.class);
+    private static final Logger log = LogManager.getLogger(EmailSinkTestCase.class);
     private static final String PASSWORD = "password";
     private static final String USERNAME = "abc";
     private static final String ADDRESS = "abc@localhost";
