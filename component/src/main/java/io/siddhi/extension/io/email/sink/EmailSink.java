@@ -444,7 +444,7 @@ public class EmailSink extends Sink {
     private Option optionBcc;
     private Option optionContentType;
     private Map<String, String> initProperties = new HashMap<>();
-    private Map<String, String> emailProperties = new HashMap<>();
+    private Map<String, String> commonEmailProperties = new HashMap<>();
     private ConfigReader configReader;
     private OptionHolder optionHolder;
     private List<String> attachments;
@@ -515,25 +515,29 @@ public class EmailSink extends Sink {
     @Override
     public void publish(Object payload, DynamicOptions dynamicOptions, State state)
             throws ConnectionUnavailableException {
+
+        Map<String, String> dynamicEmailProperties = new HashMap<>();
+        Map<String, String> combinedEmailProperties = new HashMap<>();
+
         if (optionSubject != null) {
             String subject = optionSubject.getValue(dynamicOptions);
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
+            dynamicEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
         }
         if (optionTo != null) {
             String to = optionTo.getValue(dynamicOptions);
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
+            dynamicEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
         }
         if (optionCc != null) {
             String cc = optionCc.getValue(dynamicOptions);
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+            dynamicEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
         }
         if (optionBcc != null) {
             String bcc = optionBcc.getValue(dynamicOptions);
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+            dynamicEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
         }
         if (optionContentType != null) {
             String contentType = optionContentType.getValue(dynamicOptions);
-            emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
+            dynamicEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
         }
 
         if ((attachmentOption != null) && (!attachmentOption.isStatic())) {
@@ -547,7 +551,9 @@ public class EmailSink extends Sink {
         } else {
             emailBaseMessage = new EmailTextMessage(payload.toString());
         }
-        emailBaseMessage.setHeaders(emailProperties);
+        combinedEmailProperties.putAll(commonEmailProperties);
+        combinedEmailProperties.putAll(dynamicEmailProperties);
+        emailBaseMessage.setHeaders(combinedEmailProperties);
         GenericKeyedObjectPool objectPool = EmailClientConnectionPoolManager.getConnectionPool();
         if (objectPool != null) {
             EmailClientConnector connection = null;
@@ -565,14 +571,14 @@ public class EmailSink extends Sink {
                                 + " server by the email ClientConnector.", e);
                     } else {
                         throw new RuntimeException("Error is encountered while sending the message by the email"
-                                + " ClientConnector with properties: " + emailProperties.toString(), e);
+                                + " ClientConnector with properties: " + combinedEmailProperties.toString(), e);
                     }
                 } else if (e.getCause() instanceof SMTPSendFailedException) {
                     throw new ConnectionUnavailableException("Error encountered while connecting " +
                             "to the mail server by the email client connector.", e);
                 } else {
                     throw new RuntimeException("Error is encountered while sending the message by the email"
-                            + " ClientConnector with properties: " + emailProperties.toString(), e);
+                            + " ClientConnector with properties: " + combinedEmailProperties.toString(), e);
                 }
             } finally {
                 if (connection != null) {
@@ -608,7 +614,7 @@ public class EmailSink extends Sink {
             throw new SiddhiAppCreationException(EmailConstants.MAIL_PUBLISHER_ADDRESS + " is a mandatory parameter. "
                     + "It should be defined in either stream definition or deployment 'yaml' file.");
         }
-        emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_FROM, address);
+        commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_FROM, address);
 
         String password = optionHolder.validateAndGetStaticValue(EmailConstants.MAIL_PUBLISHER_PASSWORD,
                 configReader.readConfig(EmailConstants.MAIL_PUBLISHER_PASSWORD, ""));
@@ -669,7 +675,7 @@ public class EmailSink extends Sink {
                 throw new SiddhiAppCreationException(EmailConstants.TO + " is a mandatory parameter. "
                         + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
-                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
             }
         } else {
             optionTo = optionHolder.validateAndGetOption(EmailConstants.TO);
@@ -683,7 +689,7 @@ public class EmailSink extends Sink {
                 throw new SiddhiAppCreationException(EmailConstants.SUBJECT + " is a mandatory parameter. "
                         + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
-                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
             }
         } else {
             optionSubject = optionHolder.validateAndGetOption(EmailConstants.SUBJECT);
@@ -694,7 +700,7 @@ public class EmailSink extends Sink {
         if (!optionHolder.isOptionExists(EmailConstants.CC)) {
             String  cc = configReader.readConfig(EmailConstants.CC, EmailConstants.EMPTY_STRING);
             if (!cc.isEmpty()) {
-                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
             }
         } else {
             optionCc = optionHolder.validateAndGetOption(EmailConstants.CC);
@@ -705,7 +711,7 @@ public class EmailSink extends Sink {
         if (!optionHolder.isOptionExists(EmailConstants.BCC)) {
             String  bcc = configReader.readConfig(EmailConstants.BCC, EmailConstants.EMPTY_STRING);
             if (!bcc.isEmpty()) {
-                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_BCC, bcc);
             }
         } else {
             optionBcc = optionHolder.validateAndGetOption(EmailConstants.BCC);
@@ -717,7 +723,7 @@ public class EmailSink extends Sink {
             String contentType = configReader.readConfig(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE,
                     EmailConstants.EMPTY_STRING);
             if (!contentType.isEmpty()) {
-                emailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CONTENT_TYPE, contentType);
             }
         } else {
             optionContentType = optionHolder.validateAndGetOption(EmailConstants.MAIL_PUBLISHER_CONTENT_TYPE);
