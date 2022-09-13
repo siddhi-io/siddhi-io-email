@@ -676,7 +676,8 @@ public class EmailSink extends Sink {
                 throw new SiddhiAppCreationException(EmailConstants.TO + " is a mandatory parameter. "
                         + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
-                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);            }
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_TO, to);
+            }
         } else {
             optionTo = optionHolder.validateAndGetOption(EmailConstants.TO);
         }
@@ -689,7 +690,8 @@ public class EmailSink extends Sink {
                 throw new SiddhiAppCreationException(EmailConstants.SUBJECT + " is a mandatory parameter. "
                         + "It should be defined in either stream definition or deployment 'yaml' file.");
             } else {
-                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);            }
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_SUBJECT, subject);
+            }
         } else {
             optionSubject = optionHolder.validateAndGetOption(EmailConstants.SUBJECT);
         }
@@ -699,7 +701,8 @@ public class EmailSink extends Sink {
         if (!optionHolder.isOptionExists(EmailConstants.CC)) {
             String  cc = configReader.readConfig(EmailConstants.CC, EmailConstants.EMPTY_STRING);
             if (!cc.isEmpty()) {
-                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);            }
+                commonEmailProperties.put(EmailConstants.TRANSPORT_MAIL_HEADER_CC, cc);
+            }
         } else {
             optionCc = optionHolder.validateAndGetOption(EmailConstants.CC);
         }

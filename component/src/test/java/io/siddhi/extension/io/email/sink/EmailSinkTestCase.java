@@ -14,16 +14,16 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -705,7 +705,7 @@ public class EmailSinkTestCase {
             assertEquals(message.getContent().toString().trim(), "email:\""
                     + InternetAddress.toString(message.getRecipients(Message.RecipientType.TO))
                     + "\"," + "\r\nsampleMessage:\"This message is for "
-                    + InternetAddress.toString(message.getRecipients(Message.RecipientType.TO))+"\"");
+                    + InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) + "\"");
         }
         siddhiAppRuntime.shutdown();
     }
