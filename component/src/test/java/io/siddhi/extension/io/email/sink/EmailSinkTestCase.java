@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.security.Security;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -620,6 +622,91 @@ public class EmailSinkTestCase {
         //mail for all recipients are send to same INBOX.
         assertTrue(messages.length > 0);
         assertTrue(messages[0].getSubject().contains("FooStream"));
+        siddhiAppRuntime.shutdown();
+    }
+
+    @Test(description = "Test Case for concurrent publisher")
+    public void emailSinkTest12() throws IOException, MessagingException,
+            UserException, InterruptedException {
+        // setup user on the mail server
+        log.info("EmailSinkTest2 : Configure siddhi for email event publisher with defining 'CC' & 'BCC'.");
+        mailServer = new GreenMail(ServerSetupTest.SMTP);
+        mailServer.start();
+        mailServer.setUser(ADDRESS, USERNAME, PASSWORD);
+
+        Map<String, String> masterConfigs = new HashMap<>();
+        masterConfigs.put("sink.email.port", "3025");
+        masterConfigs.put("sink.email.host", "localhost");
+        masterConfigs.put("sink.email.ssl.enable", "false");
+        masterConfigs.put("sink.email.auth", "false");
+
+        SiddhiManager siddhiManager = new SiddhiManager();
+        InMemoryConfigManager inMemoryConfigManager = new InMemoryConfigManager(masterConfigs, null);
+        inMemoryConfigManager.generateConfigReader("sink", "email");
+        siddhiManager.setConfigManager(inMemoryConfigManager);
+        String streams = "" +
+                "@App:name('TestSiddhiApp')"
+                + "define stream FooStream (email string, sampleMessage string); "
+                + "@sink(type='email', @map(type='text') ,"
+                + " username ='" + USERNAME + "',"
+                + " address ='" + ADDRESS + "',"
+                + " password= '" + PASSWORD + "',"
+                + " subject='This is meant for - {{email}}' ,"
+                + " to='{{email}}')"
+                + " define stream BarStream (email string, sampleMessage string); ";
+
+        String query = "" +
+                "from FooStream " +
+                "select * " +
+                "insert into BarStream; ";
+
+        SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(streams + query);
+        InputHandler stockStream = siddhiAppRuntime.getInputHandler("FooStream");
+        siddhiAppRuntime.start();
+
+        ExecutorService executorService1 = Executors.newSingleThreadExecutor();
+        ExecutorService executorService2 = Executors.newSingleThreadExecutor();
+
+        executorService1.execute(() -> {
+            try {
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_1@localhost", "This message is for to_1@localhost"});
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_1@localhost", "This message is for to_1@localhost"});
+                log.info(Thread.currentThread().toString());
+                Thread.sleep(1000);
+                stockStream.send(new Object[]{"to_1@localhost", "This message is for to_1@localhost"});
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_1@localhost", "This message is for to_1@localhost"});
+                log.info(Thread.currentThread().toString());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        executorService2.execute(() -> {
+            try {
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_2@localhost", "This message is for to_2@localhost"});
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_2@localhost", "This message is for to_2@localhost"});
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_2@localhost", "This message is for to_2@localhost"});
+                log.info(Thread.currentThread().toString());
+                stockStream.send(new Object[]{"to_2@localhost", "This message is for to_2@localhost"});
+                log.info(Thread.currentThread().toString());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        mailServer.waitForIncomingEmail(5000, 8);
+        MimeMessage[] messages = mailServer.getReceivedMessages();
+        for (MimeMessage message : messages) {
+            assertEquals(message.getContent().toString().trim(), "email:\""
+                    + InternetAddress.toString(message.getRecipients(Message.RecipientType.TO))
+                    + "\"," + "\r\nsampleMessage:\"This message is for "
+                    + InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) + "\"");
+        }
         siddhiAppRuntime.shutdown();
     }
 }
